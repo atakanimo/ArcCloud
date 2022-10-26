@@ -1,0 +1,47 @@
+.sidebar {
+  // width: 16.66vw;
+  flex: auto;
+  height: 100vh;
+  background-color: #2a3042;
+
+  hr.dotted {
+    border: 0;
+    border-top: 3px dotted #bbb;
+  }
+
+  .sidebar__logo {
+    display: grid;
+    place-items: center;
+    height: 120px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Mochiy Pop P one', sans-serif;
+    color: #fff;
+  }
+
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &__item {
+      padding: 1rem 3rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #73777b;
+      transition: color 0.3s ease-in-out;
+
+      &.active {
+        color: #fff;
+      }
+
+      &__icon {
+        margin-right: 1rem;
+
+        i {
+          font-size: 1.75rem;
+        }
+      }
+    }
+  }
+}

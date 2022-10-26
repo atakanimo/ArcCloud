@@ -1,0 +1,27 @@
+.card {
+  padding: 10px;
+  display: flex;
+  width: 20vw;
+  max-width: 200px;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  height: auto;
+  max-height: 35vh;
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
+  .cardContent {
+    background-color: white;
+    .cc {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      #a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
