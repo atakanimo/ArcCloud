@@ -22,6 +22,16 @@ export default function DeviceConfiguration() {
     event.preventDefault();
   }
 
+  const messages = {
+    aggregate: 'Do not perform operation if any child items are aggregated to another container.',
+    disaggregate: 'Decommission container after operation is performed.',
+    reset:
+      'If checked: It is not allowed to aggregate already aggregated items to a container. If unchecked: It is allowed to aggregate already aggregated items to a container.',
+    replace: 'Do not perform operation if any child items are aggregated to another container.',
+    decommission: 'Automatically disaggregate items from parent container.',
+    outbound: 'Automatically disaggregate serial numbers that are aggregated to another number.',
+  };
+
   return (
     <Box
       sx={{
@@ -32,47 +42,33 @@ export default function DeviceConfiguration() {
         overflowY: 'scroll',
       }}>
       <Title>Device Configuration</Title>
-      <div className="bigCardArea">
-        <InlineTitle>Serialization Validation</InlineTitle>
-        <div className="cardArea">
-          <BasicCard
-            label={'"Decommission container(s) if empty after operation is performed" checkbox on Disaggregate Items page in Tracelink.'}
-          />
-          <BasicCard label={'"Decommission container after operation is performed" checkbox on Disaggregate Container page in Tracelink.'} />
-          <BasicCard
-            label={
-              '"Decommission container if empty after operation is performed" checkbox on Disaggregate items from Container page in Tracelink.'
-            }
-          />
-          <BasicCard
-            label={
-              '"Do not perform operation if any child items are aggregated to another container" checkbox on Reset Container Aggregation page in Tracelink.'
-            }
-          />
-          <BasicCard
-            label={
-              '"Do not perform operation if any child items are aggregated to another container" checkbox on Aggregate Items in Container page in Tracelink.'
-            }
-          />
-          <BasicCard
-            label={
-              '"Do not perform operation if any child items are aggregated to another container" checkbox on Replace item in Container page in Tracelink.'
-            }
-          />
+      <div className="container_deviceConf">
+        <div className="bigCardArea_deviceConf">
+          <InlineTitle>Serialization Validation</InlineTitle>
+          <div className="cardArea_deviceConf">
+            <BasicCard label={messages.aggregate} />
+            <BasicCard label={messages.disaggregate} />
+            <BasicCard label={messages.reset} />
+            <BasicCard label={messages.replace} />
+            <BasicCard label={messages.decommission} />
+            <BasicCard label={messages.outbound} />
+          </div>
         </div>
-      </div>
-      <div className="bigCardArea" style={{marginTop: 10}}>
-        <InlineTitle>Other Settings</InlineTitle>
-        <div className="cardArea">
-          <SliderBar />
-          <Card className="checkboxCard">
-            <Checkbox header={'Is test device ?'} checked={true} />
-            <Checkbox header={'Is admin ?'} checked={true} />
-            <Checkbox header={'SAP ?'} checked={true} />
-          </Card>
-          <Card className="checkboxCard">
-            <SelectLabels />
-          </Card>
+        <div style={{marginLeft: 20}} className="bigCardArea_deviceConf">
+          <InlineTitle>Other Settings</InlineTitle>
+          <div>
+            <div className="cardArea_deviceConf">
+              <SliderBar />
+              <Card style={{marginLeft: 10, width: 'auto'}} className="checkboxCard_deviceConf">
+                <SelectLabels />
+              </Card>
+            </div>
+            <Card className="checkboxCard_deviceConf">
+              <Checkbox header={'Is test device ?'} checked={true} />
+              <Checkbox header={'Is admin ?'} checked={true} />
+              <Checkbox header={'SAP ?'} checked={true} />
+            </Card>
+          </div>
         </div>
       </div>
     </Box>

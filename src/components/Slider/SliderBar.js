@@ -12,7 +12,7 @@ export default function SliderBar() {
   };
 
   return (
-    <Card className="area">
+    <Card className="area_slider">
       <Typography id="input-slider" gutterBottom>
         Device Max Log Count
       </Typography>

@@ -1,26 +1,33 @@
-.bigCardArea {
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 10px;
-  .cardArea {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding-top: 0px;
-    padding-bottom: 15px;
-    margin-bottom: 10px;
-  }
-  .checkboxCard {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    border-radius: 5px;
+.container_deviceConf {
+  display: flex;
+  flex-direction: row;
+  .bigCardArea_deviceConf {
+    max-width: 50%;
     width: auto;
-    min-width: 10vw;
-    margin-right: 2rem;
-    margin-top: 1rem;
-    height: auto;
-    max-height: 35vh;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px;
+    .cardArea_deviceConf {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding-top: 0px;
+      padding-bottom: 15px;
+      margin-bottom: 10px;
+    }
+    .checkboxCard_deviceConf {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      padding: 1rem;
+      border-radius: 5px;
+      width: auto;
+      min-width: 10vw;
+      margin-top: 1rem;
+      height: 15vh;
+      max-height: 35vh;
+    }
   }
 }

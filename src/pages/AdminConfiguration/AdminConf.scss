@@ -1,26 +1,34 @@
-.bigCardArea {
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 10px;
-  .cardArea {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding-top: 0px;
-    padding-bottom: 15px;
-    margin-bottom: 10px;
-  }
-  .checkboxCard {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
+.container_admin {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .bigCardArea_admin {
+    background-color: #f8f9fa;
+    border-radius: 10px;
     padding: 1rem;
-    border-radius: 5px;
+    max-width: 50%;
     width: auto;
-    min-width: 10vw;
-    margin-right: 2rem;
-    margin-top: 1rem;
-    height: auto;
-    max-height: 35vh;
+
+    .cardArea_admin {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding-top: 0px;
+      padding-bottom: 15px;
+      margin-bottom: 10px;
+    }
+    .checkboxCard_admin {
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      border-radius: 5px;
+      width: auto;
+      min-width: 10vw;
+      margin-top: 1rem;
+      height: auto;
+      max-height: 35vh;
+    }
   }
 }

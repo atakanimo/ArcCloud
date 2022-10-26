@@ -6,6 +6,7 @@ import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import Button from '@mui/material/Button';
 import {Box} from '@mui/material';
 import './AdminConf.scss';
+import Alert from 'react-bootstrap/Alert';
 
 export default function AdminConfiguration() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -20,44 +21,45 @@ export default function AdminConfiguration() {
         overflowY: 'scroll',
       }}>
       <Title>Admin Configuration</Title>
-      <div className="bigCardArea" style={{marginTop: 10}}>
-        <InlineTitle>Tracelink Configuration</InlineTitle>
-        <div className="cardArea">
-          <Card className="checkboxCard">
-            <div>
+      <div className="container_admin">
+        <div className="bigCardArea_admin">
+          <InlineTitle>Tracelink Configuration</InlineTitle>
+          <div className="cardArea_admin">
+            <Card className="checkboxCard_admin">
               <TextInput label={'Tracelink Username'} width={7} />
-              <TextInput label={'Tracelink Web Url'} width={6} />
-            </div>
-            <div>
               <TextInput label={'Tracelink Password'} type="password" width={7} />
-              <Button style={{marginTop: 20, width: dynamicWidth / 6, height: 50}} variant="contained">
+              <TextInput label={'Tracelink Web Url'} width={7} />
+              <Button style={{marginTop: 20, width: dynamicWidth / 7, height: 50}} variant="contained">
                 Test
               </Button>
-            </div>
-          </Card>
+            </Card>
+          </div>
         </div>
-      </div>
-      <div className="bigCardArea" style={{marginTop: 10}}>
-        <InlineTitle>Service Endpoints</InlineTitle>
-        <div className="cardArea">
-          <Card className="checkboxCard">
-            <div style={{display: 'flex', flexDirection: 'row'}}>
-              <h4 style={{marginTop: 20, marginRight: 20}}>Log Api</h4>
-              <TextInput label={'Ip Adress'} width={7} />
-              <TextInput label={'Port'} width={10} />
-              <Button style={{marginTop: 20, width: dynamicWidth / 10, height: 50}} variant="contained">
-                Test
-              </Button>
-            </div>
-            <div style={{display: 'flex', flexDirection: 'row'}}>
-              <h4 style={{marginTop: 20, marginRight: 20}}>Log Api</h4>
-              <TextInput label={'Ip Adress'} width={7} />
-              <TextInput label={'Port'} width={10} />
-              <Button style={{marginTop: 20, width: dynamicWidth / 10, height: 50}} variant="contained">
-                Test
-              </Button>
-            </div>
-          </Card>
+        <div className="bigCardArea_admin" style={{marginLeft: 20}}>
+          <InlineTitle>Service Endpoints</InlineTitle>
+          <div className="cardArea_admin">
+            <Card className="checkboxCard_admin">
+              <div style={{display: 'flex', flexDirection: 'row'}}>
+                <h4 style={{marginTop: 20, marginRight: 20, width: 60}}>Log Api</h4>
+                <TextInput label={'Ip Adress'} width={7} />
+                <TextInput label={'Port'} width={10} />
+                <Button style={{marginTop: 20, width: dynamicWidth / 10, height: 50}} variant="contained">
+                  Test
+                </Button>
+              </div>
+              <div style={{display: 'flex', flexDirection: 'row'}}>
+                <h4 style={{marginTop: 20, marginRight: 20, width: 60}}>Print Api</h4>
+                <TextInput label={'Ip Adress'} width={7} />
+                <TextInput label={'Port'} width={10} />
+                <Button style={{marginTop: 20, width: dynamicWidth / 10, height: 50}} variant="contained">
+                  Test
+                </Button>
+              </div>
+            </Card>
+            <Alert style={{marginTop: 20, flex: 1, fontSize: 20, fontWeight: 'bold'}} variant={'info'}>
+              **Auth ip must fill from the device!
+            </Alert>
+          </div>
         </div>
       </div>
     </Box>
