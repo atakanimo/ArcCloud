@@ -41,7 +41,6 @@ export default function DeviceConfiguration() {
         flexDirection: 'column',
         overflowY: 'scroll',
       }}>
-      <Title>Device Configuration</Title>
       <div className="container_deviceConf">
         <div className="bigCardArea_deviceConf">
           <InlineTitle>Serialization Validation</InlineTitle>
@@ -74,11 +73,6 @@ export default function DeviceConfiguration() {
     </Box>
   );
 }
-
-const Title = styled.h1`
-  text-align: center;
-  color: #495057;
-`;
 
 const InlineTitle = styled.h3`
   color: #495057;
