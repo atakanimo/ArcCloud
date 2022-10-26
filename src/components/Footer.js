@@ -1,7 +1,5 @@
 import React from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
-import {IoLocationSharp} from 'react-icons/io5';
-import {HiPhone} from 'react-icons/hi';
 import {GrMail} from 'react-icons/gr';
 import {AiFillLinkedin} from 'react-icons/ai';
 import {FaHome} from 'react-icons/fa';
