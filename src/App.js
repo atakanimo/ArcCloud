@@ -11,6 +11,7 @@ import Log2 from './pages/Logs/Log2';
 import LoginPage from './pages/LoginPage/LoginPage';
 import MyCompany from './pages/MyCompany';
 import DeviceConfiguration from './pages/DeviceConfiguration/DeviceConfiguration';
+import Footer from './components/Footer';
 
 export default function App() {
   const location = useLocation();
@@ -37,6 +38,7 @@ export default function App() {
             }
           />
         </Routes>
+        <Footer />
       </Col>
     </div>
   );
