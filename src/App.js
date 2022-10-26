@@ -23,7 +23,7 @@ export default function App() {
       <Col xs={8} md={9} lg={10} style={{padding: 0}}>
         <NavbarComponent />
         <Routes>
-          <Route index path="/myCompany" element={<MyCompany />} />
+          <Route index path="/mycompany" element={<MyCompany />} />
           <Route path="screenConfiguration" element={<DeviceConfiguration />} />
           <Route path="tracelinkConfiguration" element={<AdminConfiguration />} />
           <Route path="deviceSettings" element={<DeviceSettings />} />

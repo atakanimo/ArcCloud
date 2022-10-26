@@ -1,84 +1,90 @@
 import {useEffect, useRef, useState} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import './sidebar.scss';
+import * as React from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const sidebarNavItems = [
+const routes = [
   {
-    display: 'My Company',
-    icon: <i className="bx bx-home"></i>,
-    to: '/home',
-    section: 'home',
+    header: 'ARC',
+    Nav: [
+      {
+        display: 'My Company',
+        icon: <i className="bx bx-home"></i>,
+        to: '/mycompany',
+        section: 'mycompany',
+      },
+      {
+        display: 'Permissions',
+        icon: <i className="bx bx-user"></i>,
+        to: '/permission',
+        section: 'permission',
+      },
+    ],
   },
   {
-    display: 'Device Configuration',
-    icon: <i className="bx bx-star"></i>,
-    to: '/screenConfiguration',
-    section: 'screenConfiguration',
-  },
-  {
-    display: 'Admin Configuration',
-    icon: <i className="bx bx-calendar"></i>,
-    to: '/tracelinkConfiguration',
-    section: 'tracelinkConfiguration',
-  },
-  {
-    display: 'Device Settings',
-    icon: <i className="bx bx-calendar"></i>,
-    to: '/deviceSettings',
-    section: 'deviceSettings',
-  },
-  {
-    display: 'Logs',
-    icon: <i className="bx bx-user"></i>,
-    to: '/logs',
-    section: 'logs',
-  },
-  {
-    display: 'Login',
-    icon: <i className="bx bx-user"></i>,
-    to: '/login',
-    section: 'login',
+    header: 'LESs Edge',
+    Nav: [
+      {
+        display: 'Admin Configuration',
+        icon: <i className="bx bx-calendar"></i>,
+        to: '/tracelinkConfiguration',
+        section: 'tracelinkConfiguration',
+      },
+      {
+        display: 'Device Configuration',
+        icon: <i className="bx bx-star"></i>,
+        to: '/screenConfiguration',
+        section: 'screenConfiguration',
+      },
+      {
+        display: 'Logs',
+        icon: <i className="bx bx-user"></i>,
+        to: '/logs',
+        section: 'logs',
+      },
+    ],
   },
 ];
 
 const Sidebar = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [stepHeight, setStepHeight] = useState(0);
   const sidebarRef = useRef();
-  const indicatorRef = useRef();
+
   const location = useLocation();
 
   useEffect(() => {
     const curPath = window.location.pathname.split('/')[1];
-    const activeItem = sidebarNavItems.findIndex(item => item.section === curPath);
-    setActiveIndex(curPath.length === 0 ? 0 : activeItem);
+    setActiveIndex(curPath);
   }, [location]);
 
   return (
     <div className="sidebar">
       <div className="sidebar__logo">Edge Cloud</div>
       <div ref={sidebarRef} className="sidebar__menu">
-        <div
-          ref={indicatorRef}
-          className="sidebar__menu__indicator"
-          style={{
-            transform: `translateX(-50%) translateY(${activeIndex * stepHeight}px)`,
-          }}></div>
-        {sidebarNavItems.map((item, index) => (
-          <Link to={item.to} key={index} style={{textDecoration: 'none'}}>
-            <div className={`sidebar__menu__item ${activeIndex === index ? 'active' : ''}`}>
-              <div className="sidebar__menu__item__icon">{item.icon}</div>
-              <div className="sidebar__menu__item__text">{item.display}</div>
-            </div>
-            {item.display == 'Device Settings' ? (
-              <div
-              // style={{display: 'flex', flex:1, backgroundColor: 'red'}}
-              >
-                <hr class="dotted"></hr>{' '}
-              </div>
-            ) : null}
-          </Link>
-        ))}
+        {routes.map((item, index) => {
+          return (
+            <Accordion key={index} style={{boxShadow: 'none'}} className="accordion" defaultExpanded={item.header == 'ARC' ? true : false}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: 'white'}} />}>
+                <Typography className="accordionHeader">{item.header}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {item.Nav.map((item, index) => (
+                  <Link to={item.to} key={index} style={{textDecoration: 'none'}}>
+                    <div className={`sidebar__menu__item ${activeIndex === item.section ? 'active' : ''}`}>
+                      <div className="sidebar__menu__item__icon">{item.icon}</div>
+                      <div className="sidebar__menu__item__text">{item.display}</div>
+                    </div>
+                  </Link>
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
       </div>
     </div>
   );
