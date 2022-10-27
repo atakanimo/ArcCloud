@@ -8,13 +8,13 @@ export default function NavbarComponent() {
 
   return (
     <Navbar bg="light" variant="light" style={{height: dynamicHeight / 12}}>
-      <Container>
-        <Nav className="me-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#features">Features</Nav.Link>
-          <Nav.Link href="#pricing">Pricing</Nav.Link>
-        </Nav>
-      </Container>
+      {/* <Container> */}
+      <Nav className="me-auto">
+        <Nav.Link href="#home">Home</Nav.Link>
+        <Nav.Link href="#features">Features</Nav.Link>
+        <Nav.Link href="#pricing">Pricing</Nav.Link>
+      </Nav>
+      {/* </Container> */}
     </Navbar>
   );
 }

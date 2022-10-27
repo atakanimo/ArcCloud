@@ -2,10 +2,7 @@ import React from 'react';
 import Col from 'react-bootstrap/Col';
 import {Box} from '@mui/material';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
-import TextInput from '../../components/TextInput';
 import styled from '@emotion/styled';
-import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
 import './MyCompany.scss';
 import GS1AppIdenList from '../MyCompany/GS1AppIdenList';
 

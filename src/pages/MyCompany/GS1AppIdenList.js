@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
 import TextInput from '../../components/TextInput';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
+import ButtonComponent from '../../components/Button';
 
 function GS1AppIdenList() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -27,37 +27,45 @@ function GS1AppIdenList() {
       minWidth: dynamicWidth / 10,
       marginTop: 16,
       height: 'auto',
-      // max-height: 40vh;
     },
     createButton: {
-      display: 'flex',
       flex: 1,
-      alignItems: 'flex-end',
     },
   };
 
-  const [inputList, setInputList] = useState([]);
+  const [gridNumber, setGridNumber] = useState(0);
+  const [info, setInfo] = useState([]);
 
-  const onAddButtonClick = event => {
-    setInputList(inputList.concat(<GS1AppIdenList key={inputList.length} />));
+  const onInputChange = (field, event, index) => {
+    const {value} = event.target;
+
+    setInfo({...info, [index]: {...info[index], [field]: value}});
   };
-  return (
-    <div style={styles.cardArea}>
-      <Card style={styles.checkboxCard}>
-        <div style={styles.inputDiv}>
-          <TextInput label={'AI'} width={9} />
-          <TextInput label={'Description'} width={7} />
-          <TextInput label={'Length'} width={9} />
-          <TextInput label={'Format'} width={9} />
-        </div>
-        <div style={styles.createButton}>
-          <Button onClick={() => onAddButtonClick()} variant="contained">
-            Save
-          </Button>
-        </div>
-      </Card>
-      <div style={{display: 'flex', flexDirection: 'column'}}>{inputList}</div>
-    </div>
-  );
+
+  const createCard = () => {
+    var elements = [];
+    for (var i = 0; i <= gridNumber; i++) {
+      elements.push(
+        <Card style={styles.checkboxCard}>
+          <div style={styles.inputDiv}>
+            <TextInput value={info.AI} onChange={text => onInputChange('AI', text, i)} label={'AI'} width={9} />
+            <TextInput value={info.Description} onChange={text => onInputChange('Description', text, i)} label={'Description'} width={7} />
+            <TextInput value={info.Length} onChange={text => onInputChange('Length', text, i)} label={'Length'} width={9} />
+            <TextInput value={info.Format} onChange={text => onInputChange('Format', text, i)} label={'Format'} width={9} />
+          </div>
+          <div style={styles.createButton}>
+            {i < 1 ? (
+              <>
+                <ButtonComponent mR={10} onClick={() => setGridNumber(gridNumber + 1)} label={'Add'} width={13} />
+                <ButtonComponent onClick={() => setGridNumber(gridNumber - 1)} label={'Delete'} width={13} />
+              </>
+            ) : null}
+          </div>
+        </Card>,
+      );
+    }
+    return elements;
+  };
+  return <div style={styles.cardArea}>{gridNumber >= 0 ? createCard() : null}</div>;
 }
 export default GS1AppIdenList;

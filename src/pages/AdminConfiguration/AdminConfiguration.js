@@ -3,11 +3,12 @@ import TextInput from '../../components/TextInput';
 import styled from '@emotion/styled';
 import Card from '@mui/material/Card';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
-import Button from '@mui/material/Button';
 import {Box} from '@mui/material';
 import './AdminConf.scss';
 import Alert from 'react-bootstrap/Alert';
 import Col from 'react-bootstrap/Col';
+import Button from '../../components/Button';
+import Text from '../../components/Text/Text';
 
 export default function AdminConfiguration() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -27,12 +28,10 @@ export default function AdminConfiguration() {
             <InlineTitle>Tracelink Configuration</InlineTitle>
             <div className="cardArea_admin">
               <Card className="checkboxCard_admin">
-                <TextInput mTop={2} label={'Tracelink Username'} width={6.5} />
-                <TextInput mTop={2} label={'Tracelink Password'} type="password" width={6.5} />
-                <TextInput mTop={2} label={'Tracelink Web Url'} width={6.5} />
-                <Button style={{marginTop: 20, width: dynamicWidth / 6.5, height: 50}} variant="contained">
-                  Test
-                </Button>
+                <TextInput label={'Tracelink Username'} width={6.5} />
+                <TextInput label={'Tracelink Password'} width={6.5} type="password" />
+                <TextInput label={'Tracelink Web Url'} width={6.5} />
+                <Button label={'Test'} />
               </Card>
             </div>
           </div>
@@ -43,22 +42,18 @@ export default function AdminConfiguration() {
             <div className="cardArea_admin">
               <Card className="checkboxCard_admin">
                 <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <h4 style={{marginTop: 20, marginRight: 20, width: 60}}>Log Api</h4>
-                  <TextInput mTop={2} label={'Ip Adress'} width={7} />
-                  <TextInput mTop={2} label={'Port'} width={10} />
-                  <Button style={{marginTop: 10, width: dynamicWidth / 10, height: 50}} variant="contained">
-                    Test
-                  </Button>
+                  <Text label={'Log API'} />
+                  <TextInput label={'Ip Adress'} width={6} />
+                  <TextInput label={'Port'} width={15} />
+                  <Button label={'Test'} width={10} />
                 </div>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
-                  <h4 style={{marginTop: 20, marginRight: 20, width: 60}}>Print Api</h4>
-                  <TextInput mTop={2} label={'Ip Adress'} width={7} />
-                  <TextInput mTop={2} label={'Port'} width={10} />
-                  <Button style={{marginTop: 20, width: dynamicWidth / 10, height: 50}} variant="contained">
-                    Test
-                  </Button>
+                  <Text label={'Print API'} />
+                  <TextInput label={'Ip Adress'} width={6} />
+                  <TextInput label={'Port'} width={15} />
+                  <Button label={'Test'} width={10} />
                 </div>
-                <Alert style={{marginTop: 20, flex: 1, fontSize: 20, fontWeight: 'bold'}} variant={'info'}>
+                <Alert style={{flex: 1, fontSize: 20, fontWeight: 'bold'}} variant={'info'}>
                   **Auth ip must fill from the device!
                 </Alert>
               </Card>
@@ -79,7 +74,7 @@ export default function AdminConfiguration() {
                   <TextInput header={'APK Directory Path'} label={'C:/home/sharedFolder/app'} width={7} />
                 </div>
                 <div className="createButtonAdmin">
-                  <Button variant="contained">Create Directories</Button>
+                  <Button width={8} label={'Create Directories'} />
                 </div>
               </Card>
             </div>

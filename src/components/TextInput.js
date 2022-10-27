@@ -1,21 +1,34 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
-
-export default function TextInput({label, type, width, header, mTop}) {
+import Text from './Text/Text';
+export default function TextInput({label, type, width, header, mTop, fullWidth, value, onChange}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
+  const styles = {
+    container: {
+      marginBottom: 15,
+      marginRight: 10,
+    },
+    input: {
+      width: dynamicWidth / width,
+      minWidth: 150,
+    },
+  };
   return (
-    <>
-      {header ? <h4 style={{marginTop: 10}}>{header}</h4> : null}
+    <div style={styles.container}>
+      {header ? <Text mT={10} width={'auto'} height={'auto'} label={header} /> : null}
       <TextField
-        onChange={null}
-        sx={{width: dynamicWidth / width, marginTop: mTop ? mTop : 0, marginRight: 2, fontSize: 16}}
+        // sx={{font}}
+        fullWidth={(fullWidth = true ? fullWidth : false)}
+        onChange={onChange}
+        style={styles.input}
         type={type}
         required
         label={label}
+        value={value}
       />
-    </>
+    </div>
   );
 }
