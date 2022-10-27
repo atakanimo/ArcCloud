@@ -43,9 +43,18 @@ const routes = [
       },
       {
         display: 'Logs',
-        icon: <i className="bx bx-user"></i>,
-        to: '/logs',
-        section: 'logs',
+        inlineNav: [
+          {
+            display: 'API Logs',
+            to: '/logs',
+            section: 'logs',
+          },
+          {
+            display: 'Navigation Logs',
+            to: '/logs',
+            section: 'logs',
+          },
+        ],
       },
     ],
   },
@@ -74,12 +83,34 @@ const Sidebar = () => {
               </AccordionSummary>
               <AccordionDetails>
                 {item.Nav.map((item, index) => (
-                  <Link to={item.to} key={index} style={{textDecoration: 'none'}}>
-                    <div className={`sidebar__menu__item ${activeIndex === item.section ? 'active' : ''}`}>
-                      <div className="sidebar__menu__item__icon">{item.icon}</div>
-                      <div className="sidebar__menu__item__text">{item.display}</div>
-                    </div>
-                  </Link>
+                  <>
+                    {item.display == 'Logs' ? (
+                      <Accordion key={index} style={{boxShadow: 'none'}} className="accordion" defaultExpanded={false}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: 'white'}} />}>
+                          <div className={`sidebar__menu__item ${activeIndex === item.section ? 'active' : ''}`}>
+                            <div className="sidebar__menu__item__text">{item.display}</div>
+                          </div>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {item.inlineNav.map((item, index) => (
+                            <Link to={item.to} key={index} style={{textDecoration: 'none'}}>
+                              <div className={`sidebar__menu__item ${activeIndex === item.section ? 'active' : ''}`}>
+                                <div className="sidebar__menu__item__icon">{item.icon}</div>
+                                <div className="sidebar__menu__item__text">{item.display}</div>
+                              </div>
+                            </Link>
+                          ))}
+                        </AccordionDetails>
+                      </Accordion>
+                    ) : (
+                      <Link to={item.to} key={index} style={{textDecoration: 'none'}}>
+                        <div className={`sidebar__menu__item ${activeIndex === item.section ? 'active' : ''}`}>
+                          <div className="sidebar__menu__item__icon">{item.icon}</div>
+                          <div className="sidebar__menu__item__text">{item.display}</div>
+                        </div>
+                      </Link>
+                    )}
+                  </>
                 ))}
               </AccordionDetails>
             </Accordion>

@@ -66,11 +66,11 @@ export default function AdminConfiguration() {
             <div className="cardArea_admin">
               <Card className="checkboxCard_admin" style={{flexDirection: 'row', display: 'flex'}}>
                 <div>
-                  <TextInput header={'Input Directory Path'} label={'C:/home/sharedFolder'} width={7} />
+                  <TextInput mR={20} header={'Input Directory Path'} label={'C:/home/sharedFolder'} width={7} />
                   <TextInput header={'Log Directory Path'} label={'C:/home/sharedFolder/logs'} width={7} />
                 </div>
                 <div>
-                  <TextInput header={'Archive Directory Path'} label={'C:/home/sharedFolder/archive'} width={7} />
+                  <TextInput mR={20} header={'Archive Directory Path'} label={'C:/home/sharedFolder/archive'} width={7} />
                   <TextInput header={'APK Directory Path'} label={'C:/home/sharedFolder/app'} width={7} />
                 </div>
                 <div className="createButtonAdmin">

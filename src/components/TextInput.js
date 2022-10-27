@@ -2,14 +2,14 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 import Text from './Text/Text';
-export default function TextInput({label, type, width, header, mTop, fullWidth, value, onChange}) {
+export default function TextInput({label, type, width, header, mR, fullWidth, value, onChange}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
   const styles = {
     container: {
       marginBottom: 15,
-      marginRight: 10,
+      marginRight: mR ? mR : 10,
     },
     input: {
       width: dynamicWidth / width,
