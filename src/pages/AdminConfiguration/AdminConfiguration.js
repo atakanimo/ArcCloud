@@ -8,6 +8,7 @@ import {Box} from '@mui/material';
 import './AdminConf.scss';
 import Alert from 'react-bootstrap/Alert';
 import Col from 'react-bootstrap/Col';
+import GS1AppIdenList from './GS1AppIdenList';
 
 export default function AdminConfiguration() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -83,6 +84,12 @@ export default function AdminConfiguration() {
                 </div>
               </Card>
             </div>
+          </div>
+        </Col>
+        <Col>
+          <div className="bigCardArea_admin" style={{marginTop: 20, display: 'flex', flexDirection: 'column'}}>
+            <InlineTitle>GS1 Application Identifier List</InlineTitle>
+            <GS1AppIdenList />
           </div>
         </Col>
       </div>
