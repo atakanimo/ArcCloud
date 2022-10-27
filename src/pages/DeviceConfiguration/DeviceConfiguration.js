@@ -8,6 +8,7 @@ import SliderBar from '../../components/Slider/SliderBar';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import {Card} from '@mui/material';
 import SelectLabels from '../../components/Select';
+import Col from 'react-bootstrap/Col';
 
 export default function DeviceConfiguration() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -42,33 +43,37 @@ export default function DeviceConfiguration() {
         overflowY: 'scroll',
       }}>
       <div className="container_deviceConf">
-        <div className="bigCardArea_deviceConf">
-          <InlineTitle>Serialization Validation</InlineTitle>
-          <div className="cardArea_deviceConf">
-            <BasicCard label={messages.aggregate} />
-            <BasicCard label={messages.disaggregate} />
-            <BasicCard label={messages.reset} />
-            <BasicCard label={messages.replace} />
-            <BasicCard label={messages.decommission} />
-            <BasicCard label={messages.outbound} />
-          </div>
-        </div>
-        <div style={{marginLeft: 20}} className="bigCardArea_deviceConf">
-          <InlineTitle>Other Settings</InlineTitle>
-          <div>
+        <Col lg={7}>
+          <div className="bigCardArea_deviceConf">
+            <InlineTitle>Serialization Validation</InlineTitle>
             <div className="cardArea_deviceConf">
-              <SliderBar />
-              <Card style={{marginLeft: 10, width: 'auto'}} className="checkboxCard_deviceConf">
-                <SelectLabels />
+              <BasicCard label={messages.aggregate} />
+              <BasicCard label={messages.disaggregate} />
+              <BasicCard label={messages.reset} />
+              <BasicCard label={messages.replace} />
+              <BasicCard label={messages.decommission} />
+              <BasicCard label={messages.outbound} />
+            </div>
+          </div>
+        </Col>
+        <Col lg={5}>
+          <div style={{marginLeft: 20}} className="bigCardArea_deviceConf">
+            <InlineTitle>Other Settings</InlineTitle>
+            <div>
+              <div className="cardArea_deviceConf">
+                <SliderBar />
+                <Card style={{marginLeft: 10, width: 'auto'}} className="checkboxCard_deviceConf">
+                  <SelectLabels />
+                </Card>
+              </div>
+              <Card className="checkboxCard_deviceConf">
+                <Checkbox header={'Is test device ?'} checked={true} />
+                <Checkbox header={'Is admin ?'} checked={true} />
+                <Checkbox header={'SAP ?'} checked={true} />
               </Card>
             </div>
-            <Card className="checkboxCard_deviceConf">
-              <Checkbox header={'Is test device ?'} checked={true} />
-              <Checkbox header={'Is admin ?'} checked={true} />
-              <Checkbox header={'SAP ?'} checked={true} />
-            </Card>
           </div>
-        </div>
+        </Col>
       </div>
     </Box>
   );

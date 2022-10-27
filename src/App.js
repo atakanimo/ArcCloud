@@ -9,7 +9,7 @@ import DeviceSettings from './pages/DeviceSettings';
 import NavbarComponent from './components/Navbar';
 import Log2 from './pages/Logs/Log2';
 import LoginPage from './pages/LoginPage/LoginPage';
-import MyCompany from './pages/MyCompany';
+import MyCompany from './pages/MyCompany/MyCompany';
 import DeviceConfiguration from './pages/DeviceConfiguration/DeviceConfiguration';
 import Footer from './components/Footer';
 
