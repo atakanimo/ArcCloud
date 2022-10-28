@@ -11,7 +11,7 @@ export default function BasicCard({label}) {
         <Text tAlign={'t'} width={'auto'} height={'auto'} label={label} />
         <div className="cc">
           <div id="a" class="form-check form-switch">
-            <input style={{width: 40, height: 20}} class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked />
+            <input style={{width: 40, height: 20}} class="form-check-input" type="checkbox" checked />
           </div>
         </div>
       </CardContent>

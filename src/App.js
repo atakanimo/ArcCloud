@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import MyCompany from './pages/MyCompany/MyCompany';
 import DeviceConfiguration from './pages/DeviceConfiguration/DeviceConfiguration';
 import Footer from './components/Footer';
+import Permissions from './pages/Permission/Permissions';
 
 export default function App() {
   const location = useLocation();
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="screenConfiguration" element={<DeviceConfiguration />} />
           <Route path="tracelinkConfiguration" element={<AdminConfiguration />} />
           <Route path="deviceSettings" element={<DeviceSettings />} />
+          <Route path="permission" element={<Permissions />} />
           <Route path="logs" element={<Log />} />
           <Route
             path="*"
