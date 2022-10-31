@@ -20,7 +20,7 @@ export default function TextInput({label, type, width, header, mR, fullWidth, va
     <div style={styles.container}>
       {header ? <Text mT={10} width={'auto'} height={'auto'} label={header} /> : null}
       <TextField
-        // sx={{font}}
+        size="small"
         fullWidth={(fullWidth = true ? fullWidth : false)}
         onChange={onChange}
         style={styles.input}

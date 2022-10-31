@@ -37,7 +37,7 @@ export default function DeviceConfiguration() {
     <Box
       sx={{
         display: 'flex',
-        height: dynamicHeight - dynamicHeight / 6,
+        height: dynamicHeight - dynamicHeight / 12,
         p: 2,
         flexDirection: 'column',
         overflowY: 'scroll',
@@ -62,7 +62,7 @@ export default function DeviceConfiguration() {
             <div>
               <div className="cardArea_deviceConf">
                 <SliderBar />
-                <Card style={{marginLeft: 10, width: 'auto'}} className="checkboxCard_deviceConf">
+                <Card style={{marginLeft: 10}} className="checkboxCardLang_deviceConf">
                   <SelectLabels />
                 </Card>
               </div>

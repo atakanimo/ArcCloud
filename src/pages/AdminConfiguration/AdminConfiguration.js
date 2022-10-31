@@ -17,7 +17,7 @@ export default function AdminConfiguration() {
     <Box
       sx={{
         display: 'flex',
-        height: dynamicHeight - dynamicHeight / 6,
+        height: dynamicHeight - dynamicHeight / 12,
         p: 2,
         flexDirection: 'column',
         overflowY: 'scroll',
@@ -53,7 +53,7 @@ export default function AdminConfiguration() {
                   <TextInput label={'Port'} width={15} />
                   <Button label={'Test'} width={10} />
                 </div>
-                <Alert style={{flex: 1, fontSize: 20, fontWeight: 'bold'}} variant={'info'}>
+                <Alert style={{flex: 1, fontSize: 18, fontWeight: 'bold'}} variant={'info'}>
                   **Auth ip must fill from the device!
                 </Alert>
               </Card>

@@ -16,14 +16,12 @@ const Permissions = () => {
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-    height: dynamicHeight - dynamicHeight / 6,
+    height: dynamicHeight - dynamicHeight / 12,
     overflow: 'scroll',
     padding: 0
   };
   const mainDiv = {
     display: 'flex',
-    marginLeft: 5,
-    marginRight: 5
   };
   const headerDiv = index => ({
     backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#BFBFBF',

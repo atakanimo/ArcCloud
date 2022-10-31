@@ -6,15 +6,17 @@
   padding: 1rem;
   background-color: white;
   border-radius: 10px;
-  width: 20vw;
-  max-width: 200px;
+  // max-width: 30vw !important;
+  // min-width: 200px;
+  width: 20vh;
+  min-width: 200px;
   margin-top: 1rem;
   height: 15vh;
   max-height: 35vh;
 
   .slider {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
     width: 80%;
   }
 }

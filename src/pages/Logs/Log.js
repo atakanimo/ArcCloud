@@ -65,7 +65,7 @@ export default function App() {
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
       <DataGrid
-        height={dynamicHeight - dynamicHeight / 6}
+        height={dynamicHeight - dynamicHeight / 12}
         id="gridContainer"
         dataSource={data}
         keyExpr="ID"

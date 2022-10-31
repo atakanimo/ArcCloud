@@ -9,7 +9,7 @@ export default function Text({tAlign, label, isBold, fontSize, width, height, mT
       fontWeight: isBold ? 'bold' : null,
       fontSize: fontSize ? fontSize : 17,
       width: width ? width : 90,
-      height: height ? height : 55,
+      height: height ? height : 40,
       marginTop: mT,
       marginRight: mR,
       marginBottom: mB,
