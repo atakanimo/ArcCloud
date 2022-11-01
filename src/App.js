@@ -7,12 +7,16 @@ import Col from 'react-bootstrap/Col';
 import Sidebar from './pages/LeftMenu/SideBar';
 import DeviceSettings from './pages/DeviceSettings';
 import NavbarComponent from './components/Navbar';
-import Log2 from './pages/Logs/Log2';
 import LoginPage from './pages/LoginPage/LoginPage';
 import MyCompany from './pages/MyCompany/MyCompany';
 import DeviceConfiguration from './pages/DeviceConfiguration/DeviceConfiguration';
 import Footer from './components/Footer';
 import Permissions from './pages/Permission/Permissions';
+import ApiRequestLog from './pages/Logs/ApiRequestLog';
+import InteractionLog from './pages/Logs/InteractionLog';
+import NavigationLog from './pages/Logs/NavigationLog';
+import NetworkLog from './pages/Logs/NetworkLog';
+import UserAuthLog from './pages/Logs/UserAuthLog';
 
 export default function App() {
   const location = useLocation();
@@ -30,7 +34,11 @@ export default function App() {
           <Route path="tracelinkConfiguration" element={<AdminConfiguration />} />
           <Route path="deviceSettings" element={<DeviceSettings />} />
           <Route path="permission" element={<Permissions />} />
-          <Route path="logs" element={<Log />} />
+          <Route path="apiRequestLogs" element={<ApiRequestLog />} />
+          <Route path="navigationLogs" element={<NavigationLog />} />
+          <Route path="interactionLogs" element={<InteractionLog />} />
+          <Route path="userAuthLogs" element={<UserAuthLog />} />
+          <Route path="networkLogs" element={<NetworkLog />} />
           <Route
             path="*"
             element={

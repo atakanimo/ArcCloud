@@ -4,10 +4,11 @@ import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import Mock from '../../Mock/permissions_mock.json';
 import {Box} from '@mui/material';
 
+import PaginationContainer from '../../components/PaginationContainer';
+
 const columns = ['formName', 'va', 'ea', 'vm', 'em', 'vo', 'eo', 'vu', 'eu', 'vq', 'eq', 'v1', 'e1', 'e2', 'v3', 'e3', 'v4', 'e4', 'v5', 'e5'];
 
 const Permissions = () => {
-  const [data, setData] = useState(Mock);
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
   const [ force, setForce ] = useState(false) // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
@@ -42,45 +43,57 @@ const Permissions = () => {
     textAlign: 'center',
   });
 
-  const handleChange = (title, objIdx) => {
-    const checkboxValue = data[objIdx][title];
-    data[objIdx][title] = checkboxValue === 0 ? 1 : 0;
-    setData(data);
-    setForce(p => !p)
-    return;
+  const Grid = props => {
+    const [data, setData] = useState(props.items || []);
+
+    useEffect(() => {
+      setForce(p => !p)
+    },[props.items]);
+
+    const handleChange = (title, objIdx) => {
+      const checkboxValue = data[objIdx][title];
+      data[objIdx][title] = checkboxValue === 0 ? 1 : 0;
+      setData(data);
+      setForce(p => !p)
+      return;
+    }
+
+    return (
+      <Box sx={container}>
+        <div style={mainDiv}>
+          <div style={headerDiv(1)}>{'ControlId'}</div>
+          <div style={permDiv}>
+            {columns.map(item =>
+              item == 'formName' ? <div style={{...columnsArray(1), minWidth: 120}}>{item}</div> : <div style={columnsArray(1)}>{item}</div>,
+            )}
+          </div>
+        </div>
+        {data.length > 0 && data.map((a, index) => {
+          return (
+            <div style={mainDiv}>
+              <div style={headerDiv(index)}>{a.controlId}</div>
+              <div style={permDiv}>
+                {columns.map(item => (
+                  <>
+                    {item == 'formName' ? (
+                      <div style={{...columnsArray(index), minWidth: 120}}>{a[item]}</div>
+                    ) : (
+                      <div style={columnsArray(index)}>
+                        <CheckBox onChange={() => handleChange(item, index)} checked={a[item] == 1 ? true : a[item] == 9 ? true : false} disabled={a[item] == 9 ? true : false} />
+                      </div>
+                    )}
+                  </>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </Box>
+    )
   }
   
   return (
-    <Box sx={container}>
-      <div style={mainDiv}>
-        <div style={headerDiv(1)}>{'ControlId'}</div>
-        <div style={permDiv}>
-          {columns.map(item =>
-            item == 'formName' ? <div style={{...columnsArray(1), minWidth: 120}}>{item}</div> : <div style={columnsArray(1)}>{item}</div>,
-          )}
-        </div>
-      </div>
-      {data.length > 0 && data.map((a, index) => {
-        return (
-          <div style={mainDiv}>
-            <div style={headerDiv(index)}>{a.controlId}</div>
-            <div style={permDiv}>
-              {columns.map(item => (
-                <>
-                  {item == 'formName' ? (
-                    <div style={{...columnsArray(index), minWidth: 120}}>{a[item]}</div>
-                  ) : (
-                    <div style={columnsArray(index)}>
-                      <CheckBox onChange={() => handleChange(item, index)} checked={a[item] == 1 ? true : a[item] == 9 ? true : false} disabled={a[item] == 9 ? true : false} />
-                    </div>
-                  )}
-                </>
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </Box>
+    <PaginationContainer itemArray={Mock} ChildComponent={Grid}/>
   );
 };
 

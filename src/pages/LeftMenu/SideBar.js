@@ -50,14 +50,29 @@ const routes = [
         display: 'Logs',
         inlineNav: [
           {
-            display: 'API Logs',
-            to: '/logs',
-            section: 'logs',
+            display: 'API Request Logs',
+            to: '/apiRequestLogs',
+            section: 'apiRequestLogs',
           },
           {
             display: 'Navigation Logs',
-            to: '/logs',
-            section: 'logs',
+            to: '/navigationLogs',
+            section: 'navigationLogs',
+          },
+          {
+            display: 'Interaction Logs',
+            to: '/interactionLogs',
+            section: 'interactionLogs',
+          },
+          {
+            display: 'User Authentication Logs',
+            to: '/userAuthLogs',
+            section: 'userAuthLogs',
+          },
+          {
+            display: 'Network Logs',
+            to: '/networkLogs',
+            section: 'networkLogs',
           },
         ],
       },

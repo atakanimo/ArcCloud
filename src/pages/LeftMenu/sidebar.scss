@@ -1,3 +1,12 @@
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 10px;
+}
+
 .sidebar {
   // width: 16.66vw;
   flex: auto;
@@ -6,6 +15,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  overflow-y: scroll;
 
   hr.dotted {
     border: 0;
