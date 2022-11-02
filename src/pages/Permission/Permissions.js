@@ -119,6 +119,7 @@ const Permissions = () => {
             </div>
           </div>
           <div style={mainDiv}>
+            <div style={{...titles(1), minWidth: 100}}>{'buttonAreaaaaaaa'}</div>
             <div style={titles(1)}>{'ControlId'}</div>
             <div style={permDiv}>
               {columns.map((item, index) =>
@@ -130,6 +131,9 @@ const Permissions = () => {
             data.map((permissionObj, index) => {
               return (
                 <div style={mainDiv}>
+                  <div style={{...titles(index, selectedRowIdx === index), minWidth: 100}}>
+                    <button></button>
+                  </div>
                   <div onClick={e => setSelectedRowIdx(index)} style={titles(index, selectedRowIdx === index)}>
                     {permissionObj.controlId}
                   </div>
