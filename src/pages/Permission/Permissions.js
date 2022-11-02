@@ -4,13 +4,14 @@ import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import Mock from '../../Mock/permissions_mock.json';
 import {Box} from '@mui/material';
 
+// import SearchIcon from '../../assets/search.png';
+import {TbEdit} from 'react-icons/tb';
 import PaginationContainer from '../../components/PaginationContainer';
-import SettingsModal from './SettingsModal';
+import SettingsModal, {INPUT_MAX_CHAR_LENGTH, INPUT_MIN_CHAR_LENGTH} from './SettingsModal';
 
 const columns = ['formName', 'va', 'ea', 'vm', 'em', 'vo', 'eo', 'vu', 'eu', 'vq', 'eq', 'v1', 'e1', 'e2', 'v3', 'e3', 'v4', 'e4', 'v5', 'e5'];
 
 const ADD_COLUMN_TEXT = 'Add New Column';
-const EDIT_COLUMN_TEXT = 'Edit A Column';
 
 const Styles = (width, height) => ({
   container: {
@@ -23,8 +24,8 @@ const Styles = (width, height) => ({
   mainDiv: {
     display: 'flex',
   },
-  titles: (index, isElected) => ({
-    backgroundColor: isElected ? 'red' : index % 2 === 0 ? '#FFFFFF' : '#BFBFBF',
+  titles: index => ({
+    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#BFBFBF',
     borderWidth: 1,
     borderStyle: 'solid',
     height: 40,
@@ -33,8 +34,8 @@ const Styles = (width, height) => ({
   permDiv: {
     display: 'flex',
   },
-  columnsArray: (index = 0, isElected) => ({
-    backgroundColor: isElected ? 'red' : index % 2 === 0 ? '#FFFFFF' : '#BFBFBF',
+  columnsArray: (index = 0) => ({
+    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#BFBFBF',
     width: 70,
     borderWidth: 1,
     height: 40,
@@ -63,38 +64,64 @@ const Styles = (width, height) => ({
     marginTop: 10,
     marginBottom: 10,
   },
-  editText: isRowSelected => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: width * 0.1,
-    height: 40,
-    fontSize: 14,
-    fontWeight: '600',
+  editIcon: {
+    width: 35,
+    height: 35,
+    color: 'black',
+  },
+  searchInput: {
+    width: width * 0.45,
+    maxWidth: 400,
+    height: height * 0.045,
     borderRadius: 5,
-    backgroundColor: 'purple',
-    color: 'white',
-    marginTop: 10,
-    marginBottom: 10,
-    opacity: !isRowSelected && 0.7,
-  }),
+    backgroundColor: '#dee2e6',
+  },
+  searchBtn: {
+    width: 30,
+    height: 30,
+    marginLeft: 10,
+  },
 });
 
 const Permissions = () => {
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
-  const {container, mainDiv, titles, permDiv, columnsArray, header, addText, editText} = Styles(dynamicWidth, dynamicHeight);
+  const {container, mainDiv, titles, permDiv, columnsArray, header, addText, editIcon, searchInput, searchBtn} = Styles(
+    dynamicWidth,
+    dynamicHeight,
+  );
 
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
   const [selectedRowIdx, setSelectedRowIdx] = useState(null);
   const [triggerModal, setTriggerModal] = useState(false);
+  const [searchedItems, setSearchedItems] = useState(null);
 
   const Grid = props => {
-    const [data, setData] = useState(props.items || []);
+    const [searchTerm, setSearchTerm] = useState(null);
+    const [data, setData] = useState(searchedItems || props.items || []);
 
     useEffect(() => {
       setForce(p => !p);
-    }, [props.items]);
+    }, [searchedItems, props.items]);
+
+    //min 10 char
+    const handleSearch = () => {
+      const filteredItems = Mock.filter(item => {
+        // the array to be filtered should be the array including all items available
+        const itemId = item.controlId.toLowerCase();
+        const searchedTerm = new RegExp(searchTerm.toLowerCase());
+        if (itemId.match(searchedTerm)) return item;
+      });
+
+      // should show an alert or a feedback to let the user know about the result of search
+      if (filteredItems.length < 1) {
+        console.log('no result');
+        return null;
+      }
+
+      setSearchedItems(filteredItems);
+      return;
+    };
 
     const handleChange = (title, objIdx) => {
       const checkboxValue = data[objIdx][title];
@@ -105,7 +132,7 @@ const Permissions = () => {
     };
 
     const handleCreateEvent = event => {};
-
+    const mainDivColumnStyles = {minWidth: 100, justifyContent: 'center', alignItems: 'center', display: 'flex'};
     return (
       <>
         {triggerModal && <SettingsModal setters={{setTriggerModal, setData}} open={true} itemToEdit={data[selectedRowIdx] || null} />}
@@ -114,12 +141,20 @@ const Permissions = () => {
             <div onClick={e => handleCreateEvent(e)} style={addText}>
               {ADD_COLUMN_TEXT}
             </div>
-            <div onClick={() => setTriggerModal(true)} style={editText(Boolean(selectedRowIdx))}>
-              {EDIT_COLUMN_TEXT}
-            </div>
+            <input
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              minlength={String(INPUT_MIN_CHAR_LENGTH)}
+              maxlength={String(INPUT_MAX_CHAR_LENGTH)}
+              style={searchInput}
+              placeholder="Search here..."
+            />
+            {/* src={SearchIcon} */}
+            <img onClick={() => handleSearch()} style={searchBtn} />
           </div>
           <div style={mainDiv}>
-            <div style={{...titles(1), minWidth: 100}}>{'buttonAreaaaaaaa'}</div>
+            <div style={{...titles(1), ...mainDivColumnStyles}}>{'buttonAreaaaaaaa'}</div>
+            <div style={{...titles(1), ...mainDivColumnStyles}}>{'ID'}</div>
             <div style={titles(1)}>{'ControlId'}</div>
             <div style={permDiv}>
               {columns.map((item, index) =>
@@ -131,19 +166,24 @@ const Permissions = () => {
             data.map((permissionObj, index) => {
               return (
                 <div style={mainDiv}>
-                  <div style={{...titles(index, selectedRowIdx === index), minWidth: 100}}>
-                    <button></button>
+                  <div style={{...titles(index), ...mainDivColumnStyles}}>
+                    <TbEdit
+                      onClick={() => {
+                        setTriggerModal(true);
+                        setSelectedRowIdx(index);
+                      }}
+                      style={editIcon}
+                    />
                   </div>
-                  <div onClick={e => setSelectedRowIdx(index)} style={titles(index, selectedRowIdx === index)}>
-                    {permissionObj.controlId}
-                  </div>
+                  <div style={{...titles(index), ...mainDivColumnStyles}}>{permissionObj.id}</div>
+                  <div style={titles(index)}>{permissionObj.controlId}</div>
                   <div style={permDiv}>
-                    {columns.map((item, idx) => (
+                    {columns.map((item) => (
                       <>
                         {item == 'formName' ? (
-                          <div style={{...columnsArray(index, selectedRowIdx === index), minWidth: 120}}>{permissionObj[item]}</div>
+                          <div style={{...columnsArray(index), minWidth: 120}}>{permissionObj[item]}</div>
                         ) : (
-                          <div style={columnsArray(index, selectedRowIdx === index)}>
+                          <div style={columnsArray(index)}>
                             <CheckBox
                               onChange={() => handleChange(item, index)}
                               checked={permissionObj[item] == 1 ? true : permissionObj[item] == 9 ? true : false}

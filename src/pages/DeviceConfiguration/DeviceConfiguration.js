@@ -38,7 +38,7 @@ export default function DeviceConfiguration() {
       sx={{
         display: 'flex',
         height: dynamicHeight,
-        p: 2,
+        p: 3,
         flexDirection: 'column',
         overflowY: 'scroll',
       }}>
@@ -59,18 +59,18 @@ export default function DeviceConfiguration() {
         <Col lg={5}>
           <div style={{marginLeft: 20}} className="bigCardArea_deviceConf">
             <InlineTitle>Other Settings</InlineTitle>
-            <div>
+            <div style={{display: 'flex', justifyContent: 'flex-start', paddingLeft: 20}} className="cardArea_deviceConf">
+              <SliderBar />
+              <Card style={{marginLeft: 10}} className="checkboxCardLang_deviceConf">
+                <SelectLabels />
+              </Card>
               <div className="cardArea_deviceConf">
-                <SliderBar />
-                <Card style={{marginLeft: 10}} className="checkboxCardLang_deviceConf">
-                  <SelectLabels />
+                <Card className="checkboxCard_deviceConf">
+                  <Checkbox header={'Is test device ?'} checked={true} />
+                  <Checkbox header={'Is admin ?'} checked={true} />
+                  <Checkbox header={'Is deliveries info come from SAP ?'} checked={true} />
                 </Card>
               </div>
-              <Card className="checkboxCard_deviceConf">
-                <Checkbox header={'Is test device ?'} checked={true} />
-                <Checkbox header={'Is admin ?'} checked={true} />
-                <Checkbox header={'SAP ?'} checked={true} />
-              </Card>
             </div>
           </div>
         </Col>

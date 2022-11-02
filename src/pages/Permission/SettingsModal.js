@@ -3,8 +3,8 @@ import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
-const INPUT_MIN_CHAR_LENGTH = 5;
-const INPUT_MAX_CHAR_LENGTH = 100;
+export const INPUT_MIN_CHAR_LENGTH = 5;
+export const INPUT_MAX_CHAR_LENGTH = 100;
 
 const SettingsModal = ({itemToEdit, setters, open, setOpen, selectedData}) => {
   const [screenSize] = GetDynamicDimensions();
