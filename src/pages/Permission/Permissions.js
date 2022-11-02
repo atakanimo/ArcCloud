@@ -56,6 +56,7 @@ const Styles = (width, height) => ({
     height: 40,
     fontSize: 14,
     fontWeight: '600',
+    borderWidth: 0,
     borderRadius: 5,
     backgroundColor: 'purple',
     color: 'white',
@@ -138,9 +139,9 @@ const Permissions = () => {
         {triggerModal && <SettingsModal setters={{setTriggerModal, setData}} open={true} itemToEdit={data[selectedRowIdx] || null} />}
         <Box sx={[container, {opacity: triggerModal ? 0.3 : 1}]}>
           <div style={header}>
-            <div onClick={e => handleCreateEvent(e)} style={addText}>
+            <button onClick={e => handleCreateEvent(e)} style={addText}>
               {ADD_COLUMN_TEXT}
-            </div>
+            </button>
             <input
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}

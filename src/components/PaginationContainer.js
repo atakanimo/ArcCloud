@@ -24,10 +24,12 @@ const Styles = (width, height) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: width * 0.05,
+    width: width * 0.02,
     fontSize: 18,
     fontWeight: '800',
     color: 'purple',
+    borderWidth: 0,
+    backgroundColor: "white"
   },
   paginationArea: {
     flex: 4,
@@ -137,20 +139,20 @@ const PaginationContainer = props => {
       {items.length > 0 && ChildComponent && <ChildComponent forceRender={forceRender} items={items[page - 1]} />}
       <div style={settingsContainer}>
         <div style={caretArea}>
-          <div style={caret} onClick={() => traversePage(true)}>
+          <button style={caret} onClick={() => traversePage(true)}>
             {'<'}
-          </div>
+          </button>
           <div style={pageText}>{page}</div>
-          <div style={caret} onClick={() => traversePage()}>
+          <button style={caret} onClick={() => traversePage()}>
             {'>'}
-          </div>
+          </button>
         </div>
         <div style={paginationArea}>
           <div style={presentRows}>{`Displaying ${itemCountInCurrentPage} items of ${itemArray.length} available`}</div>
           {PAGINATION_COUNTS.map((count, idx) => (
-            <div style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => handleItemCount(count, idx)}>
+            <button style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => handleItemCount(count, idx)}>
               {count}
-            </div>
+            </button>
           ))}
         </div>
       </div>
