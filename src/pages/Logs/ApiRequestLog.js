@@ -53,24 +53,26 @@ export default function App() {
 
   function customizeColumns(columns) {
     columns[0].width = 50;
-    columns[1].width = 70;
-    columns[2].width = 120;
-    columns[5].width = 150;
+    columns[1].width = 60;
+    // columns[2].width = 150;
+    // columns[3].width = 120;
+    // columns[4].width = 120;
+    columns[5].width = 250;
+    // columns[7].width = 100;
   }
 
   const Table = props => {
     const [data, setData] = React.useState(props.item || []);
 
     useEffect(() => {
-      // console.log(props.items.length, "length");
       setData(props.items);
     }, [props.items]);
 
     return (
       <>
-        <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem}/>
+        <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
         <DataGrid
-          height={dynamicHeight - dynamicHeight / 7}
+          height={dynamicHeight * 0.92}
           id="gridContainer"
           dataSource={data}
           keyExpr="ID"
@@ -95,7 +97,7 @@ export default function App() {
               visible={isCloneIconVisible}
               disabled={isCloneIconDisabled}
               onClick={e => {
-                const clonedItem = {...e.row.data, ID: service.getMaxID()};
+                const clonedItem = {...e.row.data};
                 setSelectedItem(clonedItem);
                 handleOpen();
               }}
@@ -104,9 +106,10 @@ export default function App() {
           <Column dataField="ID" />
           <Column dataField="Username" />
           <Column dataField="RequestXML" />
-          <Column dataField="RequestXML" />
-          <Column dataField="ResponseXML" dataType="date" />
-          <Column dataField="Error"></Column>
+          <Column dataField="ResponseXML" />
+          <Column dataField="ClientMessage" />
+          <Column dataField="ModuleName" />
+          <Column dataField="RequestDate" dataType="date" />
         </DataGrid>
       </>
     );

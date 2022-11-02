@@ -1,50 +1,56 @@
 import React, {useEffect, useState} from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 
-const PAGINATION_COUNTS = [10, 20, 30];
+const PAGINATION_COUNTS = [20, 30, 50];
 
 const Styles = (width, height) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
-    height: height * 0.915,
   },
   settingsContainer: {
-    height: 40,
+    height: height * 0.08,
     display: 'flex',
     flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
-    alignSelf: 'center',
+    padding: 10,
+  },
+  caretArea: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   caret: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: width * 0.05,
-    height: 40,
     fontSize: 18,
     fontWeight: '800',
     color: 'purple',
+  },
+  paginationArea: {
+    flex: 4,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   pageText: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: width * 0.025,
-    height: 40,
     fontSize: 24,
   },
   presentRows: {
+    marginRight: width * 0.015,
+    width: width * 0.3,
+    maxWidth: 280,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: width * 0.2,
-    height: 40,
+    padding: 10,
     fontSize: 14,
-    marginLeft: width * 0.35,
-    marginRight: 5,
     fontWeight: '600',
     borderWidth: 1,
     borderRadius: 10,
@@ -56,11 +62,10 @@ const Styles = (width, height) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: width * 0.04,
-    height: 40,
     fontSize: 18,
     marginRight: 2,
-    backgroundColor: 'white',
     borderRadius: 10,
+    marginRight: width * 0.005,
   },
 });
 
@@ -71,10 +76,13 @@ const PaginationContainer = props => {
   const {itemArray, ChildComponent} = props;
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
-  const {container, settingsContainer, caret, pageText, presentRows, paginationChoices} = Styles(dynamicWidth, dynamicHeight);
+  const {paginationArea, caretArea, container, settingsContainer, caret, pageText, presentRows, paginationChoices} = Styles(
+    dynamicWidth,
+    dynamicHeight,
+  );
 
   const [items, setItems] = useState([]);
-  const [itemCount, setItemCount] = useState(10);
+  const [itemCount, setItemCount] = useState(20);
 
   const [page, setPage] = useState(1);
   const [pageLimit, setPageLimit] = useState(0);
@@ -126,21 +134,25 @@ const PaginationContainer = props => {
 
   return (
     <div style={container}>
-      {items.length > 0 && <ChildComponent forceRender={forceRender} items={items[page - 1]} />}
+      {items.length > 0 && ChildComponent && <ChildComponent forceRender={forceRender} items={items[page - 1]} />}
       <div style={settingsContainer}>
-        <div style={caret} onClick={() => traversePage(true)}>
-          {'<'}
-        </div>
-        <div style={pageText}>{page}</div>
-        <div style={caret} onClick={() => traversePage()}>
-          {'>'}
-        </div>
-        <div style={presentRows}>{`Displaying ${itemCountInCurrentPage} items of ${itemArray.length} available`}</div>
-        {PAGINATION_COUNTS.map((count, idx) => (
-          <div style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => handleItemCount(count, idx)}>
-            {count}
+        <div style={caretArea}>
+          <div style={caret} onClick={() => traversePage(true)}>
+            {'<'}
           </div>
-        ))}
+          <div style={pageText}>{page}</div>
+          <div style={caret} onClick={() => traversePage()}>
+            {'>'}
+          </div>
+        </div>
+        <div style={paginationArea}>
+          <div style={presentRows}>{`Displaying ${itemCountInCurrentPage} items of ${itemArray.length} available`}</div>
+          {PAGINATION_COUNTS.map((count, idx) => (
+            <div style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => handleItemCount(count, idx)}>
+              {count}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

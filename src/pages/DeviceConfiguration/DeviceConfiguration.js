@@ -37,7 +37,7 @@ export default function DeviceConfiguration() {
     <Box
       sx={{
         display: 'flex',
-        height: dynamicHeight - dynamicHeight / 12,
+        height: dynamicHeight,
         p: 2,
         flexDirection: 'column',
         overflowY: 'scroll',

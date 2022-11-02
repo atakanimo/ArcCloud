@@ -7,7 +7,7 @@ export default function NavbarComponent() {
   const {dynamicWidth, dynamicHeight} = screenSize;
 
   return (
-    <Navbar bg="light" variant="light" style={{height: dynamicHeight / 12}}>
+    <Navbar bg="light" variant="light" style={{height: dynamicHeight * 0.08}}>
       {/* <Container> */}
       <Nav className="me-auto">
         <Nav.Link href="#home">Home</Nav.Link>

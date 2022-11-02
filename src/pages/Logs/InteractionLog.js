@@ -70,7 +70,7 @@ export default function App() {
       <>
         <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
         <DataGrid
-          height={dynamicHeight - dynamicHeight / 7}
+          height={dynamicHeight * 0.92}
           id="gridContainer"
           dataSource={data}
           keyExpr="ID"
@@ -95,7 +95,7 @@ export default function App() {
               visible={isCloneIconVisible}
               disabled={isCloneIconDisabled}
               onClick={e => {
-                const clonedItem = {...e.row.data, ID: service.getMaxID()};
+                const clonedItem = {...e.row.data};
                 setSelectedItem(clonedItem);
                 handleOpen();
               }}

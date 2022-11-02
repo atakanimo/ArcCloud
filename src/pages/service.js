@@ -1,138 +1,31 @@
-export const employees = [
-  {
-    ID: 1,
-    Username: 'John',
-    RequestXML: `    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:tracelink:soap">
-    <soapenv:Header/>
-    <soapenv:Body>
-       <urn:UpdateOrderShipment>
-          <OrderRequest deliverynumber="26.05.2022">
-             <OrderComplete>true</OrderComplete>
-             <AttemptDisaggregation>true</AttemptDisaggregation>
-             <PickedItem>
-                <Items>
-                0012311231231232,002412412312321
-                </Items>
-             </PickedItem>
-          </OrderRequest>
-       </urn:UpdateOrderShipment>
-    </soapenv:Body>
-  </soapenv:Envelope>`,
-    ResponseXML: `
-    <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-  <S:Body>
-  <ns2:UpdateOrderShipmentResponse xmlns:ns2="urn:tracelink:soap" xmlns:ns3="http://tracelink.com/som">
-  <TLResponse>
-  <Success>true</Success>
-  </TLResponse>
-  </ns2:UpdateOrderShipmentResponse>
-  </S:Body>
-  </S:Envelope
-    `,
-    Error: 'No Error',
-  },
-  {
-    ID: 2,
-    Username: 'Robert',
-    RequestXML: `    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:tracelink:soap">
-    <soapenv:Header/>
-    <soapenv:Body>
-       <urn:UpdateOrderShipment>
-          <OrderRequest deliverynumber="26.05.2022">
-             <OrderComplete>true</OrderComplete>
-             <AttemptDisaggregation>true</AttemptDisaggregation>
-             <PickedItem>
-                <Items>
-                0012311231231232,002412412312321
-                </Items>
-             </PickedItem>
-          </OrderRequest>
-       </urn:UpdateOrderShipment>
-    </soapenv:Body>
-  </soapenv:Envelope>`,
-    ResponseXML: `
-    <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-  <S:Body>
-  <ns2:UpdateOrderShipmentResponse xmlns:ns2="urn:tracelink:soap" xmlns:ns3="http://tracelink.com/som">
-  <TLResponse>
-  <Success>true</Success>
-  </TLResponse>
-  </ns2:UpdateOrderShipmentResponse>
-  </S:Body>
-  </S:Envelope
-    `,
-    Error: 'No Error',
-  },
-  {
-    ID: 3,
-    Username: 'Olivia',
-    RequestXML: `    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:tracelink:soap">
-    <soapenv:Header/>
-    <soapenv:Body>
-       <urn:UpdateOrderShipment>
-          <OrderRequest deliverynumber="26.05.2022">
-             <OrderComplete>true</OrderComplete>
-             <AttemptDisaggregation>true</AttemptDisaggregation>
-             <PickedItem>
-                <Items>
-                0012311231231232,002412412312321
-                </Items>
-             </PickedItem>
-          </OrderRequest>
-       </urn:UpdateOrderShipment>
-    </soapenv:Body>
-  </soapenv:Envelope>`,
-    ResponseXML: `
-    <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-  <S:Body>
-  <ns2:UpdateOrderShipmentResponse xmlns:ns2="urn:tracelink:soap" xmlns:ns3="http://tracelink.com/som">
-  <TLResponse>
-  <Success>true</Success>
-  </TLResponse>
-  </ns2:UpdateOrderShipmentResponse>
-  </S:Body>
-  </S:Envelope
-    `,
-    Error: 'No Error',
-  },
-];
-
-let maxID = employees[employees.length - 1].ID;
-
-export function getMaxID() {
-  maxID += 1;
-  return maxID;
-}
-export function getEmployees() {
-  return employees;
-}
-
 export function generateData(count) {
   let i;
-  const surnames = [
-    'Smith',
-    'Johnson',
-    'Brown',
-    'Taylor',
-    'Anderson',
-    'Harris',
-    'Clark',
-    'Allen',
-    'Scott',
-    'Carter',
+  const moduleName = [
+    'OutboundMain',
+    'OutboundMain',
+    'DisaggregateItemsFromContainer',
+    'GetSerialNumberStatus',
+    'ReconcileContainer',
+    'ReconcileContainer',
+    'GetSerialNumberStatus',
+    'DisaggregateItemsFromContainer',
+    'DisaggregateItemsFromContainer',
+    'DisaggregateItemsFromContainer',
   ];
-  const names = [
-    'James',
-    'John',
-    'Robert',
-    'Christopher',
-    'George',
-    'Mary',
-    'Nancy',
-    'Sandra',
-    'Michelle',
-    'Betty',
+  const names = ['James', 'John', 'Robert', 'Christopher', 'George', 'Mary', 'Nancy', 'Sandra', 'Michelle', 'Betty'];
+  const messages = [
+    'Downloaded open orders from Tracelink',
+    'Delivery2507 searched successfully',
+    'Downloaded open orders from Tracelink',
+    'Delivery0909 searched successfully',
+    '2022080501 searched successfully',
+    'SO20220811 searched successfully',
+    'Delivery2705 searched successfully',
+    '2022080501 searched successfully',
+    'SO20220811 searched successfully',
+    'Delivery2705 searched successfully',
   ];
+
   const RequestXML = `    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:tracelink:soap">
    <soapenv:Header/>
    <soapenv:Body>
@@ -169,6 +62,9 @@ export function generateData(count) {
       Username: names[nameIndex],
       RequestXML: RequestXML,
       ResponseXML: ResponseXML,
+      ClientMessage: messages[nameIndex],
+      ModuleName: moduleName[nameIndex],
+      RequestDate: '2022-10-11 22:03:00.6820000 +00:00',
       Error: 'No Error',
     };
     items.push(item);

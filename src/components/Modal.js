@@ -18,11 +18,7 @@ const style = {
 export default function BasicModal({open, setOpen, selectedData}) {
   return (
     <div>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+      <Modal open={open} onClose={() => setOpen(false)} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
           <Typography id="modal-modal-description" sx={{mt: 2}}>
             Username: {selectedData.Username}
@@ -34,7 +30,16 @@ export default function BasicModal({open, setOpen, selectedData}) {
             ResponseXML: {selectedData.ResponseXML}
           </Typography>
           <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Error: {selectedData.Error}
+            Client Message: {selectedData.ClientMessage}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Module Name: {selectedData.ModuleName}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Request Date: {selectedData.RequestDate}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Network Error: {selectedData.Error}
           </Typography>
         </Box>
       </Modal>
