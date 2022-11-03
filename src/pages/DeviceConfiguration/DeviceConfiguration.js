@@ -9,6 +9,7 @@ import Checkbox from '../../components/Checkbox/Checkbox';
 import {Card} from '@mui/material';
 import SelectLabels from '../../components/Select';
 import Col from 'react-bootstrap/Col';
+import {commonStyles} from '../../Styles/Styles';
 
 export default function DeviceConfiguration() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -34,14 +35,7 @@ export default function DeviceConfiguration() {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        height: dynamicHeight,
-        p: 3,
-        flexDirection: 'column',
-        overflowY: 'scroll',
-      }}>
+    <Box sx={commonStyles.boxStyle}>
       <div className="container_deviceConf">
         <Col lg={7}>
           <div className="bigCardArea_deviceConf">
@@ -81,8 +75,4 @@ export default function DeviceConfiguration() {
 
 const InlineTitle = styled.h3`
   color: #495057;
-`;
-const Hr = styled.hr`
-  width: 20%;
-  color: black;
 `;

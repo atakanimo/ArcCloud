@@ -1,19 +1,13 @@
-// .invisible-scrollbar::-webkit-scrollbar {
-
-//   display: none;
-
-// }
 ::-webkit-scrollbar {
   width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: gray;
-  border-radius: 10px;
+  background: #C8C8C8;
+  border-radius: 100px;
 }
 
 .sidebar {
-  // width: 16.66vw;
   flex: auto;
   height: 100vh;
   background-color: #2a3042;

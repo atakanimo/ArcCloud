@@ -1,13 +1,14 @@
 import React from 'react';
 
-export default function Checkbox({onChange, header, checked, disabled}) {
+export default function Checkbox({onChange, header, checked, disabled, color}) {
   return (
-    <div style={{flexDirection: 'row', backgroundColor: 'red'}}>
+    <div style={{flexDirection: 'row'}}>
       <input
         onChange={onChange}
         style={{width: 20, height: 20, margin: 10}}
         class="form-check-input"
         type="checkbox"
+        color={color || 'blue'}
         checked={checked}
         disabled={disabled}></input>
       <label style={{height: 20, marginTop: 10, fontSize: 16, fontWeight: '500'}} class="form-check-label">

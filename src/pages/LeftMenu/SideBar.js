@@ -69,11 +69,11 @@ const routes = [
             to: '/userAuthLogs',
             section: 'userAuthLogs',
           },
-          {
-            display: 'Network Logs',
-            to: '/networkLogs',
-            section: 'networkLogs',
-          },
+          // {
+          //   display: 'Network Logs',
+          //   to: '/networkLogs',
+          //   section: 'networkLogs',
+          // },
         ],
       },
     ],

@@ -1,43 +1,66 @@
-import React from 'react';
+import React, {useState} from 'react';
 import TextInput from '../../components/TextInput';
 import styled from '@emotion/styled';
 import Card from '@mui/material/Card';
-import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import {Box} from '@mui/material';
 import './AdminConf.scss';
 import Alert from 'react-bootstrap/Alert';
 import Col from 'react-bootstrap/Col';
 import Button from '../../components/Button';
 import Text from '../../components/Text/Text';
-
+import {commonStyles} from '../../Styles/Styles';
 export default function AdminConfiguration() {
-  const [screenSize, getDimension] = GetDynamicDimensions();
-  const {dynamicWidth, dynamicHeight} = screenSize;
+  const [TLInfo, setTLInfo] = useState({username: 'tracelink', password: 'password', url: 'https://itestapi.tracelink.com:443/'});
+  const [paths, setPaths] = useState({
+    InputDirectoryPath: 'input',
+    LogDirectoryPath: 'logDirectory',
+    ArchiveDirectoryPath: 'archive',
+    APKDirectoryPath: 'apk',
+  });
+
+  const onChangeText = e => {
+    const {name, value} = e.target;
+    setTLInfo({...TLInfo, [name]: value});
+  };
+  const onChangePath = e => {
+    const {name, value} = e.target;
+    setPaths({...paths, [name]: value});
+  };
+
+  console.log(TLInfo, 'TLInfo', paths, 'paths');
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        height: dynamicHeight,
-        p: 2,
-        flexDirection: 'column',
-        overflowY: 'scroll',
-      }}>
+    <Box sx={commonStyles.boxStyle}>
       <div className="container_admin">
-        <Col lg={3}>
+        <Col xxl={3} lg={4} md={4}>
           <div className="bigCardArea_admin">
             <InlineTitle>Tracelink Configuration</InlineTitle>
             <div className="cardArea_admin">
               <Card className="checkboxCard_admin">
-                <TextInput label={'Tracelink Username'} width={6.5} />
-                <TextInput label={'Tracelink Password'} width={6.5} type="password" />
-                <TextInput label={'Tracelink Web Url'} width={6.5} />
-                <Button label={'Test'} />
+                <TextInput
+                  name={'username'}
+                  onChange={onChangeText}
+                  value={TLInfo.username}
+                  minWidth={200}
+                  label={'Tracelink Username'}
+                  width={6.5}
+                />
+                <TextInput
+                  onChange={onChangeText}
+                  name={'password'}
+                  value={TLInfo.password}
+                  minWidth={200}
+                  label={'Tracelink Password'}
+                  width={6.5}
+                  type="password"
+                />
+                <TextInput onChange={onChangeText} name={'url'} value={TLInfo.url} minWidth={200} label={'Tracelink Web Url'} width={6.5} />
+                <Button minWidth={200} label={'Test'} />
               </Card>
             </div>
           </div>
         </Col>
-        <Col lg={9}>
-          <div className="bigCardArea_admin" style={{marginLeft: 20}}>
+        <Col xxl={9} lg={8} md={8}>
+          <div className="bigCardArea_admin" style={{marginLeft: 20, minWidth: 600}}>
             <InlineTitle>Service Endpoints</InlineTitle>
             <div className="cardArea_admin">
               <Card className="checkboxCard_admin">
@@ -66,15 +89,45 @@ export default function AdminConfiguration() {
             <div className="cardArea_admin">
               <Card className="checkboxCard_admin" style={{flexDirection: 'row', display: 'flex'}}>
                 <div>
-                  <TextInput mR={20} header={'Input Directory Path'} label={'C:/home/sharedFolder'} width={7} />
-                  <TextInput header={'Log Directory Path'} label={'C:/home/sharedFolder/logs'} width={7} />
+                  <TextInput
+                    onChange={onChangePath}
+                    value={paths.InputDirectoryPath}
+                    name={'InputDirectoryPath'}
+                    mR={20}
+                    header={'Input Directory Path'}
+                    label={'C:/home/sharedFolder'}
+                    width={7}
+                  />
+                  <TextInput
+                    onChange={onChangePath}
+                    value={paths.LogDirectoryPath}
+                    name={'LogDirectoryPath'}
+                    header={'Log Directory Path'}
+                    label={'C:/home/sharedFolder/logs'}
+                    width={7}
+                  />
                 </div>
                 <div>
-                  <TextInput mR={20} header={'Archive Directory Path'} label={'C:/home/sharedFolder/archive'} width={7} />
-                  <TextInput header={'APK Directory Path'} label={'C:/home/sharedFolder/app'} width={7} />
+                  <TextInput
+                    onChange={onChangePath}
+                    value={paths.ArchiveDirectoryPath}
+                    name={'ArchiveDirectoryPath'}
+                    mR={20}
+                    header={'Archive Directory Path'}
+                    label={'C:/home/sharedFolder/archive'}
+                    width={7}
+                  />
+                  <TextInput
+                    onChange={onChangePath}
+                    name={'APKDirectoryPath'}
+                    value={paths.APKDirectoryPath}
+                    header={'APK Directory Path'}
+                    label={'C:/home/sharedFolder/app'}
+                    width={7}
+                  />
                 </div>
                 <div className="createButtonAdmin">
-                  <Button width={8} label={'Create Directories'} />
+                  <Button height={65} width={8} label={'Create Directories'} />
                 </div>
               </Card>
             </div>

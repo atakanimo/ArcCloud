@@ -9,38 +9,13 @@ import PaginationContainer from '../../components/PaginationContainer';
 export default function App() {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
-  //   constructor(props) {
-  //     super(props);
-  //     this.state = { employees: service.getEmployees() };
-  //     this.onRowValidating = this.onRowValidating.bind(this);
-  //     this.onEditorPreparing = this.onEditorPreparing.bind(this);
-  //     this.isCloneIconVisible = this.isCloneIconVisible.bind();
-  //     this.isCloneIconDisabled = this.isCloneIconDisabled.bind(this);
-  //     this.cloneIconClick = this.cloneIconClick.bind(this);
-  //   }
 
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState([]);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   function isChief(position) {
     return position && ['CEO', 'CMO'].indexOf(position.trim().toUpperCase()) >= 0;
-  }
-
-  function onRowValidating(e) {
-    const position = e.newData.Position;
-
-    if (isChief(position)) {
-      e.errorText = `The company can have only one ${position.toUpperCase()}. Please choose another position.`;
-      e.isValid = false;
-    }
-  }
-
-  function onEditorPreparing(e) {
-    if (e.parentType === 'dataRow' && e.dataField === 'Position') {
-      e.editorOptions.readOnly = isChief(e.value);
-    }
   }
 
   function isCloneIconVisible(e) {
@@ -62,7 +37,6 @@ export default function App() {
     const [data, setData] = React.useState(props.item || []);
 
     useEffect(() => {
-      // console.log(props.items.length, "length");
       setData(props.items);
     }, [props.items]);
 
@@ -75,17 +49,8 @@ export default function App() {
           dataSource={data}
           keyExpr="ID"
           showBorders={true}
-          // onRowValidating={this.onRowValidating}
-          customizeColumns={customizeColumns}
-          // onEditorPreparing={this.onEditorPreparing}
-        >
+          customizeColumns={customizeColumns}>
           <Scrolling mode="virtual" />
-          <Editing
-            mode="row"
-            useIcons={true}
-            // allowUpdating={true}
-            // allowDeleting={this.allowDeleting}
-          />
           <Column type="buttons">
             {/* <Button name="edit" />
           <Button name="delete" /> */}
@@ -111,9 +76,5 @@ export default function App() {
       </>
     );
   };
-  return <PaginationContainer ChildComponent={Table} itemArray={service.generateData(100)} />;
+  return <PaginationContainer ChildComponent={Table} itemArray={service.generateData(100, service.type.Net)} />;
 }
-
-// allowDeleting(e) {
-//   return !this.isChief(e.row.data.Position);
-// }

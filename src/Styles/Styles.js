@@ -10,6 +10,13 @@ export const textStyles = {
 };
 
 export const commonStyles = {
+  boxStyle: {
+    display: 'flex',
+    height: '100vh',
+    p: 3,
+    flexDirection: 'column',
+    overflowY: 'scroll',
+  },
   center: {
     display: 'flex',
     justifyContent: 'center',

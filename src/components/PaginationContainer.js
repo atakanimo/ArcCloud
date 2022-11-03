@@ -6,7 +6,7 @@ const PAGINATION_COUNTS = [20, 30, 50];
 const Styles = (width, height) => ({
   container: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   settingsContainer: {
     height: height * 0.08,
@@ -24,10 +24,12 @@ const Styles = (width, height) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: width * 0.05,
+    width: width * 0.02,
     fontSize: 18,
     fontWeight: '800',
-    color: 'purple',
+    color: '#C8C8C8',
+    borderWidth: 0,
+    backgroundColor: "white"
   },
   paginationArea: {
     flex: 4,
@@ -53,8 +55,8 @@ const Styles = (width, height) => ({
     fontSize: 14,
     fontWeight: '600',
     borderWidth: 1,
-    borderRadius: 10,
-    borderColor: 'purple',
+    borderRadius: 5,
+    borderColor: '#C8C8C8',
     borderStyle: 'solid',
   },
   paginationChoices: {
@@ -63,8 +65,8 @@ const Styles = (width, height) => ({
     alignItems: 'center',
     width: width * 0.04,
     fontSize: 18,
-    marginRight: 2,
-    borderRadius: 10,
+    borderRadius: 5,
+    borderWidth: 0,
     marginRight: width * 0.005,
   },
 });
@@ -128,8 +130,8 @@ const PaginationContainer = props => {
   };
 
   const choiceBtnsColors = idx => ({
-    backgroundColor: idx === selectedPaginationIdx && 'purple',
-    color: idx === selectedPaginationIdx && 'white',
+    backgroundColor: idx === selectedPaginationIdx && '#C8C8C8',
+    color: idx === selectedPaginationIdx && 'black',
   });
 
   return (
@@ -137,20 +139,20 @@ const PaginationContainer = props => {
       {items.length > 0 && ChildComponent && <ChildComponent forceRender={forceRender} items={items[page - 1]} />}
       <div style={settingsContainer}>
         <div style={caretArea}>
-          <div style={caret} onClick={() => traversePage(true)}>
+          <button style={caret} onClick={() => traversePage(true)}>
             {'<'}
-          </div>
+          </button>
           <div style={pageText}>{page}</div>
-          <div style={caret} onClick={() => traversePage()}>
+          <button style={caret} onClick={() => traversePage()}>
             {'>'}
-          </div>
+          </button>
         </div>
         <div style={paginationArea}>
           <div style={presentRows}>{`Displaying ${itemCountInCurrentPage} items of ${itemArray.length} available`}</div>
           {PAGINATION_COUNTS.map((count, idx) => (
-            <div style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => handleItemCount(count, idx)}>
+            <button style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => handleItemCount(count, idx)}>
               {count}
-            </div>
+            </button>
           ))}
         </div>
       </div>

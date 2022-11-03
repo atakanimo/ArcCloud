@@ -4,7 +4,8 @@ import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import Mock from '../../Mock/permissions_mock.json';
 import {Box} from '@mui/material';
 
-// import SearchIcon from '../../assets/search.png';
+import CancelIcon from '../../assets/cancel.png';
+import SearchIcon from '../../assets/search.png';
 import {TbEdit} from 'react-icons/tb';
 import PaginationContainer from '../../components/PaginationContainer';
 import SettingsModal, {INPUT_MAX_CHAR_LENGTH, INPUT_MIN_CHAR_LENGTH} from './SettingsModal';
@@ -18,29 +19,30 @@ const Styles = (width, height) => ({
     display: 'flex',
     flexDirection: 'column',
     height: height * 0.92,
-    overflow: 'scroll',
-    padding: 0,
+    overflow: 'scroll'
   },
   mainDiv: {
     display: 'flex',
   },
   titles: index => ({
-    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#BFBFBF',
+    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#C8C8C8',
     borderWidth: 1,
     borderStyle: 'solid',
     height: 40,
     minWidth: 250,
+    fontSize: 16,
+    fontWeight: '600'
   }),
   permDiv: {
     display: 'flex',
   },
   columnsArray: (index = 0) => ({
-    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#BFBFBF',
+    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#C8C8C8',
     width: 70,
-    borderWidth: 1,
     height: 40,
-    borderStyle: 'solid',
     textAlign: 'center',
+    borderWidth: 1,
+    borderStyle: 'solid',
   }),
   header: {
     display: 'flex',
@@ -56,9 +58,10 @@ const Styles = (width, height) => ({
     height: 40,
     fontSize: 14,
     fontWeight: '600',
+    borderWidth: 0,
     borderRadius: 5,
-    backgroundColor: 'purple',
-    color: 'white',
+    backgroundColor: '#C8C8C8',
+    color: 'black',
     marginLeft: 10,
     marginRight: 20,
     marginTop: 10,
@@ -67,26 +70,42 @@ const Styles = (width, height) => ({
   editIcon: {
     width: 35,
     height: 35,
-    color: 'black',
+    color: 'black'
   },
   searchInput: {
-    width: width * 0.45,
-    maxWidth: 400,
-    height: height * 0.045,
+    width: width * 0.3,
+    height: 40,
+    backgroundColor: 'white',
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
     borderRadius: 5,
-    backgroundColor: '#dee2e6',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: '#C8C8C8'
   },
-  searchBtn: {
+  searchIcon: {
     width: 30,
-    height: 30,
-    marginLeft: 10,
+    height: 30
   },
+  searchBtnContainer: {
+    width: width * 0.05,
+    height: 40,
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: '#C8C8C8'
+  }
 });
 
 const Permissions = () => {
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
-  const {container, mainDiv, titles, permDiv, columnsArray, header, addText, editIcon, searchInput, searchBtn} = Styles(
+  const {container, mainDiv, titles, permDiv, columnsArray, header, addText, editIcon, searchInput, searchIcon, searchBtnContainer} = Styles(
     dynamicWidth,
     dynamicHeight,
   );
@@ -104,8 +123,13 @@ const Permissions = () => {
       setForce(p => !p);
     }, [searchedItems, props.items]);
 
-    //min 10 char
     const handleSearch = () => {
+      if(!searchedItems && !searchTerm) return null;
+      if(searchedItems) {
+        setSearchedItems(null);
+        return;
+      }
+
       const filteredItems = Mock.filter(item => {
         // the array to be filtered should be the array including all items available
         const itemId = item.controlId.toLowerCase();
@@ -123,6 +147,7 @@ const Permissions = () => {
       return;
     };
 
+    // place a save button >> try to change the checkbox when scrolled down to see why
     const handleChange = (title, objIdx) => {
       const checkboxValue = data[objIdx][title];
       data[objIdx][title] = checkboxValue === 0 ? 1 : 0;
@@ -132,33 +157,36 @@ const Permissions = () => {
     };
 
     const handleCreateEvent = event => {};
-    const mainDivColumnStyles = {minWidth: 100, justifyContent: 'center', alignItems: 'center', display: 'flex'};
+    const mainDivColumnStyles = {minWidth: 100, justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: 16, fontWeight: '600' };
+
     return (
       <>
         {triggerModal && <SettingsModal setters={{setTriggerModal, setData}} open={true} itemToEdit={data[selectedRowIdx] || null} />}
         <Box sx={[container, {opacity: triggerModal ? 0.3 : 1}]}>
           <div style={header}>
-            <div onClick={e => handleCreateEvent(e)} style={addText}>
+            <button onClick={e => handleCreateEvent(e)} style={addText}>
               {ADD_COLUMN_TEXT}
-            </div>
+            </button>
             <input
+              disabled={searchedItems}
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               minlength={String(INPUT_MIN_CHAR_LENGTH)}
               maxlength={String(INPUT_MAX_CHAR_LENGTH)}
               style={searchInput}
-              placeholder="Search here..."
+              placeholder="Type your search here..."
             />
-            {/* src={SearchIcon} */}
-            <img onClick={() => handleSearch()} style={searchBtn} />
+            <button style={searchBtnContainer} onClick={() => handleSearch()}>
+              <img src={searchedItems ? CancelIcon : SearchIcon } style={searchIcon}/>
+            </button>
           </div>
           <div style={mainDiv}>
-            <div style={{...titles(1), ...mainDivColumnStyles}}>{'buttonAreaaaaaaa'}</div>
+            <div style={{...titles(1), ...mainDivColumnStyles}}>{'Edit'}</div>
             <div style={{...titles(1), ...mainDivColumnStyles}}>{'ID'}</div>
-            <div style={titles(1)}>{'ControlId'}</div>
+            <div style={{...titles(1), ...mainDivColumnStyles, minWidth: 250 }}>{'ControlId'}</div>
             <div style={permDiv}>
               {columns.map((item, index) =>
-                item == 'formName' ? <div style={{...columnsArray(1), minWidth: 120}}>{item}</div> : <div style={columnsArray(1)}>{item}</div>,
+                item == 'formName' ? <div style={{...columnsArray(1), ...mainDivColumnStyles, minWidth: 120}}>{item}</div> : <div style={{ ...columnsArray(1), ...mainDivColumnStyles, minWidth: 70 }}>{item}</div>,
               )}
             </div>
           </div>
@@ -175,8 +203,8 @@ const Permissions = () => {
                       style={editIcon}
                     />
                   </div>
-                  <div style={{...titles(index), ...mainDivColumnStyles}}>{permissionObj.id}</div>
-                  <div style={titles(index)}>{permissionObj.controlId}</div>
+                  <div style={{...titles(index), ...mainDivColumnStyles }}>{permissionObj.id}</div>
+                  <div style={{...titles(index), ...mainDivColumnStyles, minWidth: 250 }}>{permissionObj.controlId}</div>
                   <div style={permDiv}>
                     {columns.map((item) => (
                       <>
@@ -185,6 +213,7 @@ const Permissions = () => {
                         ) : (
                           <div style={columnsArray(index)}>
                             <CheckBox
+                              color='purple'
                               onChange={() => handleChange(item, index)}
                               checked={permissionObj[item] == 1 ? true : permissionObj[item] == 9 ? true : false}
                               disabled={permissionObj[item] == 9 ? true : false}
