@@ -27,7 +27,7 @@ const Styles = (width, height) => ({
     width: width * 0.02,
     fontSize: 18,
     fontWeight: '800',
-    color: '#C8C8C8',
+    color: 'purple',
     borderWidth: 0,
     backgroundColor: "white"
   },
