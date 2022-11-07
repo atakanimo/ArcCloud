@@ -6,7 +6,7 @@ const PAGINATION_COUNTS = [20, 30, 50];
 const Styles = (width, height) => ({
   container: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   settingsContainer: {
     height: height * 0.08,
@@ -27,9 +27,9 @@ const Styles = (width, height) => ({
     width: width * 0.02,
     fontSize: 18,
     fontWeight: '800',
-    color: 'purple',
+    color: '#C8C8C8',
     borderWidth: 0,
-    backgroundColor: "white"
+    backgroundColor: 'white',
   },
   paginationArea: {
     flex: 4,
@@ -72,10 +72,7 @@ const Styles = (width, height) => ({
 });
 
 const PaginationContainer = props => {
-  const [forceRender, setForce] = useState(false);
-  const [selectedPaginationIdx, setPaginationIdx] = useState(0);
-
-  const {itemArray, ChildComponent} = props;
+  const {allItems, ChildComponent} = props;
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
   const {paginationArea, caretArea, container, settingsContainer, caret, pageText, presentRows, paginationChoices} = Styles(
@@ -83,11 +80,15 @@ const PaginationContainer = props => {
     dynamicHeight,
   );
 
-  const [items, setItems] = useState([]);
-  const [itemCount, setItemCount] = useState(20);
+  // this state should be used to update the nested components
+  const [parentState, setParentState] = useState({allItems}); // add { allItems } here for demo only
 
+  const [items, setItems] = useState([]);
+
+  const [paginationCount, setPaginationCount] = useState(20);
   const [page, setPage] = useState(1);
   const [pageLimit, setPageLimit] = useState(0);
+  const [selectedPaginationIdx, setPaginationIdx] = useState(0);
 
   const chopArray = (array, count) => {
     const choppedArray = [];
@@ -97,7 +98,7 @@ const PaginationContainer = props => {
     for (let i = 0; i < maxPageCount; i++) {
       choppedArray.push(array.slice(startIndex, count));
       startIndex = +count;
-      count += itemCount;
+      count += paginationCount;
     }
 
     setPageLimit(maxPageCount);
@@ -106,27 +107,24 @@ const PaginationContainer = props => {
   };
 
   useEffect(() => {
-    chopArray(itemArray, itemCount);
-  }, [itemCount, page]);
-
-  const itemCountInCurrentPage = (items[page - 1] && items[page - 1].length) || itemCount;
+    chopArray(allItems, paginationCount);
+  }, [parentState.allItems.length, paginationCount]); // instead of parentState.allItems, in prod, effect should fire everytime when allItems from props(from api in prod) changes
 
   const traversePage = (shouldDecrease = false) => {
     if (shouldDecrease) {
       setPage(p => (p - 1 > 0 ? p - 1 : page));
-      setForce(p => !p);
       return;
     }
 
     setPage(p => (p + 1 <= pageLimit ? p + 1 : page));
-    setForce(p => !p);
     return;
   };
 
-  const handleItemCount = (count, countIdx) => {
+  const onPaginationChange = (count, countIdx) => {
     setPage(1);
-    setItemCount(count);
+    setPaginationCount(count);
     setPaginationIdx(countIdx);
+    return;
   };
 
   const choiceBtnsColors = idx => ({
@@ -134,9 +132,13 @@ const PaginationContainer = props => {
     color: idx === selectedPaginationIdx && 'black',
   });
 
+  const itemCountInCurrentPage = (items[page - 1] && items[page - 1].length) || paginationCount;
+
   return (
     <div style={container}>
-      {items.length > 0 && ChildComponent && <ChildComponent forceRender={forceRender} items={items[page - 1]} />}
+      {items.length > 0 && ChildComponent && (
+        <ChildComponent currentPage={page} items={items[page - 1]} parent={{state: parentState, setter: setParentState}} />
+      )}
       <div style={settingsContainer}>
         <div style={caretArea}>
           <button style={caret} onClick={() => traversePage(true)}>
@@ -148,9 +150,9 @@ const PaginationContainer = props => {
           </button>
         </div>
         <div style={paginationArea}>
-          <div style={presentRows}>{`Displaying ${itemCountInCurrentPage} items of ${itemArray.length} available`}</div>
+          <div style={presentRows}>{`Displaying ${itemCountInCurrentPage} items of ${allItems.length} available`}</div>
           {PAGINATION_COUNTS.map((count, idx) => (
-            <button style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => handleItemCount(count, idx)}>
+            <button style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => onPaginationChange(count, idx)}>
               {count}
             </button>
           ))}

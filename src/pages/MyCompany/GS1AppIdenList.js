@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Card from '@mui/material/Card';
 import TextInput from '../../components/TextInput';
+import AlertComponent from '../../components/AlertComponent';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
+import {CiCirclePlus, CiCircleMinus} from 'react-icons/ci';
 import ButtonComponent from '../../components/Button';
 
 function GS1AppIdenList() {
@@ -9,7 +11,10 @@ function GS1AppIdenList() {
   const {dynamicWidth, dynamicHeight} = screenSize;
 
   const styles = {
-    inputDiv: {display: 'flex', flexDirection: 'row'},
+    inputDiv: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
     cardArea: {
       display: 'flex',
       flexDirection: 'column',
@@ -31,33 +36,101 @@ function GS1AppIdenList() {
     createButton: {
       flex: 1,
     },
+    icons: {
+      width: dynamicWidth * 0.03,
+      height: 'auto',
+      maxHeight: dynamicHeight * 0.04,
+      minHeight: 30,
+      marginTop: 5,
+      color: 'blue',
+      cursor: 'pointer',
+    },
   };
 
+  const initialState = {id: '0', AI: '', Description: '', Length: '', Format: ''};
   const [gridNumber, setGridNumber] = useState(0);
-  const [info, setInfo] = useState([]);
+  const [info, setInfo] = useState([initialState]);
+  const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
+
+  //for alert
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState();
+  const [alertMessage, setAlertMessage] = useState();
+
+  let elements = [];
 
   const onInputChange = (field, event, index) => {
     const {value} = event.target;
+    info[index] = {...info[index], [field]: value};
+    setForce(!force);
 
-    setInfo({...info, [index]: {...info[index], [field]: value}});
+    // console.log(info, 'info');
   };
 
+  const handlerDelete = infoItem => {
+    if (info.length === 1) {
+      setShowAlert(true);
+      setAlertMessage('Must have at least one card');
+      setAlertVariant('danger');
+      return;
+    }
+    // console.log(infoItem, 'iii');
+    let newItems = [];
+    info.forEach((element, index) => {
+      if (element.id !== infoItem.id) {
+        if (Number(element.id) > Number(infoItem.id)) {
+          const newId = Number(element.id) - 1;
+          element.id = newId.toString();
+        }
+        newItems.push(element);
+      }
+    });
+
+    setInfo(newItems);
+    setGridNumber(gridNumber - 1);
+  };
+
+  const handlerAdd = i => {
+    let index = -1;
+    info.forEach((element, idx) => {
+      console.log(element, 'element');
+      if (element.AI === '' || element.Description === '' || element.Length === '' || element.Format === '') {
+        index = idx;
+        return;
+      }
+    });
+    console.log(index, 'index');
+    if (index !== -1) {
+      setShowAlert(true);
+      setAlertMessage(`Please fill in the ${index + 1}th card`);
+      setAlertVariant('warning');
+      return;
+    }
+    console.log(info[i], 'info[i]');
+    setInfo([...info, {...initialState, id: (gridNumber + Number(initialState.id) + 1).toString()}]);
+    setGridNumber(gridNumber + 1);
+  };
+
+  useEffect(() => {
+    console.log(info, 'info');
+  }, [info]);
+
   const createCard = () => {
-    var elements = [];
-    for (var i = 0; i <= gridNumber; i++) {
+    for (let i = 0; i <= gridNumber; i++) {
       elements.push(
-        <Card style={styles.checkboxCard}>
+        <Card key={i} style={styles.checkboxCard}>
           <div style={styles.inputDiv}>
-            <TextInput value={info.AI} onChange={text => onInputChange('AI', text, i)} label={'AI'} width={9} />
-            <TextInput value={info.Description} onChange={text => onInputChange('Description', text, i)} label={'Description'} width={7} />
-            <TextInput value={info.Length} onChange={text => onInputChange('Length', text, i)} label={'Length'} width={9} />
-            <TextInput value={info.Format} onChange={text => onInputChange('Format', text, i)} label={'Format'} width={9} />
+            <TextInput value={info[i].AI} onChange={text => onInputChange('AI', text, i)} label={'AI'} width={9} />
+            <TextInput value={info[i].Description} onChange={text => onInputChange('Description', text, i)} label={'Description'} width={7} />
+            <TextInput value={info[i].Length} onChange={text => onInputChange('Length', text, i)} label={'Length'} width={9} />
+            <TextInput value={info[i].Format} onChange={text => onInputChange('Format', text, i)} label={'Format'} width={9} />
+            {i > 0 ? <CiCircleMinus style={styles.icons} onClick={() => handlerDelete(info[i])} /> : null}
           </div>
           <div style={styles.createButton}>
-            {i < 1 ? (
+            {i === 0 ? (
               <>
-                <ButtonComponent mR={10} onClick={() => setGridNumber(gridNumber + 1)} label={'Add'} width={13} />
-                <ButtonComponent onClick={() => setGridNumber(gridNumber - 1)} label={'Delete'} width={13} />
+                <CiCircleMinus style={styles.icons} onClick={() => handlerDelete(info[i])} />
+                <CiCirclePlus style={styles.icons} onClick={() => handlerAdd(gridNumber)} />
               </>
             ) : null}
           </div>
@@ -66,6 +139,14 @@ function GS1AppIdenList() {
     }
     return elements;
   };
-  return <div style={styles.cardArea}>{gridNumber >= 0 ? createCard() : null}</div>;
+  return (
+    <div style={styles.cardArea}>
+      <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
+      {gridNumber >= 0 ? createCard() : null}
+      <ButtonComponent onClick={() => null} label="SAVE" width={9} mT={20}>
+        SAVE
+      </ButtonComponent>
+    </div>
+  );
 }
 export default GS1AppIdenList;

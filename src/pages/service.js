@@ -88,17 +88,18 @@ export function generateData(count, serviceName) {
   return createLog(count, serviceName);
 }
 
-let s = 123456789;
 function random() {
-  s = (1103515245 * s + 12345) % 2147483647;
-  return s % (10 - 1);
+  let s;
+  s = Math.floor(Math.random() * 10);
+  return s;
 }
 
 function createLog(count, serviceName) {
   let i;
   const items = [];
-  const nameIndex = random();
+
   for (i = 0; i < count; i += 1) {
+    const nameIndex = random();
     if (serviceName == type.Api) {
       const item = {
         ID: i + 1,
