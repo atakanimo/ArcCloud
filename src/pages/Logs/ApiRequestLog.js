@@ -1,50 +1,59 @@
 import React, {useEffect} from 'react';
 import DataGrid, {Button, Column, Scrolling} from 'devextreme-react/data-grid';
 
-import * as service from '../service.js';
 import BasicModal from '../../components/Modal.js';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions.js';
-import PaginationContainer from '../../components/PaginationContainer';
-import LogPagesSearch from '../../components/LogPagesSearch.js';
 
-export default function App() {
-  return <PaginationContainer ChildComponent={Table} allItems={service.generateData(100, service.type.Api)} />;
-}
-const Table = props => {
+import LogPagesSearch from '../../components/LogPagesSearch.js';
+import PaginationContainer from '../../components/PaginationContainer.js';
+import LogService from '../../Business/LogService.js';
+
+const ApiRequestLogs = () => {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
+
+  const {types, GetLog} = LogService;
+  const [data, setData] = React.useState([]);
+
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [pageCount, setPageCount] = React.useState(20);
+  const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [pageCount, pageNumber]);
+
+  const getData = async () => {
+    setLoading(true);
+    const {data, success} = await GetLog(types.ApiRequest, true, pageCount, pageNumber);
+    setData(data);
+    setLoading(false);
+  };
 
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState([]);
   const handleOpen = () => setOpen(true);
 
-  function customizeColumns(columns) {
-    columns[0].width = 50;
-    columns[1].width = 60;
-    columns[5].width = 250;
+  if (loading == true) {
+    return <div>...Loading</div>;
   }
-
-  const [data, setData] = React.useState(props.item || []);
-
-  useEffect(() => {
-    setData(props.items);
-  }, [props.items]);
-
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
-      <LogPagesSearch />
+      <LogPagesSearch pageNumber={pageNumber} pageCount={pageCount} setData={setData} setLoading={setLoading} />
       <DataGrid
         height={dynamicHeight * 0.82}
         id="gridContainer"
         dataSource={data}
-        keyExpr="ID"
+        keyExpr="id"
         showBorders={true}
         customizeColumns={customizeColumns}>
         <Scrolling mode="virtual" />
         <Column type="buttons">
-          {/* <Button name="edit" />
-        <Button name="delete" /> */}
           <Button
             hint="details"
             icon="info"
@@ -55,14 +64,23 @@ const Table = props => {
             }}
           />
         </Column>
-        <Column dataField="ID" />
-        <Column dataField="Username" />
-        <Column dataField="RequestXML" />
-        <Column dataField="ResponseXML" />
-        <Column dataField="ClientMessage" />
-        <Column dataField="ModuleName" />
-        <Column dataField="RequestDate" dataType="date" />
+        <Column caption="Id" />
+        <Column dataField="username" />
+        <Column dataField="requestData" />
+        <Column dataField="responseData" />
+        <Column dataField="clientMessage" />
+        <Column dataField="moduleName" />
+        <Column dataField="requestDate" />
       </DataGrid>
+      <PaginationContainer paginationCount={pageCount} setPaginationCount={setPageCount} page={pageNumber} setPage={setPageNumber} />
     </>
   );
 };
+
+export default ApiRequestLogs;
+
+function customizeColumns(columns) {
+  columns[0].width = 50;
+  columns[1].width = 60;
+  columns[5].width = 250;
+}

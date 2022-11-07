@@ -1,13 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 
 const PAGINATION_COUNTS = [20, 30, 50];
 
 const Styles = (width, height) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
   settingsContainer: {
     height: height * 0.08,
     display: 'flex',
@@ -71,44 +67,11 @@ const Styles = (width, height) => ({
   },
 });
 
-const PaginationContainer = props => {
-  const {allItems, ChildComponent} = props;
+const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage}) => {
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
-  const {paginationArea, caretArea, container, settingsContainer, caret, pageText, presentRows, paginationChoices} = Styles(
-    dynamicWidth,
-    dynamicHeight,
-  );
 
-  // this state should be used to update the nested components
-  const [parentState, setParentState] = useState({allItems}); // add { allItems } here for demo only
-
-  const [items, setItems] = useState([]);
-
-  const [paginationCount, setPaginationCount] = useState(20);
-  const [page, setPage] = useState(1);
-  const [pageLimit, setPageLimit] = useState(0);
-  const [selectedPaginationIdx, setPaginationIdx] = useState(0);
-
-  const chopArray = (array, count) => {
-    const choppedArray = [];
-    const maxPageCount = Math.ceil(array.length / count);
-
-    let startIndex = 0;
-    for (let i = 0; i < maxPageCount; i++) {
-      choppedArray.push(array.slice(startIndex, count));
-      startIndex = +count;
-      count += paginationCount;
-    }
-
-    setPageLimit(maxPageCount);
-    setItems(choppedArray);
-    return;
-  };
-
-  useEffect(() => {
-    chopArray(allItems, paginationCount);
-  }, [parentState.allItems.length, paginationCount]); // instead of parentState.allItems, in prod, effect should fire everytime when allItems from props(from api in prod) changes
+  const {paginationArea, caretArea, settingsContainer, caret, pageText, presentRows, paginationChoices} = Styles(dynamicWidth, dynamicHeight);
 
   const traversePage = (shouldDecrease = false) => {
     if (shouldDecrease) {
@@ -116,47 +79,36 @@ const PaginationContainer = props => {
       return;
     }
 
-    setPage(p => (p + 1 <= pageLimit ? p + 1 : page));
+    setPage(p => (p + 1 <= 100 ? p + 1 : page));
     return;
   };
 
-  const onPaginationChange = (count, countIdx) => {
+  const onPaginationChange = count => {
     setPage(1);
     setPaginationCount(count);
-    setPaginationIdx(countIdx);
     return;
   };
 
-  const choiceBtnsColors = idx => ({
-    backgroundColor: idx === selectedPaginationIdx && '#C8C8C8',
-    color: idx === selectedPaginationIdx && 'black',
-  });
-
-  const itemCountInCurrentPage = (items[page - 1] && items[page - 1].length) || paginationCount;
-
   return (
-    <div style={container}>
-      {items.length > 0 && ChildComponent && (
-        <ChildComponent currentPage={page} items={items[page - 1]} parent={{state: parentState, setter: setParentState}} />
-      )}
-      <div style={settingsContainer}>
-        <div style={caretArea}>
-          <button style={caret} onClick={() => traversePage(true)}>
-            {'<'}
+    <div style={settingsContainer}>
+      <div style={caretArea}>
+        <button style={caret} onClick={() => traversePage(true)}>
+          {'<'}
+        </button>
+        <div style={pageText}>{page}</div>
+        <button style={caret} onClick={() => traversePage()}>
+          {'>'}
+        </button>
+      </div>
+      <div style={paginationArea}>
+        <div style={presentRows}>{`Displaying ${paginationCount} items `}</div>
+        {PAGINATION_COUNTS.map((count, idx) => (
+          <button
+            style={{...paginationChoices, color: count == paginationCount ? '#C8C8C8' : 'black'}}
+            onClick={() => onPaginationChange(count, idx)}>
+            {count}
           </button>
-          <div style={pageText}>{page}</div>
-          <button style={caret} onClick={() => traversePage()}>
-            {'>'}
-          </button>
-        </div>
-        <div style={paginationArea}>
-          <div style={presentRows}>{`Displaying ${itemCountInCurrentPage} items of ${allItems.length} available`}</div>
-          {PAGINATION_COUNTS.map((count, idx) => (
-            <button style={{...paginationChoices, ...choiceBtnsColors(idx)}} onClick={() => onPaginationChange(count, idx)}>
-              {count}
-            </button>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );

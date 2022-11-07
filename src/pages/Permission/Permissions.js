@@ -10,6 +10,7 @@ import {TbEdit} from 'react-icons/tb';
 import PaginationContainer from '../../components/PaginationContainer';
 import SettingsModal, {INPUT_MAX_CHAR_LENGTH, INPUT_MIN_CHAR_LENGTH} from './SettingsModal';
 import AlertComponent from '../../components/AlertComponent';
+import PermissionService from '../../Business/PermissionService';
 
 const columns = ['formName', 'va', 'ea', 'vm', 'em', 'vo', 'eo', 'vu', 'eu', 'vq', 'eq', 'v1', 'e1', 'e2', 'v3', 'e3', 'v4', 'e4', 'v5', 'e5'];
 
@@ -19,7 +20,7 @@ const Styles = (width, height) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    height: height * 0.92,
+    height: height,
     overflow: 'scroll',
   },
   mainDiv: {
@@ -104,6 +105,9 @@ const Styles = (width, height) => ({
 });
 
 const Permissions = props => {
+  const [state, setState] = useState([]);
+  const [state1, SetParentState] = useState([]);
+
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
   const {container, mainDiv, titles, permDiv, columnsArray, header, addText, editIcon, searchInput, searchIcon, searchBtnContainer} = Styles(
@@ -111,30 +115,34 @@ const Permissions = props => {
     dynamicHeight,
   );
 
+  const {GetPermissionsByFormName, GetPermissions} = PermissionService;
+
   //for alert
   const [showAlert, setShowAlert] = useState(false);
   const [alertVariant, setAlertVariant] = useState();
   const [alertMessage, setAlertMessage] = useState();
 
-  let {
-    parent: {state, setter},
-    items,
-  } = props;
-  const SetParentState = (field, value) => setter(p => ({...p, [field]: value}));
+  // for paging container
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [pageCount, setPageCount] = React.useState(20);
+  const [loading, setLoading] = React.useState(false);
+  //
 
   useEffect(() => {
-    setter(p => ({
-      ...p, // all items -- ONLY FOR DEMO -- in prod, creation and editing should be done via api request
-      data: items || [], // current page items
-      searchedItems: null, // search results
-      searchTerm: '',
-      isNew: false,
-      selectedRowIdx: null,
-      triggerModal: false,
-    }));
+    getData();
   }, []);
 
-  useEffect(() => setter(p => ({...p, data: items || []})), [items]);
+  useEffect(() => {
+    getData();
+  }, [pageCount, pageNumber]);
+
+  const getData = async () => {
+    setLoading(true);
+    const {data, success} = await GetPermissions(true, pageCount, pageNumber);
+    console.log(data, 'data');
+    // setData(data);
+    setLoading(false);
+  };
 
   // render a loading indicator while the state is being set
   if (!state)
@@ -172,12 +180,12 @@ const Permissions = props => {
   };
 
   // check this function after makin a successful search!
-  const onCheckboxChange = (title, objIdx) => {
-    const checkboxValue = data[objIdx][title];
-    data[objIdx][title] = checkboxValue === 0 ? 1 : 0;
-    SetParentState('data', data);
-    return;
-  };
+  // const onCheckboxChange = (title, objIdx) => {
+  //   const checkboxValue = data[objIdx][title];
+  //   data[objIdx][title] = checkboxValue === 0 ? 1 : 0;
+  //   SetParentState('data', data);
+  //   return;
+  // };
 
   const handleCreateEvent = () => {
     SetParentState('isNew', true);
@@ -186,17 +194,17 @@ const Permissions = props => {
 
   const mainDivColumnStyles = {minWidth: 100, justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: 16, fontWeight: '600'};
 
-  const getItemsToRender = () => {
-    if (searchedItems && searchedItems.length > 0) return searchedItems;
-    if (data && data.length > 0) return data;
-    return null;
-  };
+  // const getItemsToRender = () => {
+  //   if (searchedItems && searchedItems.length > 0) return searchedItems;
+  //   if (data && data.length > 0) return data;
+  //   return null;
+  // };
 
   return (
     <>
       {triggerModal && (
         <SettingsModal
-          setters={{SetParentState, setter}}
+          // setters={{SetParentState, setter}}
           itemToEdit={{item: data[selectedRowIdx] || null, itemIdx: selectedRowIdx}}
           isNew={isNew}
           newItemId={allItems.length}
@@ -221,21 +229,22 @@ const Permissions = props => {
             {/* <img src={searchedItems ? CancelIcon : SearchIcon } style={searchIcon}/> */}
           </button>
         </div>
-        <div style={mainDiv}>
-          <div style={{...titles(1), ...mainDivColumnStyles}}>{'Edit'}</div>
-          <div style={{...titles(1), ...mainDivColumnStyles}}>{'ID'}</div>
-          <div style={{...titles(1), ...mainDivColumnStyles, minWidth: 250}}>{'ControlId'}</div>
-          <div style={permDiv}>
-            {columns.map((item, index) =>
-              item == 'formName' ? (
-                <div style={{...columnsArray(1), ...mainDivColumnStyles, minWidth: 120}}>{item}</div>
-              ) : (
-                <div style={{...columnsArray(1), ...mainDivColumnStyles, minWidth: 70}}>{item}</div>
-              ),
-            )}
+        <div style={{height: dynamicHeight * 0.9, backgroundColor: 'yellow'}}>
+          <div style={mainDiv}>
+            <div style={{...titles(1), ...mainDivColumnStyles}}>{'Edit'}</div>
+            <div style={{...titles(1), ...mainDivColumnStyles}}>{'ID'}</div>
+            <div style={{...titles(1), ...mainDivColumnStyles, minWidth: 250}}>{'ControlId'}</div>
+            <div style={permDiv}>
+              {columns.map((item, index) =>
+                item == 'formName' ? (
+                  <div style={{...columnsArray(1), ...mainDivColumnStyles, minWidth: 120}}>{item}</div>
+                ) : (
+                  <div style={{...columnsArray(1), ...mainDivColumnStyles, minWidth: 70}}>{item}</div>
+                ),
+              )}
+            </div>
           </div>
-        </div>
-        {getItemsToRender() &&
+          {/* {getItemsToRender() &&
           getItemsToRender().map((permissionObj, index) => {
             return (
               <div style={mainDiv}>
@@ -270,11 +279,12 @@ const Permissions = props => {
                 </div>
               </div>
             );
-          })}
+          })} 
+          */}
+        </div>
+        <PaginationContainer paginationCount={pageCount} setPaginationCount={setPageCount} page={pageNumber} setPage={setPageNumber} />
       </Box>
     </>
   );
 };
-
-const PermissionsWithPagination = () => <PaginationContainer allItems={Mock} ChildComponent={Permissions} />;
-export default PermissionsWithPagination;
+export default Permissions;

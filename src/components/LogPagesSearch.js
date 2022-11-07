@@ -2,14 +2,16 @@ import React, {useState} from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 import CancelIcon from '../assets/cancel.png';
 import SearchIcon from '../assets/search.png';
-import Mock from '../Mock/permissions_mock.json';
+import LogService from '../Business/LogService';
 
-export default function LogPagesSearch() {
+export default function LogPagesSearch({pageNumber, pageCount, setData, setLoading}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
+  const {types, GetDataByClientMessage} = LogService;
 
-  const [searchedItems, setSearchedItems] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(null);
+  const [searchedItems, setSearchedItems] = useState('');
+  const [isSearched, setSearched] = useState(false);
+
   const styles = {
     header: {
       display: 'flex',
@@ -26,7 +28,7 @@ export default function LogPagesSearch() {
       backgroundColor: 'white',
       fontSize: 16,
       color: 'black',
-      paddingLeft:10,
+      paddingLeft: 10,
       borderRadius: 5,
       borderWidth: 1,
       borderStyle: 'solid',
@@ -48,42 +50,33 @@ export default function LogPagesSearch() {
       borderColor: '#C8C8C8',
     },
   };
-  const handleSearch = () => {
-    if (!searchedItems && !searchTerm) return null;
-    if (searchedItems) {
-      setSearchedItems(null);
-      return;
-    }
 
-    const filteredItems = Mock.filter(item => {
-      // the array to be filtered should be the array including all items available
-      const itemId = item.controlId.toLowerCase();
-      const searchedTerm = new RegExp(searchTerm.toLowerCase());
-      if (itemId.match(searchedTerm)) return item;
-    });
-
-    // should show an alert or a feedback to let the user know about the result of search
-    if (filteredItems.length < 1) {
-      console.log('no result');
-      return null;
-    }
-
-    setSearchedItems(filteredItems);
-    return;
+  const handleSearch = async e => {
+    e.preventDefault();
+    if (searchedItems.length > 0 && searchedItems.length < 5) {
+      console.log('At least write 5 words!');
+    } else if (searchedItems.length >= 5) await getData();
   };
+  const getData = async () => {
+    setLoading(true);
+    const {data, success} = await GetDataByClientMessage(types.ApiRequest, searchedItems, true, pageCount, pageNumber);
+    setData(data);
+    setLoading(false);
+  };
+
   return (
     <div style={styles.header}>
       <input
-        disabled={searchedItems}
-        value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
+        // disabled={searchedItems}
+        value={searchedItems}
+        onChange={e => setSearchedItems(e.target.value)}
         // minlength={String(INPUT_MIN_CHAR_LENGTH)}
         // maxlength={String(INPUT_MAX_CHAR_LENGTH)}
         style={styles.searchInput}
         placeholder="Type your search here..."
       />
-      <button style={styles.searchBtnContainer} onClick={() => handleSearch()}>
-        <img src={searchedItems ? CancelIcon : SearchIcon} style={styles.searchIcon} />
+      <button style={styles.searchBtnContainer} onClick={e => handleSearch(e)}>
+        <img src={isSearched == true ? CancelIcon : SearchIcon} style={styles.searchIcon} />
       </button>
     </div>
   );

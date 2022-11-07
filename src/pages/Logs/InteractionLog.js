@@ -1,76 +1,84 @@
 import React, {useEffect} from 'react';
-import DataGrid, {Button, Column, Editing, Lookup, Scrolling} from 'devextreme-react/data-grid';
+import DataGrid, {Button, Column, Scrolling} from 'devextreme-react/data-grid';
 
-import * as service from '../service.js';
 import BasicModal from '../../components/Modal.js';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions.js';
-import PaginationContainer from '../../components/PaginationContainer';
 
-export default function App() {
+import LogPagesSearch from '../../components/LogPagesSearch.js';
+import PaginationContainer from '../../components/PaginationContainer.js';
+import LogService from '../../Business/LogService.js';
+
+const InteractionLogs = () => {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
+  const {types, GetLog} = LogService;
+
+  const [data, setData] = React.useState([]);
+
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [pageCount, setPageCount] = React.useState(20);
+  const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [pageCount, pageNumber]);
+
+  const getData = async () => {
+    setLoading(true);
+    const {data, success} = await GetLog(types.Interaction, true, pageCount, pageNumber);
+    setData(data);
+    setLoading(false);
+  };
 
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState([]);
   const handleOpen = () => setOpen(true);
 
-  function isChief(position) {
-    return position && ['CEO', 'CMO'].indexOf(position.trim().toUpperCase()) >= 0;
+  if (loading == true) {
+    return <div>...Loading</div>;
   }
 
-  function isCloneIconVisible(e) {
-    return !e.row.isEditing;
-  }
-
-  function isCloneIconDisabled(e) {
-    return isChief(e.row.data.Position);
-  }
-
-  function customizeColumns(columns) {
-    columns[0].width = 50;
-    columns[1].width = 70;
-  }
-
-  const Table = props => {
-    const [data, setData] = React.useState(props.item || []);
-
-    useEffect(() => {
-      setData(props.items);
-    }, [props.items]);
-
-    return (
-      <>
-        <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
-        <DataGrid
-          height={dynamicHeight * 0.92}
-          id="gridContainer"
-          dataSource={data}
-          keyExpr="ID"
-          showBorders={true}
-          customizeColumns={customizeColumns}>
-          <Scrolling mode="virtual" />
-          <Column type="buttons">
-            {/* <Button name="edit" />
+  return (
+    <>
+      <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
+      <LogPagesSearch pageNumber={pageNumber} pageCount={pageCount} />
+      <DataGrid
+        height={dynamicHeight * 0.82}
+        id="gridContainer"
+        dataSource={data}
+        keyExpr="id"
+        showBorders={true}
+        customizeColumns={customizeColumns}>
+        <Scrolling mode="virtual" />
+        <Column type="buttons">
+          {/* <Button name="edit" />
           <Button name="delete" /> */}
-            <Button
-              hint="details"
-              icon="info"
-              visible={isCloneIconVisible}
-              disabled={isCloneIconDisabled}
-              onClick={e => {
-                const clonedItem = {...e.row.data};
-                setSelectedItem(clonedItem);
-                handleOpen();
-              }}
-            />
-          </Column>
-          <Column dataField="ID" />
-          <Column dataField="Username" />
-          <Column dataField="ClientMessage" />
-          <Column dataField="ActivityDate" dataType="date" />
-        </DataGrid>
-      </>
-    );
-  };
-  return <PaginationContainer ChildComponent={Table} itemArray={service.generateData(100, service.type.Int)} />;
+          <Button
+            hint="details"
+            icon="info"
+            onClick={e => {
+              const clonedItem = {...e.row.data};
+              setSelectedItem(clonedItem);
+              handleOpen();
+            }}
+          />
+        </Column>
+        <Column dataField="Id" />
+        <Column dataField="username" />
+        <Column dataField="clientMessage" />
+        <Column dataField="activityDate" />
+      </DataGrid>
+      <PaginationContainer paginationCount={pageCount} setPaginationCount={setPageCount} page={pageNumber} setPage={setPageNumber} />
+    </>
+  );
+};
+export default InteractionLogs;
+
+function customizeColumns(columns) {
+  columns[0].width = 50;
+  columns[1].width = 70;
 }
