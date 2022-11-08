@@ -64,7 +64,7 @@ const ApiRequestLogs = () => {
             }}
           />
         </Column>
-        <Column caption="Id" />
+        <Column dataField="id" />
         <Column dataField="username" />
         <Column dataField="requestData" />
         <Column dataField="responseData" />

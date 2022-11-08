@@ -1,7 +1,7 @@
 import React from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 
-const PAGINATION_COUNTS = [20, 30, 50];
+const PAGINATION_COUNTS = [50, 250, 1000];
 
 const Styles = (width, height) => ({
   settingsContainer: {

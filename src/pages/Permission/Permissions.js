@@ -124,7 +124,7 @@ const Permissions = props => {
 
   // for paging container
   const [pageNumber, setPageNumber] = React.useState(1);
-  const [pageCount, setPageCount] = React.useState(20);
+  const [pageCount, setPageCount] = React.useState(30);
   const [loading, setLoading] = React.useState(false);
   //
 
