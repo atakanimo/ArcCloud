@@ -16,7 +16,7 @@ export default function UserAuthLogs() {
   const [data, setData] = React.useState([]);
 
   const [pageNumber, setPageNumber] = React.useState(1);
-  const [pageCount, setPageCount] = React.useState(20);
+  const [pageCount, setPageCount] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
@@ -38,12 +38,13 @@ export default function UserAuthLogs() {
   const [selectedItem, setSelectedItem] = React.useState([]);
   const handleOpen = () => setOpen(true);
 
+  const header = ['id', 'activityType', 'clientMessage', 'activityDate', 'errorMessage'];
   if (loading == true) {
     return <div>...Loading</div>;
   }
   return (
     <>
-      <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
+      <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
       <LogPagesSearch pageNumber={pageNumber} pageCount={pageCount} />
       <DataGrid
         height={dynamicHeight * 0.82}
@@ -66,7 +67,7 @@ export default function UserAuthLogs() {
             }}
           />
         </Column>
-        <Column dataField="ID" />
+        <Column dataField="id" />
         <Column dataField="activityType" />
         <Column dataField="clientMessage" />
         <Column dataField="activityDate" />

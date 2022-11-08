@@ -16,7 +16,7 @@ const NavigationLogs = () => {
   const [data, setData] = React.useState([]);
 
   const [pageNumber, setPageNumber] = React.useState(1);
-  const [pageCount, setPageCount] = React.useState(20);
+  const [pageCount, setPageCount] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
@@ -43,9 +43,10 @@ const NavigationLogs = () => {
     return <div>...Loading</div>;
   }
 
+  const header = ['id', 'clientMessage', 'activityDate'];
   return (
     <>
-      <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
+      <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
       <LogPagesSearch pageNumber={pageNumber} pageCount={pageCount} />
       <DataGrid
         height={dynamicHeight * 0.82}
@@ -68,7 +69,7 @@ const NavigationLogs = () => {
             }}
           />
         </Column>
-        <Column dataField="ID" />
+        <Column dataField="id" />
         <Column dataField="clientMessage" />
         <Column dataField="activityDate" />
       </DataGrid>

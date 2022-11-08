@@ -16,7 +16,7 @@ const InteractionLogs = () => {
   const [data, setData] = React.useState([]);
 
   const [pageNumber, setPageNumber] = React.useState(1);
-  const [pageCount, setPageCount] = React.useState(20);
+  const [pageCount, setPageCount] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
@@ -38,13 +38,14 @@ const InteractionLogs = () => {
   const [selectedItem, setSelectedItem] = React.useState([]);
   const handleOpen = () => setOpen(true);
 
+  const header = ['id', 'username', 'clientMessage', 'activityDate'];
   if (loading == true) {
     return <div>...Loading</div>;
   }
 
   return (
     <>
-      <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} />
+      <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
       <LogPagesSearch pageNumber={pageNumber} pageCount={pageCount} />
       <DataGrid
         height={dynamicHeight * 0.82}
@@ -67,7 +68,7 @@ const InteractionLogs = () => {
             }}
           />
         </Column>
-        <Column dataField="Id" />
+        <Column dataField="id" />
         <Column dataField="username" />
         <Column dataField="clientMessage" />
         <Column dataField="activityDate" />
