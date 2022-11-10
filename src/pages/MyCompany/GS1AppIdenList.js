@@ -41,8 +41,8 @@ function GS1AppIdenList() {
     icons: {
       width: dynamicWidth * 0.035,
       height: dynamicHeight * 0.04,
-      marginTop: 5,
-      marginLeft: 5,
+      marginTop: 3,
+      marginLeft: 3,
       backgroundColor: 'white',
       borderWidth: 0,
       cursor: 'pointer',
