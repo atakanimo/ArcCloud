@@ -54,8 +54,6 @@ const SettingsModal = ({ itemToEdit, modalInfo, setData, setIsModified }) => {
     const updatedItem = PermissionService.ConstructEntryObject(formName, controlId, description, item)
     setData(p => {
       p[itemIdx] = updatedItem;
-      // console.log(p[itemIdx], 'iteminarr')
-      // console.log(updatedItem, 'updateitem')
       return p;
     })
     setModal({ trigger: false, isNew: false });
@@ -155,8 +153,8 @@ const InputWithHeader = ({value, label, screenSize, onChange, isRequired = true}
         value={value}
         onChange={onChange}
         required={isRequired ? true : false}
-        // minLength={INPUT_MIN_CHAR_LENGTH}
-        // maxLength={INPUT_MAX_CHAR_LENGTH}
+        minLength={INPUT_MIN_CHAR_LENGTH}
+        maxLength={INPUT_MAX_CHAR_LENGTH}
         style={styles.input}
       />
     </div>

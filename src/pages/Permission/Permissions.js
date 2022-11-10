@@ -74,13 +74,11 @@ const Permissions = () => {
   // };
 
   const onCheckboxChange = (columnTitle, rowIndex) => {
-    setData(p => {
-      const checkboxValue = p[rowIndex][columnTitle];
-      p[rowIndex][columnTitle] = checkboxValue === 0 ? 1 : 0;
-      return p;
-    })
+    const checkboxValue = data[rowIndex][columnTitle];
+    data[rowIndex][columnTitle] = checkboxValue === 0 ? 1 : 0;
 
-    setIsModified(true)
+    setData(data);
+    setIsModified(true);
     return;
   };
 
@@ -119,7 +117,7 @@ const Permissions = () => {
           />
           <button style={searchBtnContainer} onClick={() => null}>
             { /* when user searches, should it search the current page or make a request? */ }
-            {/* <img src={searchedItems ? CancelIcon : SearchIcon } style={searchIcon}/> */}
+            <img src={SearchIcon} style={searchIcon}/>
           </button>
           <button disabled={!isModified} onClick={() => undoChanges()} style={undoText(isModified)}>
             {UNDO_TEXT}
@@ -166,10 +164,9 @@ const Permissions = () => {
                         ) : (
                           <div style={columnsArray(index)}>
                             <CheckBox
-                              color="purple"
                               onChange={() => onCheckboxChange(col, index)}
-                              checked={row[col] == 1 ? true : row[col] == 9 ? true : false}
-                              disabled={row[col] == 9 ? true : false}
+                              checked={row[col] === 1 || row[col] === 9}
+                              disabled={row[col] === 9}
                             />
                           </div>
                         )}

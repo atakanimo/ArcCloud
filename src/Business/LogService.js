@@ -14,12 +14,7 @@ class LogService extends BusinessBase {
       this.requestParams = `${type}?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
     } else this.requestParams = type;
 
-    try {
-      const {success, data, error} = await this.makeGetRequest(this.requestParams);
-      return {success, data};
-    } catch (err) {
-      console.log('GetLogError', err);
-    }
+    return this.makeGetRequest(this.requestParams);
   }
 
   GetDataByClientMessage = async (type, clientMessage, isPaging, ItemCount, PageNumber) => {
@@ -27,12 +22,7 @@ class LogService extends BusinessBase {
       this.requestParams = `${type}?ClientMessage=${clientMessage}&IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
     } else this.requestParams = type;
 
-    try {
-      const {data, success, error} = await this.makeGetRequest(this.requestParams);
-      return {success, data};
-    } catch (err) {
-      console.log('GetLogError', err);
-    }
+    return this.makeGetRequest(this.requestParams);
   }
 }
 
