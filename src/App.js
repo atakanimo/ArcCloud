@@ -4,7 +4,6 @@ import {Routes, Route, useLocation} from 'react-router-dom';
 import AdminConfiguration from './pages/AdminConfiguration/AdminConfiguration';
 import Col from 'react-bootstrap/Col';
 import Sidebar from './pages/LeftMenu/SideBar';
-import DeviceSettings from './pages/DeviceSettings';
 import NavbarComponent from './components/Navbar';
 import LoginPage from './pages/LoginPage/LoginPage';
 import MyCompany from './pages/MyCompany/MyCompany';
@@ -22,33 +21,41 @@ export default function App() {
 
   return (
     <div style={{display: 'flex', flex: 1, flexDirection: 'row'}}>
-      <Col xs={4} md={3} lg={2}>
-        {location.pathname == '/login' ? null : <Sidebar />}
-      </Col>
-      <Col xs={8} md={9} lg={10} style={{padding: 0}}>
-        {/* <NavbarComponent /> */}
-        <Routes>
-          <Route index path="/mycompany" element={<MyCompany />} />
-          <Route path="screenConfiguration" element={<DeviceConfiguration />} />
-          <Route path="tracelinkConfiguration" element={<AdminConfiguration />} />
-          <Route path="deviceSettings" element={<DeviceSettings />} />
-          <Route path="permission" element={<Permissions />} />
-          <Route path="apiRequestLogs" element={<ApiRequestLog />} />
-          <Route path="navigationLogs" element={<NavigationLog />} />
-          <Route path="interactionLogs" element={<InteractionLog />} />
-          <Route path="userAuthLogs" element={<UserAuthLog />} />
-          <Route path="networkLogs" element={<NetworkLog />} />
-          <Route
-            path="*"
-            element={
-              <main style={{padding: '1rem'}}>
-                <p>There's nothing here!</p>
-              </main>
-            }
-          />
-        </Routes>
-        {/* <Footer /> */}
-      </Col>
+      {location.pathname == '/login' ? (
+        <Col>
+          <LoginPage />
+        </Col>
+      ) : (
+        <>
+          <Col xs={4} md={3} lg={2}>
+            <Sidebar />
+          </Col>
+          <Col xs={8} md={9} lg={10} style={{padding: 0}}>
+            {/* <NavbarComponent /> */}
+            <Routes>
+              <Route index path="/" element={<MyCompany />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="screenConfiguration" element={<DeviceConfiguration />} />
+              <Route path="tracelinkConfiguration" element={<AdminConfiguration />} />
+              <Route path="permission" element={<Permissions />} />
+              <Route path="apiRequestLogs" element={<ApiRequestLog />} />
+              <Route path="navigationLogs" element={<NavigationLog />} />
+              <Route path="interactionLogs" element={<InteractionLog />} />
+              <Route path="userAuthLogs" element={<UserAuthLog />} />
+              <Route path="networkLogs" element={<NetworkLog />} />
+              <Route
+                path="*"
+                element={
+                  <main style={{padding: '1rem'}}>
+                    <p>There's nothing here!</p>
+                  </main>
+                }
+              />
+            </Routes>
+            {/* <Footer /> */}
+          </Col>
+        </>
+      )}
     </div>
   );
 }

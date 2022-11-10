@@ -1,41 +1,64 @@
 import axios from 'axios';
 
-export const PostRequest = async (url, userObject, ForceTimeoutSeconds) => {
+const create = async (url, dataToSend, ForceTimeoutSeconds) => {
   const cancelToken = axios.CancelToken;
   const controller = cancelToken.source();
-  let response = {success: false, data: null, error: null};
+  let result = {success: false, data: null, error: null};
+  console.log(dataToSend, 'create');
 
   try {
     const config = {cancelToken: controller.token, timeout: ForceTimeoutSeconds};
-    const data = await axios.post(url, userObject, config);
+    const response = await axios.post(url, dataToSend, config);
 
-    response.success = true;
-    response.data = data;
-    return response;
+    result.success = true;
+    result.data = response.data;
+    return result;
   } catch (err) {
-    response.success = false;
-    response.error = err;
+    result.success = false;
+    result.error = err;
   }
 
   setTimeout(() => controller.cancel(), ForceTimeoutSeconds);
-  return response;
+  return result;
 };
 
-export const GetRequest = async (url, ForceTimeoutSeconds) => {
+const fetch = async (url, ForceTimeoutSeconds) => {
   const cancelToken = axios.CancelToken;
   const controller = cancelToken.source();
-  let response = {success: false, data: null, error: null};
+  let result = {success: false, data: null, error: null};
 
   try {
     const config = {cancelToken: controller.token, timeout: ForceTimeoutSeconds};
-    const {data} = await axios.get(url, config);
-    response.success = true;
-    response.data = data;
-    return response;
+    const response = await axios.get(url, config);
+    result.success = true;
+    result.data = response.data;
+    return result;
   } catch (err) {
-    response.success = false;
-    response.error = err;
+    result.success = false;
+    result.error = err;
   }
   setTimeout(() => controller.cancel(), ForceTimeoutSeconds);
-  return response;
+  return result;
 };
+
+const update = async (url, dataToSend, ForceTimeoutSeconds) => {
+  const cancelToken = axios.CancelToken;
+  const controller = cancelToken.source();
+  let result = {success: false, data: null, error: null};
+  console.log(dataToSend, 'update');
+
+  try {
+    const config = {cancelToken: controller.token, timeout: ForceTimeoutSeconds};
+    const response = await axios.put(url, dataToSend, config);
+    result.success = true;
+    result.data = response.data;
+    return result;
+  } catch (err) {
+    result.success = false;
+    result.error = err;
+  }
+  setTimeout(() => controller.cancel(), ForceTimeoutSeconds);
+  return result;
+};
+
+export default { fetch, create, update };

@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col';
 import Button from '../../components/Button';
 import Text from '../../components/Text/Text';
 import {commonStyles} from '../../Styles/Styles';
+
 export default function AdminConfiguration() {
   const [TLInfo, setTLInfo] = useState({username: 'tracelink', password: 'password', url: 'https://itestapi.tracelink.com:443/'});
   const [paths, setPaths] = useState({
@@ -27,7 +28,6 @@ export default function AdminConfiguration() {
     setPaths({...paths, [name]: value});
   };
 
-  console.log(TLInfo, 'TLInfo', paths, 'paths');
   return (
     <Box sx={commonStyles.boxStyle}>
       <div className="container_admin">

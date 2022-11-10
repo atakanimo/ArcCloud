@@ -5,21 +5,25 @@ import {Box} from '@mui/material';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import './DeviceConfiguration.scss';
 import SliderBar from '../../components/Slider/SliderBar';
-import Checkbox from '../../components/Checkbox/Checkbox';
+import Switch from '../../components/Checkbox/Checkbox';
 import {Card} from '@mui/material';
 import SelectLabels from '../../components/Select';
 import Col from 'react-bootstrap/Col';
 import {commonStyles} from '../../Styles/Styles';
+import {GetDeviceConfiguration} from '../../helper/GetConfiguration';
 
 export default function DeviceConfiguration() {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
-  const [value, setValue] = React.useState(30);
+  const {screenConfigs, isTestDevice, isSAP, isAdmin, deviceMaxLogCount} = GetDeviceConfiguration();
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const [sliderValue, setSliderValue] = React.useState(deviceMaxLogCount);
+  const [isTest, setTest] = React.useState(isTestDevice);
+  const [isDeliverySap, setSap] = React.useState(isSAP);
+  const [isAdm, setAdmin] = React.useState(isAdmin);
+  const [screenConf, setScreenConfigs] = React.useState(screenConfigs);
+
   function preventDefault(event) {
     event.preventDefault();
   }
@@ -41,12 +45,12 @@ export default function DeviceConfiguration() {
           <div className="bigCardArea_deviceConf">
             <InlineTitle>Serialization Validation</InlineTitle>
             <div className="cardArea_deviceConf">
-              <BasicCard label={messages.aggregate} />
-              <BasicCard label={messages.disaggregate} />
-              <BasicCard label={messages.reset} />
-              <BasicCard label={messages.replace} />
-              <BasicCard label={messages.decommission} />
-              <BasicCard label={messages.outbound} />
+              <BasicCard checkBox={screenConf.aggregateStrict} label={messages.aggregate} />
+              <BasicCard checkBox={screenConf.disContainer} label={messages.disaggregate} />
+              <BasicCard checkBox={screenConf.resetContainer} label={messages.reset} />
+              <BasicCard checkBox={screenConf.replaceStrict} label={messages.replace} />
+              <BasicCard checkBox={screenConf.decommissionAutoDisaggregate} label={messages.decommission} />
+              <BasicCard checkBox={screenConf.outboundAutoDisaggregate} label={messages.outbound} />
             </div>
           </div>
         </Col>
@@ -54,15 +58,15 @@ export default function DeviceConfiguration() {
           <div style={{marginLeft: 20}} className="bigCardArea_deviceConf">
             <InlineTitle>Other Settings</InlineTitle>
             <div style={{display: 'flex', justifyContent: 'flex-start', paddingLeft: 20}} className="cardArea_deviceConf">
-              <SliderBar />
+              <SliderBar setSliderValue={setSliderValue} sliderValue={sliderValue} />
               <Card style={{marginLeft: 10}} className="checkboxCardLang_deviceConf">
                 <SelectLabels />
               </Card>
               <div className="cardArea_deviceConf">
                 <Card className="checkboxCard_deviceConf">
-                  <Checkbox header={'Is test device ?'} checked={true} />
-                  <Checkbox header={'Is admin ?'} checked={true} />
-                  <Checkbox header={'Is deliveries info come from SAP ?'} checked={true} />
+                  <Switch header={'Is test device ?'} checked={isTest} />
+                  <Switch header={'Is admin ?'} checked={isDeliverySap} />
+                  <Switch header={'Is deliveries info come from SAP ?'} checked={isAdm} />
                 </Card>
               </div>
             </div>

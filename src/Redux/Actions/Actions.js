@@ -1,15 +1,9 @@
 import actionTypes from '../actionTypes';
 import store from '../store';
 
-export const SaveItemSize = itemSize => {
+export const SaveConfiguration = conf => {
   store.dispatch({
-    type: actionTypes.SET_ITEM_SIZE,
-    payload: itemSize,
-  });
-};
-export const SavePageNumber = pageNumber => {
-  store.dispatch({
-    type: actionTypes.SET_PAGE,
-    payload: pageNumber,
+    type: actionTypes.GET_CONFIGURATION,
+    payload: conf,
   });
 };

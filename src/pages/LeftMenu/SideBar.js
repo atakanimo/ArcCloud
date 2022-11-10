@@ -20,8 +20,8 @@ const routes = [
       {
         display: 'My Company',
         icon: <i className="bx bx-home"></i>,
-        to: '/mycompany',
-        section: 'mycompany',
+        to: '/', //my company is our main page
+        section: '', //my company is our main page
       },
       {
         display: 'Permissions',
@@ -120,7 +120,7 @@ const Sidebar = () => {
               </AccordionSummary>
               <AccordionDetails style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
                 {item.Nav.map((item, index) => (
-                  <>
+                  <React.Fragment key={index}>
                     {item.display == 'Logs' ? (
                       <Accordion key={index} style={{boxShadow: 'none'}} className="accordion" defaultExpanded={false}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: 'white'}} />}>
@@ -149,7 +149,7 @@ const Sidebar = () => {
                         </div>
                       </Link>
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
               </AccordionDetails>
             </Accordion>

@@ -1,41 +1,38 @@
 import {BusinessBase} from './BusinessBase';
-import {apiPorts} from './BusinessBase';
 
 class LogService extends BusinessBase {
   types = {
-    ApiRequest: `${apiPorts.logs}/ApiRequestLog`,
-    UserAuth: `${apiPorts.logs}/UserAuthenticationLog`,
-    Network: `${apiPorts.logs}/NetworkLog`,
-    Nav: `${apiPorts.logs}/NavigationLog`,
-    Interaction: `${apiPorts.logs}/InteractionLog`,
+    ApiRequest: `${this.apiPorts.logs}/ApiRequestLog`,
+    UserAuth: `${this.apiPorts.logs}/UserAuthenticationLog`,
+    Network: `${this.apiPorts.logs}/NetworkLog`,
+    Nav: `${this.apiPorts.logs}/NavigationLog`,
+    Interaction: `${this.apiPorts.logs}/InteractionLog`,
   };
 
-  async GetLog(type, isPaging, ItemCount, PageNumber) {
-    var url;
-    if (isPaging == true) {
-      url = `${type}?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
-    } else url = type;
+  GetLog = async (type, isPaging, ItemCount, PageNumber) => {
+    if (isPaging) {
+      this.requestParams = `${type}?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
+    } else this.requestParams = type;
 
     try {
-      var {success, data, error} = await super.makeGetRequest(url);
+      const {success, data, error} = await this.makeGetRequest(this.requestParams);
+      return {success, data};
     } catch (err) {
       console.log('GetLogError', err);
     }
-    return {success, data};
   }
 
-  async GetDataByClientMessage(type, clientMessage, isPaging, ItemCount, PageNumber) {
-    var url;
-    if (isPaging == true) {
-      url = `${type}?ClientMessage=${clientMessage}&IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
-    } else url = type;
+  GetDataByClientMessage = async (type, clientMessage, isPaging, ItemCount, PageNumber) => {
+    if (isPaging) {
+      this.requestParams = `${type}?ClientMessage=${clientMessage}&IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
+    } else this.requestParams = type;
 
     try {
-      var {data, success, error} = await super.makeGetRequest(url);
+      const {data, success, error} = await this.makeGetRequest(this.requestParams);
+      return {success, data};
     } catch (err) {
       console.log('GetLogError', err);
     }
-    return {success, data};
   }
 }
 

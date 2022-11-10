@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux';
-import Pagination from './Pagination';
+import ConfigurationReducer from './Configuration';
 
 const rootReducer = combineReducers({
-  Pagination,
+  ConfigurationReducer,
 });
 
 export default rootReducer;

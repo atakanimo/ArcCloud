@@ -1,14 +1,29 @@
-import {GetRequest} from '../helper/Request';
+import Request from '../helper/Request';
 
-var baseUrl = 'https://localhost:';
-export var apiPorts = {
-  logs: '9968',
-  permission: '9970',
-};
+const REQUEST_TIMEOUT = 15000;
 
 export class BusinessBase {
-  makeGetRequest(port, timeout = 15000) {
-    var url = `${baseUrl + port}`;
-    return GetRequest(url, timeout);
-  }
+  apiPorts = {logs: '9968', permission: '9970', auth: '9971'};
+  baseUrl = 'https://localhost:';
+  requestParams = '';
+
+  resetParams = () => {
+    this.requestParams = '';
+    return;
+  };
+
+  makeGetRequest = () => {
+    const url = `${this.baseUrl + this.requestParams}`;
+    return Request.fetch(url, REQUEST_TIMEOUT);
+  };
+
+  makePostRequest = data => {
+    const url = `${this.baseUrl + this.requestParams}`;
+    return Request.create(url, data, REQUEST_TIMEOUT);
+  };
+
+  makeUpdateRequest = data => {
+    const url = `${this.baseUrl + this.requestParams}`;
+    return Request.update(url, data, REQUEST_TIMEOUT);
+  };
 }

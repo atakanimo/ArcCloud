@@ -4,11 +4,9 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import './Slider.scss';
 
-export default function SliderBar() {
-  const [value, setValue] = React.useState(30);
-
+export default function SliderBar({setSliderValue, sliderValue}) {
   const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
+    setSliderValue(newValue);
   };
 
   return (
@@ -16,9 +14,16 @@ export default function SliderBar() {
       <Typography id="input-slider" gutterBottom>
         Device Max Log Count
       </Typography>
-      <Slider className="slider" aria-label="Always visible" onChange={handleSliderChange} step={5} valueLabelDisplay="auto" />
+      <Slider
+        value={sliderValue}
+        className="slider"
+        aria-label="Always visible"
+        onChange={handleSliderChange}
+        step={5}
+        valueLabelDisplay="auto"
+      />
       <Typography sx={{textAlign: 'center'}} id="input-slider" gutterBottom>
-        {value}
+        {sliderValue}
       </Typography>
     </Card>
   );

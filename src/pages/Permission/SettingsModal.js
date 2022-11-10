@@ -1,101 +1,65 @@
 import React, {useState} from 'react';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
+import PermissionService from '../../Business/PermissionService';
+
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
-export const INPUT_MIN_CHAR_LENGTH = 5;
-export const INPUT_MAX_CHAR_LENGTH = 100;
+export const INPUT_MIN_CHAR_LENGTH = '5';
+export const INPUT_MAX_CHAR_LENGTH = '100';
 
-const emptyItem = {
-  "plantId": "",
-  "formName": "",
-  "controlId": "",
-  "description": "",
-  "va": 0,
-  "ea": 0,
-  "vm": 0,
-  "em": 0,
-  "vo": 0,
-  "eo": 0,
-  "vu": 0,
-  "eu": 0,
-  "vq": 0,
-  "eq": 0,
-  "v1": 0,
-  "e1": 0,
-  "v2": 0,
-  "e2": 0,
-  "v3": 0,
-  "e3": 0,
-  "v4": 0,
-  "e4": 0,
-  "v5": 0,
-  "e5": 0,
-  "header": 0,
-  "dasboard": null,
-  "isDisplayOnList": 0,
-  "caption": "",
-  "iconCode": "",
-  "styleCode": "",
-  "id": 0,
-  "creatorUser": "",
-  "createDate": "",
-  "creatorApp": null,
-  "creatorAppVersion": null,
-  "updaterUser": "",
-  "updateDate": "",
-  "updaterApp": "",
-  "updaterAppVersion": ""
-};
+const getLabels = (isNew) => {
+  let controlIdLabel = 'Control ID';
+  let formNameLabel = 'Form Name';
+  let descriptionLabel = 'Description';
 
-const ConstructItemObject = (newItem, newItemId) => {
-  // fill the other necessary fields to operate, in the future
-  newItem.id = newItemId;
-  newItem.createDate = `${new Date().toISOString()}`;
-  newItem.creatorUser = 'ADMIN' // this should be username in the future
-  return newItem;
+  if(isNew) {
+    controlIdLabel = 'CREATE ' + controlIdLabel;
+    formNameLabel = 'CREATE ' + formNameLabel;
+    descriptionLabel = 'CREATE ' + descriptionLabel;
+  } else {
+    controlIdLabel = 'EDIT ' + controlIdLabel;
+    formNameLabel = 'EDIT ' + formNameLabel;
+    descriptionLabel = 'EDIT ' + descriptionLabel;
+  }
+  return { controlIdLabel, formNameLabel, descriptionLabel };
 }
 
-const SettingsModal = ({ itemToEdit, setters, isNew, newItemId }) => {
+const SettingsModal = ({ itemToEdit, modalInfo, setData, setIsModified }) => {
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
-  const { SetParentState, setter } = setters;
   const { item, itemIdx } = itemToEdit;
 
+  const { isNew, setModal } = modalInfo;
+
   // editing
-  const [controlId, setControlId] = useState(!isNew && item.controlId);
-  const [formName, setFormName] = useState(!isNew && item.formName);
-  const [description, setDescription] = useState(!isNew && item.description);
-  // creating
-  const [newItem, setNewItem] = useState(isNew ? emptyItem : null);
+  const [controlId, setControlId] = useState(item && item.controlId || '');
+  const [formName, setFormName] = useState(item && item.formName || '');
+  const [description, setDescription] = useState(item && item.description || '');
 
-  const handleCancel = () => SetParentState('triggerModal', false);
+  const handleCancel = () => setModal(false);
 
-  const handleCreate = () => {
-    const newObj = ConstructItemObject(newItem, newItemId);
-
-    setter(p => {
-      const newItemIdx = p['allItems'].length;
-      p['allItems'][newItemIdx] = newObj;
-      return p;
-    })
-    SetParentState('isNew', false);
-    SetParentState('triggerModal', false);
+  const handleCreate = async () => {
+    // show an alert when creation is failed
+    const { data, success } = await PermissionService.CreateEntry(formName, controlId, description)
+    if(success) {
+      setData(p => [...p, data]);
+      setModal({ trigger: false, isNew: false });
+    }
+    setIsModified(true);
     return;
   };
 
-  const handleSave = () => {
-    item.formName = formName;
-    item.controlId = controlId;
-    item.description = description;
-
-    setter(p => {
-      delete p['allItems'][itemIdx];
-      p['allItems'][itemIdx] = item;
+  const handleSave = async () => {
+    const updatedItem = PermissionService.ConstructEntryObject(formName, controlId, description, item)
+    setData(p => {
+      p[itemIdx] = updatedItem;
+      // console.log(p[itemIdx], 'iteminarr')
+      // console.log(updatedItem, 'updateitem')
       return p;
-    });
-
-    SetParentState('triggerModal', false);
+    })
+    setModal({ trigger: false, isNew: false });
+    setIsModified(true);
     return;
   };
 
@@ -136,26 +100,17 @@ const SettingsModal = ({ itemToEdit, setters, isNew, newItemId }) => {
   };
 
   if (!isNew && !item) return null;
+  const labels = getLabels(isNew);
   return (
     <div>
       <Modal open={true} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={styles.box}>
           <div style={styles.modalContainer}>
-
-            { !isNew ? (
               <>
-                <InputWithHeader value={controlId} onChange={e => setControlId(e.target.value)} screenSize={screenSize} label={'EDIT Control ID'} />
-                <InputWithHeader value={formName} onChange={e => setFormName(e.target.value)} screenSize={screenSize} label={'EDIT Form Name'} />
-                <InputWithHeader value={description} onChange={e => setDescription(e.target.value)} screenSize={screenSize} label={'EDIT Description'}/>
+                <InputWithHeader value={controlId} onChange={e => setControlId(e.target.value)} screenSize={screenSize} label={labels.controlIdLabel} />
+                <InputWithHeader value={formName} onChange={e => setFormName(e.target.value)} screenSize={screenSize} label={labels.formNameLabel} />
+                <InputWithHeader value={description} onChange={e => setDescription(e.target.value)} screenSize={screenSize} label={labels.descriptionLabel}/>
               </>
-            ) : (
-              <>
-                <InputWithHeader value={newItem.controlId} onChange={e => setNewItem(p => ({ ...p, controlId: e.target.value }) )} screenSize={screenSize} label={'CREATE a Control ID'} />
-                <InputWithHeader value={newItem.formName} onChange={e => setNewItem(p => ({ ...p, formName: e.target.value }) )} screenSize={screenSize} label={'CREATE a Form Name'} />
-                <InputWithHeader value={newItem.description} onChange={e => setNewItem(p => ({ ...p, description: e.target.value }) )} screenSize={screenSize} label={'CREATE a Description'}/>
-              </>
-            ) }
-
             <div style={styles.btnsContainer}>
               <div onClick={() => isNew ? handleCreate() : handleSave()} style={styles.buttons}>
                 {isNew ? 'Create' : 'Save'}
@@ -200,8 +155,8 @@ const InputWithHeader = ({value, label, screenSize, onChange, isRequired = true}
         value={value}
         onChange={onChange}
         required={isRequired ? true : false}
-        minlength={String(INPUT_MIN_CHAR_LENGTH)}
-        maxlength={String(INPUT_MAX_CHAR_LENGTH)}
+        // minLength={INPUT_MIN_CHAR_LENGTH}
+        // maxLength={INPUT_MAX_CHAR_LENGTH}
         style={styles.input}
       />
     </div>

@@ -5,6 +5,7 @@ import AlertComponent from '../../components/AlertComponent';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import {CiCirclePlus, CiCircleMinus} from 'react-icons/ci';
 import ButtonComponent from '../../components/Button';
+import {GetAIs} from '../../helper/GetConfiguration';
 
 function GS1AppIdenList() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -47,9 +48,15 @@ function GS1AppIdenList() {
     },
   };
 
-  const initialState = {id: '0', AI: '', Description: '', Length: '', Format: ''};
+  const AIs = GetAIs();
+
+  useEffect(() => {
+    setGridNumber(AIs.length - 1);
+  }, []);
+
+  const initialState = {id: '0', ai: '', description: '', length: '', format: ''};
   const [gridNumber, setGridNumber] = useState(0);
-  const [info, setInfo] = useState([initialState]);
+  const [info, setInfo] = useState(AIs.length > 0 ? AIs : [initialState]);
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
 
   //for alert
@@ -115,15 +122,19 @@ function GS1AppIdenList() {
     console.log(info, 'info');
   }, [info]);
 
+  useEffect(() => {
+    console.log(gridNumber, 'gridNumber');
+  }, [gridNumber]);
+
   const createCard = () => {
     for (let i = 0; i <= gridNumber; i++) {
       elements.push(
         <Card key={i} style={styles.checkboxCard}>
           <div style={styles.inputDiv}>
-            <TextInput value={info[i].AI} onChange={text => onInputChange('AI', text, i)} label={'AI'} width={9} />
-            <TextInput value={info[i].Description} onChange={text => onInputChange('Description', text, i)} label={'Description'} width={7} />
-            <TextInput value={info[i].Length} onChange={text => onInputChange('Length', text, i)} label={'Length'} width={9} />
-            <TextInput value={info[i].Format} onChange={text => onInputChange('Format', text, i)} label={'Format'} width={9} />
+            <TextInput value={info[i].ai} onChange={text => onInputChange('ai', text, i)} label={'AI'} width={9} />
+            <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Description'} width={7} />
+            <TextInput value={info[i].lenght} onChange={text => onInputChange('lenght', text, i)} label={'Length'} width={9} />
+            <TextInput value={info[i].format} onChange={text => onInputChange('format', text, i)} label={'Format'} width={9} />
             {i > 0 ? <CiCircleMinus style={styles.icons} onClick={() => handlerDelete(info[i])} /> : null}
           </div>
           <div style={styles.createButton}>

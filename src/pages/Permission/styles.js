@@ -45,11 +45,38 @@ export const Styles = (width, height) => ({
     borderRadius: 5,
     backgroundColor: '#C8C8C8',
     color: 'black',
-    marginLeft: 10,
-    marginRight: 20,
-    marginTop: 10,
-    marginBottom: 10,
+    margin: 10
   },
+  saveText: hasChanged => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: width * 0.1,
+    height: 40,
+    fontSize: 14,
+    fontWeight: '600',
+    borderWidth: 0,
+    borderRadius: 5,
+    backgroundColor: 'green',
+    color: 'white',
+    marginLeft: 10,
+    opacity: hasChanged ? 1 : 0.5
+  }),
+  undoText: hasChanged => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: width * 0.1,
+    height: 40,
+    fontSize: 14,
+    fontWeight: '600',
+    borderWidth: 0,
+    borderRadius: 5,
+    backgroundColor: 'green',
+    color: 'white',
+    marginLeft: width * 0.15,
+    opacity: hasChanged ? 1 : 0.5
+  }),
   editIcon: {
     width: 35,
     height: 35,
@@ -86,4 +113,21 @@ export const Styles = (width, height) => ({
   mainDiv: {
     display: 'flex',
   },
+  spinnerContainer: {
+    display: 'flex',
+    position: 'absolute',
+    height: height * 0.1,
+    width: width * 0.1,
+    marginLeft: width * 0.3,
+    marginTop: height * 0.25,
+    backgroundColor: 'green',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100
+  },
+  spinner: {
+    color: 'white',
+    fontSize: 24
+  }
 });

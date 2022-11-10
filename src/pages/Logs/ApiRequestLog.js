@@ -21,10 +21,6 @@ const ApiRequestLogs = () => {
 
   useEffect(() => {
     getData();
-  }, []);
-
-  useEffect(() => {
-    getData();
   }, [pageCount, pageNumber]);
 
   const getData = async () => {

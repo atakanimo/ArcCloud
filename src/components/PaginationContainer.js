@@ -1,7 +1,7 @@
 import React from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 
-const PAGINATION_COUNTS = [100, 500, 1000];
+export const PAGINATION_CHOICES = [100, 500, 1000];
 
 const Styles = (width, height) => ({
   settingsContainer: {
@@ -102,8 +102,9 @@ const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage
       </div>
       <div style={paginationArea}>
         <div style={presentRows}>{`Displaying ${paginationCount} items `}</div>
-        {PAGINATION_COUNTS.map((count, idx) => (
+        {PAGINATION_CHOICES.map((count, idx) => (
           <button
+            key={count}
             style={{...paginationChoices, color: count == paginationCount ? '#C8C8C8' : 'black'}}
             onClick={() => onPaginationChange(count, idx)}>
             {count}
