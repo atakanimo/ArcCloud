@@ -20,8 +20,8 @@ const routes = [
       {
         display: 'My Company',
         icon: <i className="bx bx-home"></i>,
-        to: '/', //my company is our main page
-        section: '', //my company is our main page
+        to: '/myCompany', //my company is our main page
+        section: 'myCompany', //my company is our main page
       },
       {
         display: 'Permissions',

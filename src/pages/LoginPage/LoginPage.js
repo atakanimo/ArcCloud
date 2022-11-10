@@ -19,13 +19,11 @@ export default function SignIn() {
 
   const handleSubmit = async event => {
     event.preventDefault();
-    console.log(user, 'user');
     setLoading(true);
     const {success, data, error} = await GetConfiguration(user);
     if (success == true) {
-      console.log(data, 'data');
       SaveConfiguration(data);
-      navigate('/');
+      navigate('/myCompany');
     } else {
       let response = error.response.data;
       console.log(response, 'response');

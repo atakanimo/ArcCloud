@@ -21,7 +21,7 @@ export default function App() {
 
   return (
     <div style={{display: 'flex', flex: 1, flexDirection: 'row'}}>
-      {location.pathname == '/login' ? (
+      {location.pathname == '/' ? (
         <Col>
           <LoginPage />
         </Col>
@@ -33,8 +33,8 @@ export default function App() {
           <Col xs={8} md={9} lg={10} style={{padding: 0}}>
             {/* <NavbarComponent /> */}
             <Routes>
-              <Route index path="/" element={<MyCompany />} />
-              <Route path="/login" element={<LoginPage />} />
+              <Route index path="/" element={<LoginPage />} />
+              <Route path="/myCompany" element={<MyCompany />} />
               <Route path="screenConfiguration" element={<DeviceConfiguration />} />
               <Route path="tracelinkConfiguration" element={<AdminConfiguration />} />
               <Route path="permission" element={<Permissions />} />

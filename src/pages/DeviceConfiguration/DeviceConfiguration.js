@@ -5,7 +5,7 @@ import {Box} from '@mui/material';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import './DeviceConfiguration.scss';
 import SliderBar from '../../components/Slider/SliderBar';
-import Switch from '../../components/Checkbox/Checkbox';
+import Switch from '../../components/Checkbox-Switch/Switch';
 import {Card} from '@mui/material';
 import SelectLabels from '../../components/Select';
 import Col from 'react-bootstrap/Col';
@@ -37,6 +37,9 @@ export default function DeviceConfiguration() {
     decommission: 'Automatically disaggregate items from parent container.',
     outbound: 'Automatically disaggregate serial numbers that are aggregated to another number.',
   };
+  const onChangeSerialize = name => {
+    setScreenConfigs({...screenConf, [name]: !screenConf[name]});
+  };
 
   return (
     <Box sx={commonStyles.boxStyle}>
@@ -45,12 +48,24 @@ export default function DeviceConfiguration() {
           <div className="bigCardArea_deviceConf">
             <InlineTitle>Serialization Validation</InlineTitle>
             <div className="cardArea_deviceConf">
-              <BasicCard checkBox={screenConf.aggregateStrict} label={messages.aggregate} />
-              <BasicCard checkBox={screenConf.disContainer} label={messages.disaggregate} />
-              <BasicCard checkBox={screenConf.resetContainer} label={messages.reset} />
-              <BasicCard checkBox={screenConf.replaceStrict} label={messages.replace} />
-              <BasicCard checkBox={screenConf.decommissionAutoDisaggregate} label={messages.decommission} />
-              <BasicCard checkBox={screenConf.outboundAutoDisaggregate} label={messages.outbound} />
+              <BasicCard
+                onChange={() => onChangeSerialize('aggregateStrict')}
+                checkBox={screenConf.aggregateStrict}
+                label={messages.aggregate}
+              />
+              <BasicCard onChange={() => onChangeSerialize('disContainer')} checkBox={screenConf.disContainer} label={messages.disaggregate} />
+              <BasicCard onChange={() => onChangeSerialize('resetContainer')} checkBox={screenConf.resetContainer} label={messages.reset} />
+              <BasicCard onChange={() => onChangeSerialize('replaceStrict')} checkBox={screenConf.replaceStrict} label={messages.replace} />
+              <BasicCard
+                onChange={() => onChangeSerialize('decommissionAutoDisaggregate')}
+                checkBox={screenConf.decommissionAutoDisaggregate}
+                label={messages.decommission}
+              />
+              <BasicCard
+                onChange={() => onChangeSerialize('outboundAutoDisaggregate')}
+                checkBox={screenConf.outboundAutoDisaggregate}
+                label={messages.outbound}
+              />
             </div>
           </div>
         </Col>
@@ -64,9 +79,9 @@ export default function DeviceConfiguration() {
               </Card>
               <div className="cardArea_deviceConf">
                 <Card className="checkboxCard_deviceConf">
-                  <Switch header={'Is test device ?'} checked={isTest} />
-                  <Switch header={'Is admin ?'} checked={isDeliverySap} />
-                  <Switch header={'Is deliveries info come from SAP ?'} checked={isAdm} />
+                  <Switch setValue={setTest} header={'Is test device ?'} checked={isTest} />
+                  <Switch setValue={setAdmin} header={'Is admin ?'} checked={isAdm} />
+                  <Switch setValue={setSap} header={'Is deliveries info come from SAP ?'} checked={isDeliverySap} />
                 </Card>
               </div>
             </div>

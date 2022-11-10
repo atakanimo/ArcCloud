@@ -3,9 +3,10 @@ import Card from '@mui/material/Card';
 import TextInput from '../../components/TextInput';
 import AlertComponent from '../../components/AlertComponent';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
-import {CiCirclePlus, CiCircleMinus} from 'react-icons/ci';
 import ButtonComponent from '../../components/Button';
 import {GetAIs} from '../../helper/GetConfiguration';
+import DeleteIcon from '../../assets/DeleteIcon.png';
+import AddIcon from '../../assets/AddIcon.png';
 
 function GS1AppIdenList() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -38,12 +39,12 @@ function GS1AppIdenList() {
       flex: 1,
     },
     icons: {
-      width: dynamicWidth * 0.03,
-      height: 'auto',
-      maxHeight: dynamicHeight * 0.04,
-      minHeight: 30,
-      marginTop: 5,
-      color: 'blue',
+      width: dynamicWidth * 0.035,
+      height: dynamicHeight * 0.04,
+      marginTop: 3,
+      marginLeft: 3,
+      backgroundColor: 'white',
+      borderWidth: 0,
       cursor: 'pointer',
     },
   };
@@ -54,7 +55,7 @@ function GS1AppIdenList() {
     setGridNumber(AIs.length - 1);
   }, []);
 
-  const initialState = {id: '0', ai: '', description: '', length: '', format: ''};
+  const initialState = {ai: '', description: '', length: '', format: ''};
   const [gridNumber, setGridNumber] = useState(0);
   const [info, setInfo] = useState(AIs.length > 0 ? AIs : [initialState]);
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
@@ -70,38 +71,24 @@ function GS1AppIdenList() {
     const {value} = event.target;
     info[index] = {...info[index], [field]: value};
     setForce(!force);
-
-    // console.log(info, 'info');
   };
 
-  const handlerDelete = infoItem => {
+  const handlerDelete = itemIndex => {
     if (info.length === 1) {
       setShowAlert(true);
       setAlertMessage('Must have at least one card');
       setAlertVariant('danger');
       return;
     }
-    // console.log(infoItem, 'iii');
-    let newItems = [];
-    info.forEach((element, index) => {
-      if (element.id !== infoItem.id) {
-        if (Number(element.id) > Number(infoItem.id)) {
-          const newId = Number(element.id) - 1;
-          element.id = newId.toString();
-        }
-        newItems.push(element);
-      }
-    });
-
-    setInfo(newItems);
+    const filtered = info.filter((item, index) => index !== itemIndex);
+    setInfo(filtered);
     setGridNumber(gridNumber - 1);
   };
 
-  const handlerAdd = i => {
+  const handlerAdd = () => {
     let index = -1;
     info.forEach((element, idx) => {
-      console.log(element, 'element');
-      if (element.AI === '' || element.Description === '' || element.Length === '' || element.Format === '') {
+      if (element.ai === '' || element.description === '' || element.length === '' || element.format === '') {
         index = idx;
         return;
       }
@@ -113,8 +100,7 @@ function GS1AppIdenList() {
       setAlertVariant('warning');
       return;
     }
-    console.log(info[i], 'info[i]');
-    setInfo([...info, {...initialState, id: (gridNumber + Number(initialState.id) + 1).toString()}]);
+    setInfo([...info, initialState]);
     setGridNumber(gridNumber + 1);
   };
 
@@ -126,6 +112,16 @@ function GS1AppIdenList() {
     console.log(gridNumber, 'gridNumber');
   }, [gridNumber]);
 
+  const IconComponent = ({icon, onClick}) => {
+    return (
+      <div>
+        <button onClick={onClick} style={styles.icons}>
+          <img style={{width: 30, height: 30}} src={icon} />
+        </button>
+      </div>
+    );
+  };
+
   const createCard = () => {
     for (let i = 0; i <= gridNumber; i++) {
       elements.push(
@@ -135,14 +131,14 @@ function GS1AppIdenList() {
             <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Description'} width={7} />
             <TextInput value={info[i].lenght} onChange={text => onInputChange('lenght', text, i)} label={'Length'} width={9} />
             <TextInput value={info[i].format} onChange={text => onInputChange('format', text, i)} label={'Format'} width={9} />
-            {i > 0 ? <CiCircleMinus style={styles.icons} onClick={() => handlerDelete(info[i])} /> : null}
+            {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} /> : null}
           </div>
           <div style={styles.createButton}>
             {i === 0 ? (
-              <>
-                <CiCircleMinus style={styles.icons} onClick={() => handlerDelete(info[i])} />
-                <CiCirclePlus style={styles.icons} onClick={() => handlerAdd(gridNumber)} />
-              </>
+              <div key={i} style={{display: 'flex', flexDirection: 'row'}}>
+                <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} />
+                <IconComponent icon={AddIcon} onClick={() => handlerAdd()} />
+              </div>
             ) : null}
           </div>
         </Card>,
