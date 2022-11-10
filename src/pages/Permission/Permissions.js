@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
-import {Styles} from './styles';
+import PermissionStyle from './styles';
 
 // API
 import PermissionService from '../../Business/PermissionService';
@@ -18,7 +18,11 @@ import AlertComponent from '../../components/AlertComponent';
 import CancelIcon from '../../assets/cancel.png';
 import SearchIcon from '../../assets/search.png';
 
-const columns = ['formName', 'va', 'ea', 'vm', 'em', 'vo', 'eo', 'vu', 'eu', 'vq', 'eq', 'v1', 'e1', 'e2', 'v3', 'e3', 'v4', 'e4', 'v5', 'e5'];
+const { Styles, decideColumnStyles } = PermissionStyle;
+
+const titles = ['Edit', 'ID', 'Control ID', 'Description', 'Form Name']
+const roles = ['va', 'ea', 'vm', 'em', 'vo', 'eo', 'vu', 'eu', 'vq', 'eq', 'v1', 'e1', 'e2', 'v3', 'e3', 'v4', 'e4', 'v5', 'e5'];
+const allColumns = [ ...titles, ...roles];
 
 const ADD_COLUMN_TEXT = 'Add New Entry';
 const SAVE_TEXT = 'Save Changes';
@@ -27,10 +31,10 @@ const UNDO_TEXT = 'Undo All Changes';
 const Permissions = () => {
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
-  const {container, mainDiv, titles, permDiv, columnsArray, header, addText, saveText, undoText, spinner, spinnerContainer, editIcon, searchInput, searchIcon, searchBtnContainer} = Styles(
-    dynamicWidth,
-    dynamicHeight,
-  );
+  const { 
+    container, header, addText, saveText, undoText, spinner,
+    spinnerContainer, editIcon, searchInput, searchIcon, searchBtnContainer, editIconContainer,
+    gridContainer } = Styles(dynamicWidth, dynamicHeight);
 
   const [data, setData] = React.useState([]);
 
@@ -97,89 +101,88 @@ const Permissions = () => {
       <Spinner style={spinner} animation='border' />
     </div>
 
-  return (
-    <>
-      {modal.trigger && ( <SettingsModal itemToEdit={{item: data[selectedRowIdx] || null, itemIdx: selectedRowIdx}} setData={setData} setIsModified={setIsModified} modalInfo={{ ...modal, setModal }}/> )}
-      <Box sx={[container]}>
-        {/* <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} /> */}
-        <div style={header}>
-          <button onClick={() => setModal({ trigger: true, isNew: true })} style={addText}>
-            {ADD_COLUMN_TEXT}
-          </button>
-          <input
-            // disabled={searchedItems}
-            // value={searchTerm}
-            // onChange={e => SetParentState('searchTerm', e.target.value)}
-            minLength={INPUT_MIN_CHAR_LENGTH}
-            maxLength={INPUT_MAX_CHAR_LENGTH}
-            style={searchInput}
-            placeholder="Type your search here..."
-          />
-          <button style={searchBtnContainer} onClick={() => null}>
-            { /* when user searches, should it search the current page or make a request? */ }
-            <img src={SearchIcon} style={searchIcon}/>
-          </button>
-          <button disabled={!isModified} onClick={() => undoChanges()} style={undoText(isModified)}>
-            {UNDO_TEXT}
-          </button>
-          <button disabled={!isModified} onClick={() => saveChanges()} style={saveText(isModified)}>
-            {SAVE_TEXT}
-          </button>
-        </div>
-        <div style={{height: dynamicHeight * 0.82, overflow: 'scroll'}}>
-          <div style={mainDiv}>
-            <div style={{...titles(1), borderLeftWidth: 0}}>{'Edit'}</div>
-            <div style={{...titles(1)}}>{'ID'}</div>
-            <div style={{...titles(1), minWidth: 250}}>{'ControlId'}</div>
-            <div style={permDiv}>
-              {columns.map((item, index) =>
-                item == 'formName' ? (
-                  <div key={index} style={{...columnsArray(1), minWidth: 120}}>{item}</div>
-                ) : (
-                  <div key={index} style={{...columnsArray(1), minWidth: 70}}>{item}</div>
-                ),
-              )}
-            </div>
+  const Row = props => {
+    const { item, index, row, column } = props;
+
+    const decideStyle = (element, idx = 1) => {
+      const decideColor = rowIdx => ({ backgroundColor: rowIdx % 2 === 0 ? '#FFFFFF' : '#C8C8C8' });
+      return { ...decideColumnStyles(element, dynamicWidth, dynamicHeight), ...decideColor(idx) };
+    }
+
+    const onEdit = () => {
+      setSelectedRowIdx(index);
+      setModal({ trigger: true, isNew: false });
+    }
+
+    // checked={row[col] === 1 || row[col] === 9} disabled={row[col] === 9} onCheckboxChange(col, index)
+    if(column) {
+      return (
+        <span key={index} style={decideStyle(item)}>{item.toUpperCase()}</span>
+      )};
+    if(row) {
+      return (
+        <div key={item.id} style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{ ...decideStyle('edit', index), editIconContainer}}>
+            <TbEdit onClick={onEdit} style={editIcon}/>
           </div>
-          {loading ? <LoadingSpinner /> : (data && data.length > 0) &&
-            data.map((row, index) => {
-              return (
-                <div key={row.id} style={mainDiv}>
-                  <div style={{...titles(index), borderLeftWidth: 0}}>
-                    <TbEdit
-                      onClick={() => {
-                        setSelectedRowIdx(index);
-                        setModal({ trigger: true, isNew: false });
-                      }}
-                      style={editIcon}
-                    />
-                  </div>
-                  <div style={{...titles(index)}}>{row.id}</div>
-                  <div style={{...titles(index), minWidth: 250}}>{row.controlId}</div>
-                  <div style={permDiv}>
-                    {columns.map(col => (
-                      <React.Fragment key={col}>
-                        {col == 'formName' ? (
-                          <div style={{...columnsArray(index), minWidth: 120}}>{row[col]}</div>
-                        ) : (
-                          <div style={columnsArray(index)}>
-                            <CheckBox
-                              onChange={() => onCheckboxChange(col, index)}
-                              checked={row[col] === 1 || row[col] === 9}
-                              disabled={row[col] === 9}
-                            />
-                          </div>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+          <span style={decideStyle('id', index)}>{item.id}</span>
+          <span style={decideStyle('control id', index)}>{item.controlId}</span>
+          <span style={decideStyle('description', index)}>{item.description}</span>
+          <span style={decideStyle('form name', index)}>{item.formName}</span>
+          { roles.length > 0 && roles.map(() => <CheckBox style={decideStyle('checkbox', index)} onChange={() => {}} />)}
         </div>
-        <PaginationContainer paginationCount={pageCount} setPaginationCount={setPageCount} page={pageNumber} setPage={setPageNumber} />
-      </Box>
-    </>
+      )
+    }
+  }
+
+  const Header = () => {
+    return (
+      <div style={header}>
+        <button onClick={() => setModal({ trigger: true, isNew: true })} style={addText}>
+          {ADD_COLUMN_TEXT}
+        </button>
+        <input
+          // disabled={searchedItems}
+          // value={searchTerm}
+          // onChange={e => SetParentState('searchTerm', e.target.value)}
+          minLength={INPUT_MIN_CHAR_LENGTH}
+          maxLength={INPUT_MAX_CHAR_LENGTH}
+          style={searchInput}
+          placeholder="Type your search here..."
+          />
+        <button style={searchBtnContainer} onClick={() => null}>
+          { /* when user searches, should it search the current page or make a request? */ }
+          <img src={SearchIcon} style={searchIcon}/>
+        </button>
+        <button disabled={!isModified} onClick={() => undoChanges()} style={undoText(isModified)}>
+          {UNDO_TEXT}
+        </button>
+        <button disabled={!isModified} onClick={() => saveChanges()} style={saveText(isModified)}>
+          {SAVE_TEXT}
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div style={container}>
+      <Header />
+      <div style={gridContainer}>
+        { loading ? <LoadingSpinner /> : (
+          <>
+            <div style={{ display: 'flex' }}>
+            { allColumns.length > 0 && allColumns.map((title, i) => <Row index={i} item={title} column/> )}
+            </div>
+            <div style={{ display:'flex', flexDirection: 'column' }}>
+              { data.length > 0 && data.map((row, i) => <Row index={i} item={row} row/> )}
+            </div>
+          </>
+          )
+        }
+      </div>
+      <PaginationContainer paginationCount={pageCount} setPaginationCount={setPageCount} page={pageNumber} setPage={setPageNumber} />
+      </div>
   );
 };
+
 export default Permissions;

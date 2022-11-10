@@ -1,36 +1,48 @@
-export const Styles = (width, height) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: height,
-  },
-  titles: index => ({
-    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#C8C8C8',
+const decideColumnStyles = (columnName, width, height) => {
+  const defaultStyle = {
+    minWidth: width * 0.03,
     borderWidth: 1,
     borderStyle: 'solid',
-    height: 40,
-    fontSize: 16,
-    fontWeight: '600',
-    minWidth: 100,
+    height: 30,
+    fontSize: 13,
+    fontWeight: '500',
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-  }),
-  permDiv: {
+  };
+
+  switch(columnName.toLowerCase()) {
+    case "edit":
+      return { ...defaultStyle, minWidth: (width * 0.1) * 0.5, borderLeftWidth: 0};
+    case "id":
+      return { ...defaultStyle, minWidth: (width * 0.1) * 0.5};
+    case "control id":
+      return { ...defaultStyle, minWidth: (width * 0.1) * 1.5};
+    case "form name":
+      return { ...defaultStyle, minWidth: (width * 0.1) * 2};
+    case "description":
+      return { ...defaultStyle, minWidth: (width * 0.1) * 2};
+    default:
+      return defaultStyle;
+  }
+}
+
+const Styles = (width, height) => ({
+  container: {
     display: 'flex',
+    flexDirection: 'column',
+    height
   },
-  columnsArray: (index = 0) => ({
-    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#C8C8C8',
-    width: 70,
-    height: 40,
-    textAlign: 'center',
-    borderWidth: 1,
-    borderStyle: 'solid',
-  }),
+  gridContainer: {
+    height,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'scroll',
+  },
   header: {
     display: 'flex',
     flexDirection: 'row',
-    height: height * 0.1,
+    height: height * 0.2,
     alignItems: 'center',
   },
   addText: {
@@ -78,9 +90,9 @@ export const Styles = (width, height) => ({
     opacity: hasChanged ? 1 : 0.5
   }),
   editIcon: {
-    width: 35,
-    height: 35,
-    color: 'red',
+    width: 25,
+    height: 25,
+    color: 'black',
   },
   searchInput: {
     width: width * 0.3,
@@ -110,9 +122,6 @@ export const Styles = (width, height) => ({
     borderStyle: 'solid',
     borderColor: '#C8C8C8',
   },
-  mainDiv: {
-    display: 'flex',
-  },
   spinnerContainer: {
     display: 'flex',
     position: 'absolute',
@@ -131,3 +140,5 @@ export const Styles = (width, height) => ({
     fontSize: 24
   }
 });
+
+export default { Styles, decideColumnStyles }
