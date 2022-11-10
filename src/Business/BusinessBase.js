@@ -19,11 +19,11 @@ export class BusinessBase {
 
   makePostRequest = data => {
     const url = `${this.baseUrl + this.requestParams}`;
-    return Request.create(url, data, REQUEST_TIMEOUT);
+    return Request.post(url, data, REQUEST_TIMEOUT);
   };
 
   makeUpdateRequest = data => {
     const url = `${this.baseUrl + this.requestParams}`;
-    return Request.update(url, data, REQUEST_TIMEOUT);
+    return Request.put(url, data, REQUEST_TIMEOUT);
   };
 }

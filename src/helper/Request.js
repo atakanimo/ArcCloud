@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const create = async (url, dataToSend, ForceTimeoutSeconds) => {
+const post = async (url, dataToSend, ForceTimeoutSeconds) => {
   const cancelToken = axios.CancelToken;
   const controller = cancelToken.source();
   let result = {success: false, data: null, error: null};
-  console.log(dataToSend, 'create');
 
   try {
     const config = {cancelToken: controller.token, timeout: ForceTimeoutSeconds};
@@ -41,11 +40,10 @@ const fetch = async (url, ForceTimeoutSeconds) => {
   return result;
 };
 
-const update = async (url, dataToSend, ForceTimeoutSeconds) => {
+const put = async (url, dataToSend, ForceTimeoutSeconds) => {
   const cancelToken = axios.CancelToken;
   const controller = cancelToken.source();
   let result = {success: false, data: null, error: null};
-  console.log(dataToSend, 'update');
 
   try {
     const config = {cancelToken: controller.token, timeout: ForceTimeoutSeconds};
@@ -61,4 +59,4 @@ const update = async (url, dataToSend, ForceTimeoutSeconds) => {
   return result;
 };
 
-export default { fetch, create, update };
+export default { fetch, post, put };
