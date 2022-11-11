@@ -14,7 +14,7 @@ class LogService extends BusinessBase {
       this.requestParams = `${type}?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
     } else this.requestParams = type;
 
-    return this.makeGetRequest(this.requestParams);
+    return this.makeGetRequest();
   }
 
   GetDataByClientMessage = async (type, clientMessage, isPaging, ItemCount, PageNumber) => {
@@ -22,7 +22,7 @@ class LogService extends BusinessBase {
       this.requestParams = `${type}?ClientMessage=${clientMessage}&IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
     } else this.requestParams = type;
 
-    return this.makeGetRequest(this.requestParams);
+    return this.makeGetRequest();
   }
 }
 
