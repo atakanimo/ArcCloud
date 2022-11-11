@@ -1,47 +1,47 @@
 import {BusinessBase} from './BusinessBase';
 
-const additionalInfo = { 
-  "creatorUser": "",
-  "createDate": "",
-  "creatorApp": null,
-  "creatorAppVersion": null,
-  "updaterUser": "",
-  "updateDate": "",
-  "updaterApp": "",
-  "updaterAppVersion": ""
-}
+const additionalInfo = {
+  creatorUser: '',
+  createDate: '',
+  creatorApp: null,
+  creatorAppVersion: null,
+  updaterUser: '',
+  updateDate: '',
+  updaterApp: '',
+  updaterAppVersion: '',
+};
 
 const emptyEntryObject = {
-  "plantId": "",
-  "formName": "",
-  "controlId": "",
-  "description": "",
-  "va": 0,
-  "ea": 0,
-  "vm": 0,
-  "em": 0,
-  "vo": 0,
-  "eo": 0,
-  "vu": 0,
-  "eu": 0,
-  "vq": 0,
-  "eq": 0,
-  "v1": 0,
-  "e1": 0,
-  "v2": 0,
-  "e2": 0,
-  "v3": 0,
-  "e3": 0,
-  "v4": 0,
-  "e4": 0,
-  "v5": 0,
-  "e5": 0,
-  "header": 0,
-  "dasboard": null,
-  "isDisplayOnList": 0,
-  "caption": "",
-  "iconCode": "",
-  "styleCode": ""
+  plantId: '',
+  formName: '',
+  controlId: '',
+  description: '',
+  va: 0,
+  ea: 0,
+  vm: 0,
+  em: 0,
+  vo: 0,
+  eo: 0,
+  vu: 0,
+  eu: 0,
+  vq: 0,
+  eq: 0,
+  v1: 0,
+  e1: 0,
+  v2: 0,
+  e2: 0,
+  v3: 0,
+  e3: 0,
+  v4: 0,
+  e4: 0,
+  v5: 0,
+  e5: 0,
+  header: 0,
+  dasboard: null,
+  isDisplayOnList: 0,
+  caption: '',
+  iconCode: '',
+  styleCode: '',
 };
 
 class PermissionService extends BusinessBase {
@@ -51,7 +51,7 @@ class PermissionService extends BusinessBase {
     } else this.requestParams = `${this.apiPorts.permission}/Permission`;
 
     return this.makeGetRequest();
-  }
+  };
 
   GetPermissionsByFormName = (formName, isPaging, ItemCount, PageNumber) => {
     if (isPaging) {
@@ -59,12 +59,16 @@ class PermissionService extends BusinessBase {
     }
 
     return this.makeGetRequest();
-  }
+  };
 
-  ConstructEntryObject = (formName, controlId, description, editItem = null, isNewEntry = false) => {
+  ConstructEntryObject = (formName, controlId, description, editItem = null, checkBoxValues = null, isNewEntry = false) => {
     let entryObject = emptyEntryObject;
-
-    if(isNewEntry) {
+    if (isNewEntry) {
+      for (const key in entryObject) {
+        if (checkBoxValues[key]) {
+          entryObject[key] = checkBoxValues[key];
+        }
+      }
       entryObject.formName = formName;
       entryObject.controlId = controlId;
       entryObject.description = description;
@@ -84,20 +88,20 @@ class PermissionService extends BusinessBase {
     }
 
     return entryObject;
-  }
+  };
 
-  CreateEntry = (formName, controlId, description) => {
-    this.requestParams = `${this.apiPorts.permission}/Permission`;
-    const newEntity = this.ConstructEntryObject(formName, controlId, description, null, true);
+  CreateEntry = (formName, controlId, description, checkBoxValues) => {
+    this.requestParams = `${this.apiPorts.permission}/Permission/add`;
+    const newEntity = this.ConstructEntryObject(formName, controlId, description, null, checkBoxValues, true);
 
     return this.makePostRequest(newEntity);
-  }
+  };
 
   SaveAllChanges = data => {
-    this.requestParams = `${this.apiPorts.permission}/Permission`;
+    this.requestParams = `${this.apiPorts.permission}/Permission/updateAll`;
 
-    return this.makeUpdateRequest(data);
-  }
+    return this.makePostRequest(data);
+  };
 }
 
 export default new PermissionService();

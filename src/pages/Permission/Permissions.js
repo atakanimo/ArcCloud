@@ -66,7 +66,7 @@ const Permissions = () => {
     const {data, success} = await PermissionService.GetPermissions(true, pageCount, page);
 
     if(!success) Alertify.ErrorNotifications('Could not load!');
-    if (success) setData(data);
+    if (success) setData(data.list);
     setLoading(false);
   };
 
@@ -189,6 +189,7 @@ const Permissions = () => {
             modalInfo={{ ...modal, setModal }}
             setData={setData}
             setIsModified={setIsModified}
+            roles={roles}
           />
       }
       <div style={gridContainer}>

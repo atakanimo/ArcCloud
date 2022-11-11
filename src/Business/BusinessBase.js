@@ -22,8 +22,4 @@ export class BusinessBase {
     return Request.post(url, data, REQUEST_TIMEOUT);
   };
 
-  makeUpdateRequest = data => {
-    const url = `${this.baseUrl + this.requestParams}`;
-    return Request.put(url, data, REQUEST_TIMEOUT);
-  };
 }
