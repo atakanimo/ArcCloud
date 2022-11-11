@@ -12,12 +12,12 @@ export class BusinessBase {
     return;
   };
 
-  makeGetRequest = () => {
+  makeGetRequest = (queryParams = null) => {
     const url = `${this.baseUrl + this.requestParams}`;
-    return Request.fetch(url, REQUEST_TIMEOUT);
+    return Request.fetch(url, REQUEST_TIMEOUT, queryParams);
   };
 
-  makePostRequest = data => {
+  makePostRequest = (data) => {
     const url = `${this.baseUrl + this.requestParams}`;
     return Request.post(url, data, REQUEST_TIMEOUT);
   };

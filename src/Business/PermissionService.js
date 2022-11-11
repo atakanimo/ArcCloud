@@ -1,16 +1,5 @@
 import {BusinessBase} from './BusinessBase';
 
-const additionalInfo = {
-  creatorUser: '',
-  createDate: '',
-  creatorApp: null,
-  creatorAppVersion: null,
-  updaterUser: '',
-  updateDate: '',
-  updaterApp: '',
-  updaterAppVersion: '',
-};
-
 const emptyEntryObject = {
   plantId: '',
   formName: '',
@@ -101,6 +90,15 @@ class PermissionService extends BusinessBase {
     this.requestParams = `${this.apiPorts.permission}/Permission/updateAll`;
 
     return this.makePostRequest(data);
+  };
+
+  Search = params => {
+    // if id is present, only id will be sent
+    this.requestParams = `${this.apiPorts.permission}/Permission`;
+    
+    if(params.id) return this.makeGetRequest({ id: params.id });
+
+    return this.makeGetRequest(params);
   };
 }
 
