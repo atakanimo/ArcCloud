@@ -1,10 +1,11 @@
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C8C8C8;
-  border-radius: 100px;
+  background: black;
+  border-radius: 10px;
 }
 
 .sidebar {

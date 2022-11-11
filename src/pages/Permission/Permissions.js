@@ -12,7 +12,8 @@ import CheckBox from '../../components/Checkbox-Switch/Checkbox';
 import PaginationContainer, {PAGINATION_CHOICES} from '../../components/PaginationContainer';
 import SettingsModal, {INPUT_MAX_CHAR_LENGTH, INPUT_MIN_CHAR_LENGTH} from './SettingsModal';
 import Spinner from '../../components/Spinner';
-import AlertComponent from '../../components/AlertComponent';
+import TextInput from '../../components/TextInput';
+import Alertify from '../../components/Alertify';
 
 // ICONS
 import CancelIcon from '../../assets/cancel.png';
@@ -43,6 +44,10 @@ const Permissions = () => {
     searchBtnContainer,
     editIconContainer,
     gridContainer,
+    btnsContainer,
+    inputsContainer,
+    inputStyle,
+    inputContainer
   } = Styles(dynamicWidth, dynamicHeight);
 
   const [data, setData] = React.useState([]);
@@ -53,22 +58,21 @@ const Permissions = () => {
   const [selectedRowIdx, setSelectedRowIdx] = React.useState(null);
   const [isModified, setIsModified] = useState(false);
 
-  const [pageNumber, setPageNumber] = React.useState(1);
+  const [page, setPage] = React.useState(1);
   const [pageCount, setPageCount] = React.useState(PAGINATION_CHOICES[0]);
 
   const fetch = async () => {
     setLoading(true);
-    const {data, success} = await PermissionService.GetPermissions(true, pageCount, pageNumber);
-    // show an alert if request was not successful or/and retry
-    if (success) {
-      setData(data);
-    }
+    const {data, success} = await PermissionService.GetPermissions(true, pageCount, page);
+
+    if(!success) Alertify.ErrorNotifications('Could not load!');
+    if (success) setData(data);
     setLoading(false);
   };
 
   useEffect(() => {
     fetch();
-  }, [pageCount, pageNumber]);
+  }, [pageCount, page]);
 
   // const handleSearch = () => {
   //   if (!searchedItems && !searchTerm) return null;
@@ -105,6 +109,7 @@ const Permissions = () => {
   const saveChanges = () => {
     PermissionService.SaveAllChanges(data);
     setIsModified(false);
+    Alertify.SuccessNotifications('Changes saved!');
   };
 
   const Row = props => {
@@ -120,7 +125,6 @@ const Permissions = () => {
       setModal({trigger: true, isNew: false});
     };
 
-    // checked={row[col] === 1 || row[col] === 9} disabled={row[col] === 9} onCheckboxChange(col, index)
     if (column) {
       return (
         <span key={index} style={decideStyle(item)}>
@@ -138,7 +142,10 @@ const Permissions = () => {
           <span style={decideStyle('control id', index)}>{item.controlId}</span>
           <span style={decideStyle('description', index)}>{item.description}</span>
           <span style={decideStyle('form name', index)}>{item.formName}</span>
-          {roles.length > 0 && roles.map(() => <CheckBox style={decideStyle('checkbox', index)} onChange={() => {}} />)}
+          {roles.length > 0 && roles.map(role => <CheckBox
+            checked={data[index][role] === 1 || data[index][role] === 9} disabled={data[index][role] === 9}
+            style={decideStyle('checkbox', index)}
+            onChange={() => onCheckboxChange(role, index)} />)}
         </div>
       );
     }
@@ -147,28 +154,27 @@ const Permissions = () => {
   const Header = () => {
     return (
       <div style={header}>
-        <button onClick={() => setModal({trigger: true, isNew: true})} style={addText}>
-          {ADD_COLUMN_TEXT}
-        </button>
-        <input
-          // disabled={searchedItems}
-          // value={searchTerm}
-          // onChange={e => SetParentState('searchTerm', e.target.value)}
-          minLength={INPUT_MIN_CHAR_LENGTH}
-          maxLength={INPUT_MAX_CHAR_LENGTH}
-          style={searchInput}
-          placeholder="Type your search here..."
-        />
-        <button style={searchBtnContainer} onClick={() => null}>
-          {/* when user searches, should it search the current page or make a request? */}
-          <img src={SearchIcon} style={searchIcon} />
-        </button>
-        <button disabled={!isModified} onClick={() => undoChanges()} style={undoText(isModified)}>
-          {UNDO_TEXT}
-        </button>
-        <button disabled={!isModified} onClick={() => saveChanges()} style={saveText(isModified)}>
-          {SAVE_TEXT}
-        </button>
+        <div style={btnsContainer}>
+          <button onClick={() => setModal({trigger: true, isNew: true})} style={addText}>
+            {ADD_COLUMN_TEXT}
+          </button>
+          <button disabled={!isModified} onClick={() => undoChanges()} style={undoText(isModified)}>
+            {UNDO_TEXT}
+          </button>
+          <button disabled={!isModified} onClick={() => saveChanges()} style={saveText(isModified)}>
+            {SAVE_TEXT}
+          </button>
+        </div>
+        <div style={inputsContainer}>
+          <TextInput containerStyle={{ ...inputContainer, width: dynamicWidth * 0.1 }} inputStyle={{ ...inputStyle, width: dynamicWidth * 0.1 }} label={'ID'} />
+          <TextInput containerStyle={inputContainer} inputStyle={inputStyle} label={'Control ID'} />
+          <TextInput containerStyle={inputContainer} inputStyle={inputStyle} label={'Description'} />
+          <TextInput containerStyle={inputContainer} inputStyle={inputStyle} label={'Form Name'} />
+          <button style={searchBtnContainer} onClick={() => null}>
+            {/* when user searches, should it search the current page or make a request? */}
+            <img src={SearchIcon} style={searchIcon} />
+          </button>
+        </div>
       </div>
     );
   };
@@ -176,6 +182,15 @@ const Permissions = () => {
   return (
     <div style={container}>
       <Header />
+      { 
+        modal.trigger &&
+          <SettingsModal
+            itemToEdit={{ item: data[selectedRowIdx] || null, itemIdx: selectedRowIdx || null }}
+            modalInfo={{ ...modal, setModal }}
+            setData={setData}
+            setIsModified={setIsModified}
+          />
+      }
       <div style={gridContainer}>
         {loading ? (
           <Spinner />
@@ -188,7 +203,7 @@ const Permissions = () => {
           </>
         )}
       </div>
-      <PaginationContainer paginationCount={pageCount} setPaginationCount={setPageCount} page={pageNumber} setPage={setPageNumber} />
+      <PaginationContainer itemLength={data.length} paginationCount={pageCount} setPaginationCount={setPageCount} page={page} setPage={setPage} isModified={isModified} />
     </div>
   );
 };

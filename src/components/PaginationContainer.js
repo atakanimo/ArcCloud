@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
+import Alertify from './Alertify';
 
 export const PAGINATION_CHOICES = [100, 500, 1000];
 
@@ -67,11 +68,12 @@ const Styles = (width, height) => ({
   },
 });
 
-const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage}) => {
+const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage, itemLength, isModified}) => {
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
 
   const {paginationArea, caretArea, settingsContainer, caret, pageText, presentRows, paginationChoices} = Styles(dynamicWidth, dynamicHeight);
+  const pageLimit = Math.ceil(itemLength / paginationCount);
 
   const traversePage = (shouldDecrease = false) => {
     if (shouldDecrease) {
@@ -79,7 +81,18 @@ const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage
       return;
     }
 
-    setPage(p => (p + 1 <= 100 ? p + 1 : page));
+    setPage(p => {
+      if(p + 1 <= pageLimit) {
+        if(isModified) {
+          Alertify.ErrorNotifications('You have unsaved changes!')
+          return page
+        }
+        return p + 1
+      }
+
+      Alertify.ErrorNotifications("You have seen all available entries!")
+      return page;
+    });
     return;
   };
 

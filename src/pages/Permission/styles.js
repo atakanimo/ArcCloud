@@ -41,9 +41,29 @@ const Styles = (width, height) => ({
   },
   header: {
     display: 'flex',
+    flexDirection: 'column',
+    height: height * 0.15,
+    // marginBottom: 10
+  },
+  btnsContainer: {
+    display: 'flex',
     flexDirection: 'row',
-    height: height * 0.2,
+    height: height * 0.15,
     alignItems: 'center',
+  },
+  inputsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: height * 0.15
+  },
+  inputContainer: {
+    width: width * 0.215,
+    alignItems: 'center',
+    marginLeft: 5,
+    marginRight: 5
+  },
+  inputStyle: {
+    width: width * 0.215
   },
   addText: {
     display: 'flex',
@@ -55,9 +75,9 @@ const Styles = (width, height) => ({
     fontWeight: '600',
     borderWidth: 0,
     borderRadius: 5,
-    backgroundColor: '#C8C8C8',
-    color: 'black',
-    margin: 10
+    backgroundColor: 'green',
+    color: 'white',
+    margin: 5
   },
   saveText: hasChanged => ({
     display: 'flex',
@@ -86,7 +106,7 @@ const Styles = (width, height) => ({
     borderRadius: 5,
     backgroundColor: 'green',
     color: 'white',
-    marginLeft: width * 0.15,
+    marginLeft: width * 0.514,
     opacity: hasChanged ? 1 : 0.5
   }),
   editIcon: {
@@ -121,24 +141,7 @@ const Styles = (width, height) => ({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: '#C8C8C8',
-  },
-  // spinnerContainer: {
-  //   display: 'flex',
-  //   position: 'absolute',
-  //   height: height * 0.1,
-  //   width: width * 0.1,
-  //   marginLeft: width * 0.3,
-  //   marginTop: height * 0.25,
-  //   backgroundColor: 'green',
-  //   borderRadius: 10,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   zIndex: 100
-  // },
-  // spinner: {
-  //   color: 'white',
-  //   fontSize: 24
-  // }
+  }
 });
 
 export default { Styles, decideColumnStyles }

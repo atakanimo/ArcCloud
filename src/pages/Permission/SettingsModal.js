@@ -4,6 +4,7 @@ import PermissionService from '../../Business/PermissionService';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import Alertify from '../../components/Alertify';
 
 export const INPUT_MIN_CHAR_LENGTH = '5';
 export const INPUT_MAX_CHAR_LENGTH = '100';
@@ -42,10 +43,11 @@ const SettingsModal = ({ itemToEdit, modalInfo, setData, setIsModified }) => {
   const handleCreate = async () => {
     // show an alert when creation is failed
     const { data, success } = await PermissionService.CreateEntry(formName, controlId, description)
-    if(success) {
-      setData(p => [...p, data]);
-      setModal({ trigger: false, isNew: false });
-    }
+    if(!success) return Alertify.ErrorNotifications('Could not create entry!');
+    
+    setData(p => [...p, data]);
+    setModal({ trigger: false, isNew: false });
+    Alertify.SuccessNotifications('Entry created!')
     setIsModified(true);
     return;
   };
@@ -58,6 +60,7 @@ const SettingsModal = ({ itemToEdit, modalInfo, setData, setIsModified }) => {
     })
     setModal({ trigger: false, isNew: false });
     setIsModified(true);
+    Alertify.SuccessNotifications('Changes made. Be sure to save!')
     return;
   };
 
