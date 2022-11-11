@@ -15,15 +15,19 @@ class LogService extends BusinessBase {
     } else this.requestParams = type;
 
     return this.makeGetRequest();
-  }
+  };
 
-  GetDataByClientMessage = async (type, clientMessage, isPaging, ItemCount, PageNumber) => {
+  GetDataByFilter = async (type, id, querry, isPaging) => {
     if (isPaging) {
-      this.requestParams = `${type}?ClientMessage=${clientMessage}&IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
+      if (id) {
+        this.requestParams = `${type}?id=${id}`;
+        return this.makeGetRequest();
+      }
+      this.requestParams = querry;
     } else this.requestParams = type;
 
     return this.makeGetRequest();
-  }
+  };
 }
 
 export default new LogService();
