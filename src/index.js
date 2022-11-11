@@ -4,8 +4,9 @@ import './index.css';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'devextreme/dist/css/dx.light.css';
-import {BrowserRouter, Routes, Route, useLocation} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 
+import 'alertifyjs/build/css/alertify.css';
 import {Provider} from 'react-redux';
 import store from './Redux/store';
 

@@ -2,15 +2,14 @@ import React, {useEffect} from 'react';
 import DataGrid, {Button, Column, Scrolling} from 'devextreme-react/data-grid';
 
 import BasicModal from '../../components/Modal.js';
-import GetDynamicDimensions from '../../helper/GetDynamicDimensions.js';
 
-import LogPagesSearch from '../../components/LogPagesSearch.js';
+import SearchForm from '../../components/SearchForm/SearchForm';
 import PaginationContainer from '../../components/PaginationContainer.js';
 import LogService from '../../Business/LogService.js';
+import Spinner from '../../components/Spinner.js';
+import {commonStyles} from '../../Styles/Styles.js';
 
 const InteractionLogs = () => {
-  const [screenSize, getDimension] = GetDynamicDimensions();
-  const {dynamicWidth, dynamicHeight} = screenSize;
   const {types, GetLog} = LogService;
 
   const [data, setData] = React.useState([]);
@@ -18,10 +17,6 @@ const InteractionLogs = () => {
   const [pageNumber, setPageNumber] = React.useState(1);
   const [pageCount, setPageCount] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   useEffect(() => {
     getData();
@@ -39,16 +34,14 @@ const InteractionLogs = () => {
   const handleOpen = () => setOpen(true);
 
   const header = ['id', 'username', 'clientMessage', 'activityDate'];
-  if (loading == true) {
-    return <div>...Loading</div>;
-  }
+  if (loading == true) return <Spinner />;
 
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
-      <LogPagesSearch pageNumber={pageNumber} pageCount={pageCount} />
+      <SearchForm pageNumber={pageNumber} pageCount={pageCount} />
       <DataGrid
-        height={dynamicHeight * 0.82}
+        height={commonStyles.LogGridHeight.height}
         id="gridContainer"
         dataSource={data}
         keyExpr="id"

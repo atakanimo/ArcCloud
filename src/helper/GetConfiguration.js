@@ -12,3 +12,10 @@ export const GetDeviceConfiguration = () => {
   const {screenConfigs, isTestDevice, isSAP, isAdmin, deviceMaxLogCount} = deviceConf;
   return {screenConfigs, isTestDevice, isSAP, isAdmin, deviceMaxLogCount};
 };
+
+export const GetAdminConfiguration = () => {
+  var storeData = store.getState();
+  const adminConf = storeData.ConfigurationReducer.Configuration.adminManagement;
+  const {serviceList, tracelinkLoginInfo, directoryAndFilePaths} = adminConf;
+  return {serviceList, tracelinkLoginInfo, directoryAndFilePaths};
+};

@@ -9,6 +9,8 @@ import {commonStyles} from '../../Styles/Styles';
 import AuthService from '../../Business/AuthService';
 import {SaveConfiguration} from '../../Redux/Actions/Actions';
 import {useNavigate} from 'react-router-dom';
+import Alertify from '../../components/Alertify';
+import Spinner from '../../components/Spinner';
 
 export default function SignIn() {
   const {GetConfiguration} = AuthService;
@@ -22,11 +24,12 @@ export default function SignIn() {
     setLoading(true);
     const {success, data, error} = await GetConfiguration(user);
     if (success == true) {
+      Alertify.SuccessNotifications('Login is successfull!');
       SaveConfiguration(data);
       navigate('/myCompany');
     } else {
       let response = error.response.data;
-      console.log(response, 'response');
+      Alertify.ErrorNotifications(response);
     }
     setLoading(false);
   };
@@ -51,35 +54,39 @@ export default function SignIn() {
   };
   return (
     <Box sx={commonStyles.boxStyle}>
-      <div style={styles.formArea}>
-        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form onSubmit={handleSubmit} sx={{mt: 1}}>
-          <InputComponent label={'Email Address'} name={'username'} autoComplete={'email'} onChangeText={onChangeText} />
-          <InputComponent label={'Password'} name={'password'} type={'password'} onChangeText={onChangeText} />
-          <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-          <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2, height: 50}}>
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div style={styles.formArea}>
+          <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form onSubmit={handleSubmit} sx={{mt: 1}}>
+            <InputComponent label={'Email Address'} name={'username'} autoComplete={'email'} onChangeText={onChangeText} />
+            <InputComponent label={'Password'} name={'password'} type={'password'} onChangeText={onChangeText} />
+            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+            <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2, height: 50}}>
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-        <Copyright sx={{mt: 8, mb: 4}} />
-      </div>
+          </form>
+          <Copyright sx={{mt: 8, mb: 4}} />
+        </div>
+      )}
     </Box>
   );
 }

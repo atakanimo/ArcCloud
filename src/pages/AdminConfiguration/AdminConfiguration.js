@@ -9,23 +9,35 @@ import Col from 'react-bootstrap/Col';
 import Button from '../../components/Button';
 import Text from '../../components/Text/Text';
 import {commonStyles} from '../../Styles/Styles';
+import {GetAdminConfiguration} from '../../helper/GetConfiguration';
+import ButtonComponent from '../../components/Button';
+import Alertify from '../../components/Alertify';
 
 export default function AdminConfiguration() {
-  const [TLInfo, setTLInfo] = useState({username: 'tracelink', password: 'password', url: 'https://itestapi.tracelink.com:443/'});
-  const [paths, setPaths] = useState({
-    InputDirectoryPath: 'input',
-    LogDirectoryPath: 'logDirectory',
-    ArchiveDirectoryPath: 'archive',
-    APKDirectoryPath: 'apk',
-  });
+  const {directoryAndFilePaths, serviceList, tracelinkLoginInfo} = GetAdminConfiguration();
+  const [TLInfo, setTLInfo] = useState(tracelinkLoginInfo);
+  const [paths, setPaths] = useState(directoryAndFilePaths);
+  const [service, setService] = useState(serviceList);
+  const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
 
   const onChangeText = e => {
     const {name, value} = e.target;
     setTLInfo({...TLInfo, [name]: value});
   };
+
   const onChangePath = e => {
     const {name, value} = e.target;
     setPaths({...paths, [name]: value});
+  };
+
+  const onChangeService = (e, index, type) => {
+    const {name, value} = e.target;
+    service[index] = {...service[index], [name]: value, serviceName: type};
+    setForce(!force);
+  };
+
+  const saveConfigurations = (e, index, type) => {
+    Alertify.SuccessNotifications('Clicked save buttons');
   };
 
   return (
@@ -40,21 +52,35 @@ export default function AdminConfiguration() {
                   name={'username'}
                   onChange={onChangeText}
                   value={TLInfo.username}
-                  minWidth={200}
+                  minWidth={210}
                   label={'Tracelink Username'}
-                  width={6.5}
+                  width={6}
+                  isRequired={true}
+                  mt={10}
                 />
                 <TextInput
                   onChange={onChangeText}
                   name={'password'}
                   value={TLInfo.password}
-                  minWidth={200}
+                  minWidth={210}
                   label={'Tracelink Password'}
-                  width={6.5}
+                  width={6}
                   type="password"
+                  isRequired={true}
+                  mt={20}
                 />
-                <TextInput onChange={onChangeText} name={'url'} value={TLInfo.url} minWidth={200} label={'Tracelink Web Url'} width={6.5} />
-                <Button minWidth={200} label={'Test'} />
+                <TextInput
+                  onChange={onChangeText}
+                  name={'url'}
+                  value={TLInfo.webAddress}
+                  minWidth={210}
+                  label={'Tracelink Web Url'}
+                  width={6}
+                  isRequired={true}
+                  mt={20}
+                  mb={15}
+                />
+                <Button width={6} minWidth={200} label={'Test'} />
               </Card>
             </div>
           </div>
@@ -66,17 +92,29 @@ export default function AdminConfiguration() {
               <Card className="checkboxCard_admin">
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <Text label={'Log API'} />
-                  <TextInput label={'Ip Adress'} width={6} />
-                  <TextInput label={'Port'} width={15} />
+                  <TextInput
+                    value={service[0].ipAddress}
+                    label={'Ip Adress'}
+                    name={'ipAddress'}
+                    onChange={e => onChangeService(e, 0, 'LogAPI')}
+                    width={6}
+                  />
+                  <TextInput value={service[0].port} label={'Port'} name={'port'} onChange={e => onChangeService(e, 0, 'LogAPI')} width={15} />
                   <Button label={'Test'} width={10} />
                 </div>
-                <div style={{display: 'flex', flexDirection: 'row'}}>
+                <div style={{display: 'flex', flexDirection: 'row', marginTop: 20}}>
                   <Text label={'Print API'} />
-                  <TextInput label={'Ip Adress'} width={6} />
-                  <TextInput label={'Port'} width={15} />
+                  <TextInput
+                    value={service[1].ipAddress}
+                    name={'ipAddress'}
+                    label={'Ip Adress'}
+                    onChange={e => onChangeService(e, 1, 'PrintAPI')}
+                    width={6}
+                  />
+                  <TextInput value={service[1].port} name={'port'} label={'Port'} onChange={e => onChangeService(e, 1, 'PrintAPI')} width={15} />
                   <Button label={'Test'} width={10} />
                 </div>
-                <Alert style={{flex: 1, fontSize: 18, fontWeight: 'bold'}} variant={'info'}>
+                <Alert style={{marginTop: 20, flex: 1, fontSize: 18, fontWeight: 'bold'}} variant={'info'}>
                   **Auth ip must fill from the device!
                 </Alert>
               </Card>
@@ -91,38 +129,38 @@ export default function AdminConfiguration() {
                 <div>
                   <TextInput
                     onChange={onChangePath}
-                    value={paths.InputDirectoryPath}
-                    name={'InputDirectoryPath'}
+                    value={paths.inputDirectoryPath}
+                    name={'inputDirectoryPath'}
                     mR={20}
                     header={'Input Directory Path'}
-                    label={'C:/home/sharedFolder'}
+                    label={'Exp: C:/home/sharedFolder'}
                     width={7}
                   />
                   <TextInput
                     onChange={onChangePath}
-                    value={paths.LogDirectoryPath}
-                    name={'LogDirectoryPath'}
+                    value={paths.logDirectoryPath}
+                    name={'logDirectoryPath'}
                     header={'Log Directory Path'}
-                    label={'C:/home/sharedFolder/logs'}
+                    label={'Exp: C:/home/sharedFolder/logs'}
                     width={7}
                   />
                 </div>
                 <div>
                   <TextInput
                     onChange={onChangePath}
-                    value={paths.ArchiveDirectoryPath}
-                    name={'ArchiveDirectoryPath'}
+                    value={paths.archiveDirectoryPath}
+                    name={'archiveDirectoryPath'}
                     mR={20}
                     header={'Archive Directory Path'}
-                    label={'C:/home/sharedFolder/archive'}
+                    label={'Exp: C:/home/sharedFolder/archive'}
                     width={7}
                   />
                   <TextInput
                     onChange={onChangePath}
-                    name={'APKDirectoryPath'}
-                    value={paths.APKDirectoryPath}
+                    name={'aPKDirectoryPath'}
+                    value={paths.aPKDirectoryPath}
                     header={'APK Directory Path'}
-                    label={'C:/home/sharedFolder/app'}
+                    label={'Exp: C:/home/sharedFolder/app'}
                     width={7}
                   />
                 </div>
@@ -132,6 +170,9 @@ export default function AdminConfiguration() {
               </Card>
             </div>
           </div>
+          <ButtonComponent onClick={() => saveConfigurations()} label="SAVE" width={9} mT={20} mL={20}>
+            SAVE
+          </ButtonComponent>
         </Col>
       </div>
     </Box>

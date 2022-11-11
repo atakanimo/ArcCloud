@@ -11,6 +11,8 @@ import SelectLabels from '../../components/Select';
 import Col from 'react-bootstrap/Col';
 import {commonStyles} from '../../Styles/Styles';
 import {GetDeviceConfiguration} from '../../helper/GetConfiguration';
+import ButtonComponent from '../../components/Button';
+import Alertify from '../../components/Alertify';
 
 export default function DeviceConfiguration() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -39,6 +41,10 @@ export default function DeviceConfiguration() {
   };
   const onChangeSerialize = name => {
     setScreenConfigs({...screenConf, [name]: !screenConf[name]});
+  };
+
+  const saveConfigurations = (e, index, type) => {
+    Alertify.SuccessNotifications('Clicked save buttons');
   };
 
   return (
@@ -87,6 +93,9 @@ export default function DeviceConfiguration() {
             </div>
           </div>
         </Col>
+        <ButtonComponent onClick={() => saveConfigurations()} label="SAVE" width={9} mT={20} mL={20}>
+          SAVE
+        </ButtonComponent>
       </div>
     </Box>
   );

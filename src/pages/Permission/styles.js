@@ -122,23 +122,23 @@ const Styles = (width, height) => ({
     borderStyle: 'solid',
     borderColor: '#C8C8C8',
   },
-  spinnerContainer: {
-    display: 'flex',
-    position: 'absolute',
-    height: height * 0.1,
-    width: width * 0.1,
-    marginLeft: width * 0.3,
-    marginTop: height * 0.25,
-    backgroundColor: 'green',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 100
-  },
-  spinner: {
-    color: 'white',
-    fontSize: 24
-  }
+  // spinnerContainer: {
+  //   display: 'flex',
+  //   position: 'absolute',
+  //   height: height * 0.1,
+  //   width: width * 0.1,
+  //   marginLeft: width * 0.3,
+  //   marginTop: height * 0.25,
+  //   backgroundColor: 'green',
+  //   borderRadius: 10,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   zIndex: 100
+  // },
+  // spinner: {
+  //   color: 'white',
+  //   fontSize: 24
+  // }
 });
 
 export default { Styles, decideColumnStyles }

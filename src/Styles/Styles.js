@@ -17,6 +17,12 @@ export const commonStyles = {
     flexDirection: 'column',
     overflowY: 'scroll',
   },
+  LogSearchFormHeight: {
+    height: '12vh',
+  },
+  LogGridHeight: {
+    height: '80vh',
+  },
   center: {
     display: 'flex',
     justifyContent: 'center',

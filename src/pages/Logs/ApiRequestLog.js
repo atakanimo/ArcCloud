@@ -1,17 +1,15 @@
 import React, {useEffect} from 'react';
-import DataGrid, {Button, Column, FilterRow, HeaderFilter, Scrolling} from 'devextreme-react/data-grid';
+import DataGrid, {Button, Column, FilterRow, Scrolling} from 'devextreme-react/data-grid';
 
 import BasicModal from '../../components/Modal.js';
-import GetDynamicDimensions from '../../helper/GetDynamicDimensions.js';
 
-import LogPagesSearch from '../../components/LogPagesSearch.js';
+import SearchForm from '../../components/SearchForm/SearchForm.js';
 import PaginationContainer from '../../components/PaginationContainer.js';
 import LogService from '../../Business/LogService.js';
+import Spinner from '../../components/Spinner.js';
+import {commonStyles} from '../../Styles/Styles';
 
 const ApiRequestLogs = () => {
-  const [screenSize, getDimension] = GetDynamicDimensions();
-  const {dynamicWidth, dynamicHeight} = screenSize;
-
   const {types, GetLog} = LogService;
   const [data, setData] = React.useState([]);
 
@@ -36,15 +34,14 @@ const ApiRequestLogs = () => {
   const handleOpen = () => setOpen(true);
 
   const header = ['id', 'username', 'requestData', 'responseData', 'clientMessage', 'moduleName', 'errorMessage', 'requestDate', 'responseDate'];
-  if (loading == true) {
-    return <div>...Loading</div>;
-  }
+  if (loading == true) return <Spinner />;
+
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
-      <LogPagesSearch pageNumber={pageNumber} pageCount={pageCount} setData={setData} setLoading={setLoading} />
+      <SearchForm pageNumber={pageNumber} pageCount={pageCount} setData={setData} setLoading={setLoading} />
       <DataGrid
-        height={dynamicHeight * 0.82}
+        height={commonStyles.LogGridHeight.height}
         id="gridContainer"
         dataSource={data}
         keyExpr="id"
