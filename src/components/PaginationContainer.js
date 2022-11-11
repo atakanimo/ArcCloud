@@ -83,13 +83,13 @@ const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage
     }
 
     setPage(p => {
-      if(p + 1 <= pageLimit) {
+      // if(p + 1 <= pageLimit) {
         if(isModified) {
           Alertify.ErrorNotifications('You have unsaved changes!')
           return page
         }
         return p + 1
-      }
+      // }
 
       Alertify.ErrorNotifications("You have seen all available entries!")
       return page;

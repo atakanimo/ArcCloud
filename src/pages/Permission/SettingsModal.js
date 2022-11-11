@@ -168,19 +168,21 @@ const SettingsModal = ({itemToEdit, modalInfo, setData, setIsModified, roles}) =
                 screenSize={screenSize}
                 label={labels.descriptionLabel}
               />
-              <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                {roles &&
-                  roles.map((role, index) => (
-                    <React.Fragment key={index}>
-                      <Switch
-                        header={role}
-                        setValue={() => (checkBoxValues[role] = checkBoxValues[role] === 0 ? 1 : 0)}
-                        switchAreaStyle={styles.switchAreaStyle}
-                        switchStyle={styles.switchStyle}
-                      />
-                    </React.Fragment>
-                  ))}
-              </div>
+              {
+                isNew && <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                  {roles &&
+                    roles.map((role, index) => (
+                      <React.Fragment key={index}>
+                        <Switch
+                          header={role}
+                          setValue={() => (checkBoxValues[role] = checkBoxValues[role] === 0 ? 1 : 0)}
+                          switchAreaStyle={styles.switchAreaStyle}
+                          switchStyle={styles.switchStyle}
+                        />
+                      </React.Fragment>
+                    ))}
+                </div>
+              }
             </>
             <div style={styles.btnsContainer}>
               <button onClick={() => (isNew ? handleCreate() : handleSave())} style={styles.buttons}>

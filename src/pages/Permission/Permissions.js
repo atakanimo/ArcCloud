@@ -50,16 +50,16 @@ const Permissions = () => {
     inputContainer
   } = Styles(dynamicWidth, dynamicHeight);
 
-  const [data, setData] = React.useState([]);
+  const [data, setData] = useState([]);
+  const [isSearched, setSearched] = useState(false);
 
-  const [modal, setModal] = React.useState({trigger: false, isNew: false});
-  const [loading, setLoading] = React.useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [selectedRowIdx, setSelectedRowIdx] = React.useState(null);
+  const [modal, setModal] = useState({trigger: false, isNew: false});
+  const [loading, setLoading] = useState(false);
+  const [selectedRowIdx, setSelectedRowIdx] = useState(null);
   const [isModified, setIsModified] = useState(false);
 
-  const [page, setPage] = React.useState(1);
-  const [pageCount, setPageCount] = React.useState(PAGINATION_CHOICES[0]);
+  const [page, setPage] = useState(1);
+  const [pageCount, setPageCount] = useState(PAGINATION_CHOICES[0]);
 
   const fetch = async () => {
     setLoading(true);
@@ -73,24 +73,6 @@ const Permissions = () => {
   useEffect(() => {
     fetch();
   }, [pageCount, page]);
-
-  // const handleSearch = () => {
-  //   if (!searchedItems && !searchTerm) return null;
-  //   if (searchedItems) {
-  //     SetParentState('searchedItems', null);
-  //     return;
-  //   }
-
-  //   // should show an alert or a feedback to let the user know about the result of search
-  //   if (filteredItems.length < 1) {
-  //     setShowAlert(true);
-  //     setAlertMessage('No result');
-  //     setAlertVariant('primary');
-  //     return;
-  //   }
-
-  //   return;
-  // };
 
   const onCheckboxChange = (columnTitle, rowIndex) => {
     const checkboxValue = data[rowIndex][columnTitle];
@@ -152,6 +134,29 @@ const Permissions = () => {
   };
 
   const Header = () => {
+    const [searchFields, setSearchFields] = useState({});
+    const onTextChange = (event, field) => setSearchFields(p => ({ ...p, [field]: event.target.value }) );
+
+    const handleSearch = async () => {
+      if(isSearched) {
+        setSearchFields({ });
+        setSearched(false)
+        return fetch();
+      }
+
+      if (!searchFields.id && !searchFields.controlId && !searchFields.formName && !searchFields.description) return null;
+      const {data: result, success} = await PermissionService.Search(searchFields);
+  
+      if (!success) {
+        Alertify.ErrorNotifications('No result!');
+        return;
+      }
+  
+      setData(result.list);
+      setSearched(true)
+      return;
+    };
+
     return (
       <div style={header}>
         <div style={btnsContainer}>
@@ -166,13 +171,12 @@ const Permissions = () => {
           </button>
         </div>
         <div style={inputsContainer}>
-          <TextInput containerStyle={{ ...inputContainer, width: dynamicWidth * 0.1 }} inputStyle={{ ...inputStyle, width: dynamicWidth * 0.1 }} label={'ID'} />
-          <TextInput containerStyle={inputContainer} inputStyle={inputStyle} label={'Control ID'} />
-          <TextInput containerStyle={inputContainer} inputStyle={inputStyle} label={'Description'} />
-          <TextInput containerStyle={inputContainer} inputStyle={inputStyle} label={'Form Name'} />
-          <button style={searchBtnContainer} onClick={() => null}>
-            {/* when user searches, should it search the current page or make a request? */}
-            <img src={SearchIcon} style={searchIcon} />
+          <TextInput onChange={e => onTextChange(e, 'id')} containerStyle={{ ...inputContainer, width: dynamicWidth * 0.1 }} inputStyle={{ ...inputStyle, width: dynamicWidth * 0.1 }} label={'ID'} />
+          <TextInput onChange={e => onTextChange(e, 'controlId')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Control ID'} />
+          <TextInput onChange={e => onTextChange(e, 'description')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Description'} />
+          <TextInput onChange={e => onTextChange(e, 'formName')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Form Name'} />
+          <button style={searchBtnContainer} onClick={handleSearch}>
+            <img src={isSearched ? CancelIcon : SearchIcon} style={searchIcon} />
           </button>
         </div>
       </div>
@@ -182,7 +186,7 @@ const Permissions = () => {
   return (
     <div style={container}>
       <Header />
-      { 
+      {
         modal.trigger &&
           <SettingsModal
             itemToEdit={{ item: data[selectedRowIdx] || null, itemIdx: selectedRowIdx || null }}

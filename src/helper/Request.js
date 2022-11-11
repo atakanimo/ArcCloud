@@ -21,13 +21,13 @@ const post = async (url, dataToSend, ForceTimeoutSeconds) => {
   return result;
 };
 
-const fetch = async (url, ForceTimeoutSeconds) => {
+const fetch = async (url, ForceTimeoutSeconds, params) => {
   const cancelToken = axios.CancelToken;
   const controller = cancelToken.source();
   let result = {success: false, data: null, error: null};
 
   try {
-    const config = {cancelToken: controller.token, timeout: ForceTimeoutSeconds};
+    const config = {cancelToken: controller.token, timeout: ForceTimeoutSeconds, params};
     const response = await axios.get(url, config);
     result.success = true;
     result.data = response.data;
