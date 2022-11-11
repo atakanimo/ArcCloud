@@ -39,7 +39,7 @@ const ApiRequestLogs = () => {
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
-      <SearchForm pageNumber={pageNumber} pageCount={pageCount} setData={setData} setLoading={setLoading} />
+      <SearchForm pageNumber={pageNumber} pageCount={pageCount} setData={setData} setLoading={setLoading} logType={types.ApiRequest} />
       <DataGrid
         height={commonStyles.LogGridHeight.height}
         id="gridContainer"

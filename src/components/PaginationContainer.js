@@ -10,6 +10,7 @@ const Styles = (width, height) => ({
     display: 'flex',
     flexDirection: 'row',
     padding: 10,
+    backgroundColor:"#F7F7F7"
   },
   caretArea: {
     flex: 1,

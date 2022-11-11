@@ -17,6 +17,7 @@ export default function TextInput({mb, mt, mL, name, minWidth, label, type, widt
       width: dynamicWidth / width,
       minWidth: minWidth ? minWidth : 150,
       marginTop: mt ? mt : 5,
+      backgroundColor: 'white',
     },
   };
   return (

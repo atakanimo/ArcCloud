@@ -11,13 +11,12 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
-export default function LogPagesSearch({pageNumber, pageCount, setData, setLoading}) {
+export default function LogPagesSearch({pageNumber, pageCount, setData, setLoading, logType}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
-  const {types, GetDataByClientMessage} = LogService;
+  const {types, GetDataByClientMessage, GetLog} = LogService;
 
-  const [searchedItems, setSearchedItems] = useState('');
-  const [isSearched, setSearched] = useState(false);
+  const [searchedItems, setSearchedItems] = useState({dateTo: dayjs('2022-04-07'), dateFrom: dayjs('2022-04-07')});
 
   const styles = {
     header: {
@@ -26,7 +25,7 @@ export default function LogPagesSearch({pageNumber, pageCount, setData, setLoadi
       height: commonStyles.LogSearchFormHeight.height,
       alignItems: 'center',
       paddingLeft: dynamicWidth * 0.03,
-      // backgroundColor: 'gray',
+      backgroundColor: '#F7F7F7',
     },
     headerColumn: {
       display: 'flex',
@@ -34,12 +33,12 @@ export default function LogPagesSearch({pageNumber, pageCount, setData, setLoadi
     },
     searchBtnContainer: {
       flex: 1,
-      flexDirection: 'row',
+      flexDirection: 'column',
       height: dynamicHeight * 0.12,
       display: 'flex',
       justifyContent: 'space-between',
       padding: 10,
-      // marginLeft: dynamicWidth * 0.01,
+      marginLeft: 10,
     },
   };
 
@@ -55,42 +54,115 @@ export default function LogPagesSearch({pageNumber, pageCount, setData, setLoadi
     setData(data);
     setLoading(false);
   };
+  const onChange = e => {
+    const {name, value} = e.target;
+    setSearchedItems({...searchedItems, [name]: value});
+  };
+  console.log(searchedItems, 'searchedItems');
 
-  const [dateFrom, setFrom] = React.useState(dayjs('2022-04-07'));
-  const [dateTo, setTo] = React.useState(dayjs('2022-04-07'));
+  const reset = async () => {
+    setLoading(true);
+    const {data, success} = await GetLog(logType, true, pageCount, pageNumber);
+    setData(data);
+    setLoading(false);
+  };
 
+  if (logType == types.Nav) {
+    return (
+      <div style={styles.header}>
+        <div style={styles.headerColumn}>
+          <TextInput label={'ID'} name={'id'} onChange={onChange} mL={10} mb={5} width={8} />
+          <TextInput label={'Client Message'} name={'clientMessage'} onChange={onChange} mL={10} mb={5} width={8} />
+        </div>
+        <div style={{...styles.headerColumn, marginLeft: 10}}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Request Date From"
+              value={searchedItems.dateFrom}
+              onChange={newValue => setSearchedItems({...searchedItems, dateFrom: newValue})}
+              renderInput={params => <TextField style={{marginBottom: 5, backgroundColor: 'white'}} size="small" {...params} />}
+            />
+            <DatePicker
+              label="Request Date To"
+              value={searchedItems.dateTo}
+              onChange={newValue => setSearchedItems({...searchedItems, dateTo: newValue})}
+              renderInput={params => <TextField style={{marginTop: 5, backgroundColor: 'white'}} size="small" {...params} />}
+            />
+          </LocalizationProvider>
+        </div>
+        <div style={styles.searchBtnContainer}>
+          <ButtonComponent onClick={handleSearch} mT={'0'} minWidth={110} width={16.5} label={'Search'} />
+          <ButtonComponent onClick={reset} mT={'0'} minWidth={110} width={16.5} label={'Reset'} />
+        </div>
+      </div>
+    );
+  }
+  if (logType == types.Interaction) {
+    return (
+      <div style={styles.header}>
+        <div style={styles.headerColumn}>
+          <TextInput label={'ID'} name={'id'} onChange={onChange} mL={10} mb={5} width={8} />
+          <TextInput label={'Username'} name={'username'} onChange={onChange} mL={10} mb={5} width={8} />
+        </div>
+        <div style={{...styles.headerColumn, marginLeft: 10}}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Request Date From"
+              value={searchedItems.dateFrom}
+              onChange={newValue => setSearchedItems({...searchedItems, dateFrom: newValue})}
+              renderInput={params => <TextField style={{marginBottom: 5, backgroundColor: 'white'}} size="small" {...params} />}
+            />
+            <DatePicker
+              label="Request Date To"
+              value={searchedItems.dateTo}
+              onChange={newValue => setSearchedItems({...searchedItems, dateTo: newValue})}
+              renderInput={params => <TextField style={{marginTop: 5, backgroundColor: 'white'}} size="small" {...params} />}
+            />
+          </LocalizationProvider>
+        </div>
+        <div style={styles.headerColumn}>
+          <TextInput label={'Client Message'} name={'clientMessage'} onChange={onChange} mL={10} mb={5} width={8} />
+        </div>
+        <div style={styles.searchBtnContainer}>
+          <ButtonComponent onClick={handleSearch} mT={'0'} minWidth={110} width={16.5} label={'Search'} />
+          <ButtonComponent onClick={reset} mT={'0'} minWidth={110} width={16.5} label={'Reset'} />
+        </div>
+      </div>
+    );
+  }
   return (
     <div style={styles.header}>
       <div style={styles.headerColumn}>
-        <TextInput label={'Username'} mL={10} mb={5} width={8} />
-        <TextInput label={'ID'} mL={10} mb={5} width={8} />
+        <TextInput label={'Username'} name={'username'} onChange={onChange} mL={10} mb={5} width={8} />
+        <TextInput label={'ID'} name={'id'} onChange={onChange} mL={10} mb={5} width={8} />
       </div>
       <div style={styles.headerColumn}>
-        <TextInput label={'Request Data'} mL={10} mb={5} width={8} />
-        <TextInput label={'Response Data'} mL={10} mb={5} width={8} />
+        <TextInput label={'Request Data'} name={'requestData'} onChange={onChange} mL={10} mb={5} width={8} />
+        <TextInput label={'Response Data'} name={'responseData'} onChange={onChange} mL={10} mb={5} width={8} />
+      </div>
+      <div style={{...styles.headerColumn, marginLeft: 10}}>
+        <TextInput label={'Client Message'} name={'clientMessage'} onChange={onChange} mL={10} mb={5} width={8} />
+        <TextInput label={'Module Name'} name={'moduleName'} onChange={onChange} mL={10} mb={5} width={8} />
       </div>
       <div style={{...styles.headerColumn, marginLeft: 10}}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Request Date From"
-            value={dateFrom}
-            onChange={newValue => setFrom(newValue)}
-            renderInput={params => <TextField style={{marginBottom: 5}} size="small" {...params} />}
+            value={searchedItems.dateFrom}
+            onChange={newValue => setSearchedItems({...searchedItems, dateFrom: newValue})}
+            renderInput={params => <TextField style={{marginBottom: 5, backgroundColor: 'white'}} size="small" {...params} />}
           />
           <DatePicker
             label="Request Date To"
-            value={dateTo}
-            onChange={newValue => setTo(newValue)}
-            renderInput={params => <TextField style={{marginTop: 5}} size="small" {...params} />}
+            value={searchedItems.dateTo}
+            onChange={newValue => setSearchedItems({...searchedItems, dateTo: newValue})}
+            renderInput={params => <TextField style={{marginTop: 5, backgroundColor: 'white'}} size="small" {...params} />}
           />
         </LocalizationProvider>
       </div>
-      <div style={{...styles.headerColumn, marginLeft: 10}}>
-        <TextInput label={'Client Message'} mL={10} mb={'0'} width={8} />
-        <div style={styles.searchBtnContainer}>
-          <ButtonComponent mT={'0'} minWidth={110} width={16.5} label={'Search'} />
-          <ButtonComponent mL={10} mT={'0'} minWidth={110} width={16.5} label={'Reset'} />
-        </div>
+      <div style={styles.searchBtnContainer}>
+        <ButtonComponent onClick={handleSearch} mT={'0'} minWidth={110} width={16.5} label={'Search'} />
+        <ButtonComponent onClick={reset} mT={'0'} minWidth={110} width={16.5} label={'Reset'} />
       </div>
     </div>
   );
