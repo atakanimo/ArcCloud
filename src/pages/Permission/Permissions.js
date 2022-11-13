@@ -27,7 +27,7 @@ const allColumns = [...titles, ...roles];
 const ADD_COLUMN_TEXT = 'Add New Entry';
 const SAVE_TEXT = 'Save Changes';
 const UNDO_TEXT = 'Undo All Changes';
-const PAGINATION_CHOICES = [100, 250, 400];
+const PAGINATION_CHOICES = [100, 200, 300];
 
 const Permissions = () => {
   const [screenSize] = GetDynamicDimensions();
