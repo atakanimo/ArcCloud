@@ -53,7 +53,7 @@ function GS1AppIdenList() {
 
   const {GetAI, DeleteAI, UpdateAI} = CompanyService;
 
-  const initialState = [{code: '', description: '', length: '', format: ''}];
+  const initialState = [{plantId: '0000', key: 'GS1-AI', code: '', description: '', length: '', format: ''}];
   const [gridNumber, setGridNumber] = useState(0);
   const [info, setInfo] = useState(initialState);
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
@@ -114,6 +114,8 @@ function GS1AppIdenList() {
     setForce(!force);
   };
 
+  console.log(info, 'info');
+
   const handlerAdd = () => {
     let index = -1;
     info.forEach((element, idx) => {
@@ -128,7 +130,8 @@ function GS1AppIdenList() {
       setAlertVariant('warning');
       return;
     }
-    setInfo([...info, initialState]);
+    console.log(gridNumber, 'grid');
+    info[gridNumber + 1] = initialState[0];
     setGridNumber(gridNumber + 1);
   };
 
@@ -150,7 +153,7 @@ function GS1AppIdenList() {
             <div style={styles.inputDiv}>
               <TextInput value={info[i].code} onChange={text => onInputChange('code', text, i)} label={'Code'} width={9} />
               <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Description'} width={7} />
-              <TextInput value={info[i].length} onChange={text => onInputChange('lenght', text, i)} label={'Length'} width={9} />
+              <TextInput value={info[i].length} onChange={text => onInputChange('length', text, i)} label={'Length'} width={9} />
               <TextInput value={info[i].format} onChange={text => onInputChange('format', text, i)} label={'Format'} width={9} />
               {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => deleteAI(info[i].id)} /> : null}
             </div>

@@ -2,7 +2,7 @@ import {BusinessBase} from './BusinessBase';
 
 class AdminService extends BusinessBase {
   querryHeader = '/Admin';
-  querry = {save: '/save', createDir: 'createDirectories', testTL: 'testTracelinkAPI', testLog: 'testLogAPI', testPrint: 'testPrintAPI'};
+  querry = {save: '/save', createDir: '/createDirectories', testTL: '/testTracelinkAPI', testLog: '/testLogAPI', testPrint: '/testPrintAPI'};
 
   GetAdminConf = () => {
     this.requestParams = `${this.apiPorts.admin}${this.querryHeader}`;

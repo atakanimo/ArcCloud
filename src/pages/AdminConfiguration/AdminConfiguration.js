@@ -75,9 +75,9 @@ export default function AdminConfiguration() {
     const {data, success, error} = await TestTracelinkApi(TLInfo);
     console.log(success, 'success', data, 'data', error, 'error');
     if (success) Alertify.SuccessNotifications('Tracelink infos are true!');
-    else Alertify.ErrorNotifications('Tracelink infos are true!');
+    else Alertify.ErrorNotifications(error.response.data.message);
     // setLoading(false);
-  }; //ask Onder, API doesn't work
+  };
 
   return (
     <Box sx={commonStyles.boxStyle}>
@@ -113,7 +113,7 @@ export default function AdminConfiguration() {
                   />
                   <TextInput
                     onChange={onChangeText}
-                    name={'url'}
+                    name={'webAddress'}
                     value={TLInfo.webAddress}
                     minWidth={210}
                     label={'Tracelink Web Url'}
