@@ -11,27 +11,27 @@ const decideColumnStyles = (columnName, width, height) => {
     display: 'flex',
   };
 
-  switch(columnName.toLowerCase()) {
-    case "edit":
-      return { ...defaultStyle, minWidth: (width * 0.1) * 0.5, borderLeftWidth: 0};
-    case "id":
-      return { ...defaultStyle, minWidth: (width * 0.1) * 0.5};
-    case "control id":
-      return { ...defaultStyle, minWidth: (width * 0.1) * 1.5};
-    case "form name":
-      return { ...defaultStyle, minWidth: (width * 0.1) * 2};
-    case "description":
-      return { ...defaultStyle, minWidth: (width * 0.1) * 2};
+  switch (columnName.toLowerCase()) {
+    case 'edit':
+      return {...defaultStyle, minWidth: width * 0.1 * 0.5, borderLeftWidth: 0};
+    case 'id':
+      return {...defaultStyle, minWidth: width * 0.1 * 0.5};
+    case 'control id':
+      return {...defaultStyle, minWidth: width * 0.1 * 1.5};
+    case 'form name':
+      return {...defaultStyle, minWidth: width * 0.1 * 2};
+    case 'description':
+      return {...defaultStyle, minWidth: width * 0.1 * 2};
     default:
       return defaultStyle;
   }
-}
+};
 
 const Styles = (width, height) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    height
+    height,
   },
   gridContainer: {
     height,
@@ -44,6 +44,7 @@ const Styles = (width, height) => ({
     flexDirection: 'column',
     height: height * 0.15,
     // marginBottom: 10
+    backgroundColor: '#F7F7F7',
   },
   btnsContainer: {
     display: 'flex',
@@ -54,16 +55,16 @@ const Styles = (width, height) => ({
   inputsContainer: {
     display: 'flex',
     flexDirection: 'row',
-    height: height * 0.15
+    height: height * 0.15,
   },
   inputContainer: {
     width: width * 0.215,
     alignItems: 'center',
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
   },
   inputStyle: {
-    width: width * 0.215
+    width: width * 0.215,
   },
   addText: {
     display: 'flex',
@@ -77,7 +78,7 @@ const Styles = (width, height) => ({
     borderRadius: 5,
     backgroundColor: 'green',
     color: 'white',
-    margin: 5
+    margin: 5,
   },
   saveText: hasChanged => ({
     display: 'flex',
@@ -92,7 +93,7 @@ const Styles = (width, height) => ({
     backgroundColor: 'green',
     color: 'white',
     marginLeft: 10,
-    opacity: hasChanged ? 1 : 0.5
+    opacity: hasChanged ? 1 : 0.5,
   }),
   undoText: hasChanged => ({
     display: 'flex',
@@ -107,7 +108,7 @@ const Styles = (width, height) => ({
     backgroundColor: 'green',
     color: 'white',
     marginLeft: width * 0.514,
-    opacity: hasChanged ? 1 : 0.5
+    opacity: hasChanged ? 1 : 0.5,
   }),
   editIcon: {
     width: 25,
@@ -141,7 +142,7 @@ const Styles = (width, height) => ({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: '#C8C8C8',
-  }
+  },
 });
 
-export default { Styles, decideColumnStyles }
+export default {Styles, decideColumnStyles};

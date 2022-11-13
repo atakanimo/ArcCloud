@@ -6,10 +6,9 @@ import PermissionStyle from './styles';
 import PermissionService from '../../Business/PermissionService';
 
 // COMPONENTS
-import {Box} from '@mui/material';
 import {TbEdit} from 'react-icons/tb';
 import CheckBox from '../../components/Checkbox-Switch/Checkbox';
-import PaginationContainer, {PAGINATION_CHOICES} from '../../components/PaginationContainer';
+import PaginationContainer from '../../components/PaginationContainer';
 import SettingsModal, {INPUT_MAX_CHAR_LENGTH, INPUT_MIN_CHAR_LENGTH} from './SettingsModal';
 import Spinner from '../../components/Spinner';
 import TextInput from '../../components/TextInput';
@@ -28,6 +27,7 @@ const allColumns = [...titles, ...roles];
 const ADD_COLUMN_TEXT = 'Add New Entry';
 const SAVE_TEXT = 'Save Changes';
 const UNDO_TEXT = 'Undo All Changes';
+const PAGINATION_CHOICES = [100, 250, 400];
 
 const Permissions = () => {
   const [screenSize] = GetDynamicDimensions();
@@ -39,7 +39,6 @@ const Permissions = () => {
     saveText,
     undoText,
     editIcon,
-    searchInput,
     searchIcon,
     searchBtnContainer,
     editIconContainer,
@@ -47,7 +46,7 @@ const Permissions = () => {
     btnsContainer,
     inputsContainer,
     inputStyle,
-    inputContainer
+    inputContainer,
   } = Styles(dynamicWidth, dynamicHeight);
 
   const [data, setData] = useState([]);
@@ -65,7 +64,7 @@ const Permissions = () => {
     setLoading(true);
     const {data, success} = await PermissionService.GetPermissions(true, pageCount, page);
 
-    if(!success) Alertify.ErrorNotifications('Could not load!');
+    if (!success) Alertify.ErrorNotifications('Could not load!');
     if (success) setData(data.list);
     setLoading(false);
   };
@@ -124,10 +123,15 @@ const Permissions = () => {
           <span style={decideStyle('control id', index)}>{item.controlId}</span>
           <span style={decideStyle('description', index)}>{item.description}</span>
           <span style={decideStyle('form name', index)}>{item.formName}</span>
-          {roles.length > 0 && roles.map(role => <CheckBox
-            checked={data[index][role] === 1 || data[index][role] === 9} disabled={data[index][role] === 9}
-            style={decideStyle('checkbox', index)}
-            onChange={() => onCheckboxChange(role, index)} />)}
+          {roles.length > 0 &&
+            roles.map(role => (
+              <CheckBox
+                checked={data[index][role] === 1 || data[index][role] === 9}
+                disabled={data[index][role] === 9}
+                style={decideStyle('checkbox', index)}
+                onChange={() => onCheckboxChange(role, index)}
+              />
+            ))}
         </div>
       );
     }
@@ -135,25 +139,25 @@ const Permissions = () => {
 
   const Header = () => {
     const [searchFields, setSearchFields] = useState({});
-    const onTextChange = (event, field) => setSearchFields(p => ({ ...p, [field]: event.target.value }) );
+    const onTextChange = (event, field) => setSearchFields(p => ({...p, [field]: event.target.value}));
 
     const handleSearch = async () => {
-      if(isSearched) {
-        setSearchFields({ });
-        setSearched(false)
+      if (isSearched) {
+        setSearchFields({});
+        setSearched(false);
         return fetch();
       }
 
       if (!searchFields.id && !searchFields.controlId && !searchFields.formName && !searchFields.description) return null;
       const {data: result, success} = await PermissionService.Search(searchFields);
-  
+
       if (!success) {
         Alertify.ErrorNotifications('No result!');
         return;
       }
-  
+
       setData(result.list);
-      setSearched(true)
+      setSearched(true);
       return;
     };
 
@@ -171,9 +175,19 @@ const Permissions = () => {
           </button>
         </div>
         <div style={inputsContainer}>
-          <TextInput onChange={e => onTextChange(e, 'id')} containerStyle={{ ...inputContainer, width: dynamicWidth * 0.1 }} inputStyle={{ ...inputStyle, width: dynamicWidth * 0.1 }} label={'ID'} />
+          <TextInput
+            onChange={e => onTextChange(e, 'id')}
+            containerStyle={{...inputContainer, width: dynamicWidth * 0.1}}
+            inputStyle={{...inputStyle, width: dynamicWidth * 0.1}}
+            label={'ID'}
+          />
           <TextInput onChange={e => onTextChange(e, 'controlId')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Control ID'} />
-          <TextInput onChange={e => onTextChange(e, 'description')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Description'} />
+          <TextInput
+            onChange={e => onTextChange(e, 'description')}
+            containerStyle={inputContainer}
+            inputStyle={inputStyle}
+            label={'Description'}
+          />
           <TextInput onChange={e => onTextChange(e, 'formName')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Form Name'} />
           <button style={searchBtnContainer} onClick={handleSearch}>
             <img src={isSearched ? CancelIcon : SearchIcon} style={searchIcon} />
@@ -186,16 +200,15 @@ const Permissions = () => {
   return (
     <div style={container}>
       <Header />
-      {
-        modal.trigger &&
-          <SettingsModal
-            itemToEdit={{ item: data[selectedRowIdx] || null, itemIdx: selectedRowIdx || null }}
-            modalInfo={{ ...modal, setModal }}
-            setData={setData}
-            setIsModified={setIsModified}
-            roles={roles}
-          />
-      }
+      {modal.trigger && (
+        <SettingsModal
+          itemToEdit={{item: data[selectedRowIdx] || null, itemIdx: selectedRowIdx || null}}
+          modalInfo={{...modal, setModal}}
+          setData={setData}
+          setIsModified={setIsModified}
+          roles={roles}
+        />
+      )}
       <div style={gridContainer}>
         {loading ? (
           <Spinner />
@@ -208,7 +221,15 @@ const Permissions = () => {
           </>
         )}
       </div>
-      <PaginationContainer itemLength={data.length} paginationCount={pageCount} setPaginationCount={setPageCount} page={page} setPage={setPage} isModified={isModified} />
+      <PaginationContainer
+        PAG_CHOICES={PAGINATION_CHOICES}
+        itemLength={data.length}
+        paginationCount={pageCount}
+        setPaginationCount={setPageCount}
+        page={page}
+        setPage={setPage}
+        isModified={isModified}
+      />
     </div>
   );
 };

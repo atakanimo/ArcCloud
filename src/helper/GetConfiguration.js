@@ -1,11 +1,5 @@
 import store from '../Redux/store';
 
-export const GetAIs = () => {
-  var storeData = store.getState();
-  const AIs = storeData.ConfigurationReducer.Configuration.adminManagement.gsAIs;
-  return AIs;
-};
-
 export const GetDeviceConfiguration = () => {
   var storeData = store.getState();
   const deviceConf = storeData.ConfigurationReducer.Configuration.deviceList[0];
@@ -13,9 +7,8 @@ export const GetDeviceConfiguration = () => {
   return {screenConfigs, isTestDevice, isSAP, isAdmin, deviceMaxLogCount};
 };
 
-export const GetAdminConfiguration = () => {
+export const GetPrinters = () => {
   var storeData = store.getState();
-  const adminConf = storeData.ConfigurationReducer.Configuration.adminManagement;
-  const {serviceList, tracelinkLoginInfo, directoryAndFilePaths} = adminConf;
-  return {serviceList, tracelinkLoginInfo, directoryAndFilePaths};
+  const printers = storeData.ConfigurationReducer.Configuration.printerList;
+  return {printers};
 };

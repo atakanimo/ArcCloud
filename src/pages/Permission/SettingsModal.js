@@ -98,7 +98,7 @@ const SettingsModal = ({itemToEdit, modalInfo, setData, setIsModified, roles}) =
       border: '2px solid #000',
       boxShadow: 24,
       p: 2,
-      maxHeight: dynamicHeight * 0.75,
+      maxHeight: dynamicHeight * 0.85,
       overflowY: 'scroll',
     },
     modalContainer: {
@@ -106,7 +106,7 @@ const SettingsModal = ({itemToEdit, modalInfo, setData, setIsModified, roles}) =
       flexDirection: 'column',
       width: dynamicWidth * 0.5,
       maxWidth: 450,
-      heigth: 700,
+      // heigth: 700,
     },
     btnsContainer: {
       display: 'flex',

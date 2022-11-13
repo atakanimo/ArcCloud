@@ -4,9 +4,11 @@ import TextInput from '../../components/TextInput';
 import AlertComponent from '../../components/AlertComponent';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import ButtonComponent from '../../components/Button';
-import {GetAIs} from '../../helper/GetConfiguration';
 import DeleteIcon from '../../assets/DeleteIcon.png';
 import AddIcon from '../../assets/AddIcon.png';
+import CompanyService from '../../Business/CompanyService';
+import Spinner from '../../components/Spinner';
+import Alertify from '../../components/Alertify';
 
 function GS1AppIdenList() {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -49,16 +51,55 @@ function GS1AppIdenList() {
     },
   };
 
-  const AIs = GetAIs();
+  const {GetAI, DeleteAI, UpdateAI} = CompanyService;
+
+  const initialState = [{code: '', description: '', length: '', format: ''}];
+  const [gridNumber, setGridNumber] = useState(0);
+  const [info, setInfo] = useState(initialState);
+  const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
-    setGridNumber(AIs.length - 1);
+    getAI();
   }, []);
 
-  const initialState = {ai: '', description: '', length: '', format: ''};
-  const [gridNumber, setGridNumber] = useState(0);
-  const [info, setInfo] = useState(AIs.length > 0 ? AIs : [initialState]);
-  const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
+  const getAI = async () => {
+    setLoading(true);
+    const {data, success} = await GetAI();
+    if (success) {
+      if (data.list.length > 0) {
+        setInfo(data.list);
+        setGridNumber(data.list.length - 1);
+      }
+    }
+    setLoading(false);
+  };
+  const updateAI = async () => {
+    setLoading(true);
+    const {data, success} = await UpdateAI(info);
+    if (success) {
+      Alertify.SuccessNotifications('Updated successfully!');
+      getAI();
+    } else Alertify.ErrorNotifications('Error!');
+    setLoading(false);
+  };
+
+  const deleteAI = async id => {
+    if (info.length === 1) {
+      setShowAlert(true);
+      setAlertMessage('Must have at least one card');
+      setAlertVariant('danger');
+      return;
+    }
+    setLoading(true);
+    const {data, success, error} = await DeleteAI(id);
+    console.log(data, success, error);
+    if (success) {
+      Alertify.SuccessNotifications('Deleted successfully!');
+      getAI();
+    } else Alertify.ErrorNotifications('Error!');
+    setLoading(false);
+  };
 
   //for alert
   const [showAlert, setShowAlert] = useState(false);
@@ -73,27 +114,14 @@ function GS1AppIdenList() {
     setForce(!force);
   };
 
-  const handlerDelete = itemIndex => {
-    if (info.length === 1) {
-      setShowAlert(true);
-      setAlertMessage('Must have at least one card');
-      setAlertVariant('danger');
-      return;
-    }
-    const filtered = info.filter((item, index) => index !== itemIndex);
-    setInfo(filtered);
-    setGridNumber(gridNumber - 1);
-  };
-
   const handlerAdd = () => {
     let index = -1;
     info.forEach((element, idx) => {
-      if (element.ai === '' || element.description === '' || element.length === '' || element.format === '') {
+      if (element.code === '' || element.description === '' || element.length === '' || element.format === '') {
         index = idx;
         return;
       }
     });
-    console.log(index, 'index');
     if (index !== -1) {
       setShowAlert(true);
       setAlertMessage(`Please fill in the ${index + 1}th card`);
@@ -103,14 +131,6 @@ function GS1AppIdenList() {
     setInfo([...info, initialState]);
     setGridNumber(gridNumber + 1);
   };
-
-  useEffect(() => {
-    console.log(info, 'info');
-  }, [info]);
-
-  useEffect(() => {
-    console.log(gridNumber, 'gridNumber');
-  }, [gridNumber]);
 
   const IconComponent = ({icon, onClick}) => {
     return (
@@ -123,36 +143,42 @@ function GS1AppIdenList() {
   };
 
   const createCard = () => {
-    for (let i = 0; i <= gridNumber; i++) {
-      elements.push(
-        <Card key={i} style={styles.checkboxCard}>
-          <div style={styles.inputDiv}>
-            <TextInput value={info[i].ai} onChange={text => onInputChange('ai', text, i)} label={'AI'} width={9} />
-            <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Description'} width={7} />
-            <TextInput value={info[i].lenght} onChange={text => onInputChange('lenght', text, i)} label={'Length'} width={9} />
-            <TextInput value={info[i].format} onChange={text => onInputChange('format', text, i)} label={'Format'} width={9} />
-            {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} /> : null}
-          </div>
-          <div style={styles.createButton}>
-            {i === 0 ? (
-              <div key={i} style={{display: 'flex', flexDirection: 'row'}}>
-                <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} />
-                <IconComponent icon={AddIcon} onClick={() => handlerAdd()} />
-              </div>
-            ) : null}
-          </div>
-        </Card>,
-      );
+    if (info && info.length > 0) {
+      for (let i = 0; i <= gridNumber; i++) {
+        elements.push(
+          <Card key={i} style={styles.checkboxCard}>
+            <div style={styles.inputDiv}>
+              <TextInput value={info[i].code} onChange={text => onInputChange('code', text, i)} label={'Code'} width={9} />
+              <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Description'} width={7} />
+              <TextInput value={info[i].length} onChange={text => onInputChange('lenght', text, i)} label={'Length'} width={9} />
+              <TextInput value={info[i].format} onChange={text => onInputChange('format', text, i)} label={'Format'} width={9} />
+              {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => deleteAI(info[i].id)} /> : null}
+            </div>
+            <div style={styles.createButton}>
+              {i === 0 ? (
+                <div key={i} style={{display: 'flex', flexDirection: 'row'}}>
+                  <IconComponent icon={DeleteIcon} onClick={() => deleteAI(info[i].id)} />
+                  <IconComponent icon={AddIcon} onClick={() => handlerAdd()} />
+                </div>
+              ) : null}
+            </div>
+          </Card>,
+        );
+      }
+      return elements;
     }
-    return elements;
   };
   return (
     <div style={styles.cardArea}>
-      <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
-      {gridNumber >= 0 ? createCard() : null}
-      <ButtonComponent onClick={() => null} label="SAVE" width={9} mT={20}>
-        SAVE
-      </ButtonComponent>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
+          {gridNumber >= 0 ? createCard() : null}
+          <ButtonComponent onClick={() => updateAI()} label="Update" width={9} mT={20} />
+        </>
+      )}
     </div>
   );
 }

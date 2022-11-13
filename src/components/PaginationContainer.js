@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 import Alertify from './Alertify';
 
@@ -10,7 +10,7 @@ const Styles = (width, height) => ({
     display: 'flex',
     flexDirection: 'row',
     padding: 10,
-    backgroundColor:"#F7F7F7"
+    backgroundColor: '#F7F7F7',
   },
   caretArea: {
     flex: 1,
@@ -69,7 +69,9 @@ const Styles = (width, height) => ({
   },
 });
 
-const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage, itemLength, isModified}) => {
+const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage, itemLength, isModified, PAG_CHOICES}) => {
+  const choice = PAG_CHOICES ? PAG_CHOICES : PAGINATION_CHOICES;
+
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
 
@@ -84,14 +86,14 @@ const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage
 
     setPage(p => {
       // if(p + 1 <= pageLimit) {
-        if(isModified) {
-          Alertify.ErrorNotifications('You have unsaved changes!')
-          return page
-        }
-        return p + 1
+      if (isModified) {
+        Alertify.ErrorNotifications('You have unsaved changes!');
+        return page;
+      }
+      return p + 1;
       // }
 
-      Alertify.ErrorNotifications("You have seen all available entries!")
+      Alertify.ErrorNotifications('You have seen all available entries!');
       return page;
     });
     return;
@@ -116,7 +118,7 @@ const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage
       </div>
       <div style={paginationArea}>
         <div style={presentRows}>{`Displaying ${paginationCount} items `}</div>
-        {PAGINATION_CHOICES.map((count, idx) => (
+        {choice.map((count, idx) => (
           <button
             key={count}
             style={{...paginationChoices, color: count == paginationCount ? '#C8C8C8' : 'black'}}

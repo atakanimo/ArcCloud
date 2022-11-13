@@ -4,7 +4,6 @@ import {Routes, Route, useLocation} from 'react-router-dom';
 import AdminConfiguration from './pages/AdminConfiguration/AdminConfiguration';
 import Col from 'react-bootstrap/Col';
 import Sidebar from './pages/LeftMenu/SideBar';
-import NavbarComponent from './components/Navbar';
 import LoginPage from './pages/LoginPage/LoginPage';
 import MyCompany from './pages/MyCompany/MyCompany';
 import DeviceConfiguration from './pages/DeviceConfiguration/DeviceConfiguration';
@@ -13,8 +12,9 @@ import Permissions from './pages/Permission/Permissions';
 import ApiRequestLog from './pages/Logs/ApiRequestLog';
 import InteractionLog from './pages/Logs/InteractionLog';
 import NavigationLog from './pages/Logs/NavigationLog';
-import NetworkLog from './pages/Logs/NetworkLog';
+// import NetworkLog from './pages/Logs/NetworkLog';
 import UserAuthLog from './pages/Logs/UserAuthLog';
+import Printer from './pages/Printer/Printer';
 
 export default function App() {
   const location = useLocation();
@@ -42,7 +42,8 @@ export default function App() {
               <Route path="navigationLogs" element={<NavigationLog />} />
               <Route path="interactionLogs" element={<InteractionLog />} />
               <Route path="userAuthLogs" element={<UserAuthLog />} />
-              <Route path="networkLogs" element={<NetworkLog />} />
+              <Route path="printers" element={<Printer />} />
+              {/* <Route path="networkLogs" element={<NetworkLog />} /> */}
               <Route
                 path="*"
                 element={

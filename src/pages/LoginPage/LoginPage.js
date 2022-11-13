@@ -44,9 +44,6 @@ export default function SignIn() {
       flex: 1,
     },
   };
-  // if (loading == true) {
-  //   return <div>...Loading</div>;
-  // }
 
   const onChangeText = e => {
     const {name, value} = e.target;

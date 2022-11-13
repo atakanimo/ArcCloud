@@ -29,6 +29,12 @@ const routes = [
         to: '/permission',
         section: 'permission',
       },
+      {
+        display: 'Printers',
+        icon: <i className="bx bx-user"></i>,
+        to: '/printers',
+        section: 'printers',
+      },
     ],
   },
   {
@@ -64,11 +70,11 @@ const routes = [
             to: '/interactionLogs',
             section: 'interactionLogs',
           },
-          {
-            display: 'User Authentication Logs',
-            to: '/userAuthLogs',
-            section: 'userAuthLogs',
-          },
+          // {
+          //   display: 'User Authentication Logs',
+          //   to: '/userAuthLogs',
+          //   section: 'userAuthLogs',
+          // },
           // {
           //   display: 'Network Logs',
           //   to: '/networkLogs',

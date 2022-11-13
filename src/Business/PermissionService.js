@@ -42,14 +42,6 @@ class PermissionService extends BusinessBase {
     return this.makeGetRequest();
   };
 
-  GetPermissionsByFormName = (formName, isPaging, ItemCount, PageNumber) => {
-    if (isPaging) {
-      this.requestParams = `${this.apiPorts.permission}/Permission?FormName=${formName}&IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
-    }
-
-    return this.makeGetRequest();
-  };
-
   ConstructEntryObject = (formName, controlId, description, editItem = null, checkBoxValues = null, isNewEntry = false) => {
     let entryObject = emptyEntryObject;
     if (isNewEntry) {
@@ -95,8 +87,8 @@ class PermissionService extends BusinessBase {
   Search = params => {
     // if id is present, only id will be sent
     this.requestParams = `${this.apiPorts.permission}/Permission`;
-    
-    if(params.id) return this.makeGetRequest({ id: params.id });
+
+    if (params.id) return this.makeGetRequest({id: params.id});
 
     return this.makeGetRequest(params);
   };

@@ -6,7 +6,7 @@
   .bigCardArea_admin {
     background-color: #f8f9fa;
     border-radius: 10px;
-    padding: 1rem;
+    padding: 0.7rem;
 
     .cardArea_admin {
       display: flex;
@@ -15,12 +15,11 @@
       padding-top: 0px;
     }
     .checkboxCard_admin {
-      justify-content: center;
       display: flex;
       flex-direction: column;
-      padding: 1rem;
       border-radius: 5px;
       width: auto;
+      padding: 0.8rem;
       min-width: 10vw;
       margin-top: 1rem;
       height: auto;

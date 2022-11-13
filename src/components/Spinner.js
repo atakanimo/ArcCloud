@@ -20,7 +20,9 @@ export default function Spinner() {
       width: dynamicWidth * 0.08,
       height: dynamicHeight * 0.1,
       backgroundColor: 'gray',
+      position: 'absolute',
       borderRadius: 10,
+      zIndex: 100
     },
     spinner: {
       width: 50,
@@ -37,3 +39,21 @@ export default function Spinner() {
     </div>
   );
 }
+
+//   spinnerContainer: {
+//   display: 'flex',
+//   position: 'absolute',
+//   height: height * 0.1,
+//   width: width * 0.1,
+//   marginLeft: width * 0.3,
+//   marginTop: height * 0.25,
+//   backgroundColor: 'green',
+//   borderRadius: 10,
+//   justifyContent: 'center',
+//   alignItems: 'center',
+//   zIndex: 100
+// },
+// spinner: {
+//   color: 'white',
+//   fontSize: 24
+// }
