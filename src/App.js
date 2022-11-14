@@ -7,7 +7,6 @@ import Sidebar from './pages/LeftMenu/SideBar';
 import LoginPage from './pages/LoginPage/LoginPage';
 import MyCompany from './pages/MyCompany/MyCompany';
 import DeviceConfiguration from './pages/DeviceConfiguration/DeviceConfiguration';
-// import Footer from './components/Footer';
 import Permissions from './pages/Permission/Permissions';
 import ApiRequestLog from './pages/Logs/ApiRequestLog';
 import InteractionLog from './pages/Logs/InteractionLog';
@@ -53,7 +52,6 @@ export default function App() {
                 }
               />
             </Routes>
-            {/* <Footer /> */}
           </Col>
         </>
       )}

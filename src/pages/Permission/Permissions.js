@@ -59,13 +59,15 @@ const Permissions = () => {
 
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(PAGINATION_CHOICES[0]);
+  const [itemCount, setItemCount] = React.useState(100);
 
   const fetch = async () => {
     setLoading(true);
-    const {data, success} = await PermissionService.GetPermissions(true, pageCount, page);
-
-    if (!success) Alertify.ErrorNotifications('Could not load!');
-    if (success) setData(data.list);
+    const {success, count, list, error} = await PermissionService.GetPermissions(true, pageCount, page);
+    if (success) {
+      setData(list);
+      setItemCount(count);
+    } else Alertify.ErrorNotifications('Could not load!');
     setLoading(false);
   };
 
@@ -223,7 +225,7 @@ const Permissions = () => {
       </div>
       <PaginationContainer
         PAG_CHOICES={PAGINATION_CHOICES}
-        itemLength={data.length}
+        itemCount={itemCount}
         paginationCount={pageCount}
         setPaginationCount={setPageCount}
         page={page}

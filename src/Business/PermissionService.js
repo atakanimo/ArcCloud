@@ -34,12 +34,14 @@ const emptyEntryObject = {
 };
 
 class PermissionService extends BusinessBase {
-  GetPermissions = (isPaging, ItemCount, PageNumber) => {
+  GetPermissions = async (isPaging, ItemCount, PageNumber) => {
     if (isPaging) {
       this.requestParams = `${this.apiPorts.permission}/Permission?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
     } else this.requestParams = `${this.apiPorts.permission}/Permission`;
 
-    return this.makeGetRequest();
+    const {success, data, error} = await this.makeGetRequest();
+    const {list, count} = data;
+    return {success, list, count, error};
   };
 
   ConstructEntryObject = (formName, controlId, description, editItem = null, checkBoxValues = null, isNewEntry = false) => {

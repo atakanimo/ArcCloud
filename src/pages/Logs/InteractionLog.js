@@ -17,6 +17,7 @@ const InteractionLogs = () => {
   const [pageNumber, setPageNumber] = React.useState(1);
   const [pageCount, setPageCount] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
+  const [itemCount, setItemCount] = React.useState(100);
 
   useEffect(() => {
     getData();
@@ -25,7 +26,10 @@ const InteractionLogs = () => {
   const getData = async () => {
     setLoading(true);
     const {success, count, list, error} = await GetLog(types.Interaction, true, pageCount, pageNumber);
-    setData(list);
+    if (success) {
+      setData(list);
+      setItemCount(count);
+    }
     setLoading(false);
   };
 
@@ -66,7 +70,13 @@ const InteractionLogs = () => {
         <Column dataField="clientMessage" />
         <Column dataField="activityDate" />
       </DataGrid>
-      <PaginationContainer paginationCount={pageCount} setPaginationCount={setPageCount} page={pageNumber} setPage={setPageNumber} />
+      <PaginationContainer
+        itemCount={itemCount}
+        paginationCount={pageCount}
+        setPaginationCount={setPageCount}
+        page={pageNumber}
+        setPage={setPageNumber}
+      />
     </>
   );
 };

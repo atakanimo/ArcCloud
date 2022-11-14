@@ -9,26 +9,49 @@ import {commonStyles} from '../../Styles/Styles';
 import DeleteIcon from '../../assets/DeleteIcon.png';
 import AddIcon from '../../assets/AddIcon.png';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
-import {GetAIs, GetPrinters} from '../../helper/GetConfiguration';
 import ButtonComponent from '../../components/Button';
+import PrinterService from '../../Business/PrinterService';
+import Spinner from '../../components/Spinner';
+import Alertify from '../../components/Alertify';
 
 export default function Printer() {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
+  const {GetPrinter, UpdatePrinter} = PrinterService;
+
   useEffect(() => {
-    setGridNumber(printers.length - 1);
+    getPrinters();
   }, []);
 
-  const {printers} = GetPrinters();
+  const getPrinters = async () => {
+    setLoading(true);
+    const {success, count, list, error} = await GetPrinter();
+    if (success) {
+      if (list.length > 0) {
+        setInfo(list);
+        setGridNumber(list.length - 1);
+      }
+    }
+    setLoading(false);
+  };
 
-  const initialState = {ai: '', description: '', length: '', format: ''};
+  const updatePrinters = async () => {
+    console.log(info, 'info');
+    setLoading(true);
+    const {data, success, error} = await UpdatePrinter(info);
+    if (success) {
+      Alertify.SuccessNotifications('Updated successfully!');
+      getPrinters();
+    } else Alertify.ErrorNotifications('Error!');
+    setLoading(false);
+  };
+
+  const initialState = {printerName: '', moduleType: '', numberOfLabels: '', labelLayout: ''};
   const [gridNumber, setGridNumber] = useState(0);
-  const [info, setInfo] = useState(printers.length > 0 ? printers : [initialState]);
+  const [info, setInfo] = useState(initialState);
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
   const [loading, setLoading] = useState(false);
-
-  // console.log(printers, 'printers');
 
   //for alert
   const [showAlert, setShowAlert] = useState(false);
@@ -72,17 +95,6 @@ export default function Printer() {
     },
   };
 
-  //   useEffect(() => {
-  //     getData();
-  //   }, []);
-
-  //   const getPrinters = async () => {
-  //     setLoading(true);
-  //     const {data, success} = await GetLog(types.ApiRequest, true, pageCount, pageNumber);
-  //     setData(data);
-  //     setLoading(false);
-  //   };
-
   let elements = [];
 
   const onInputChange = (field, event, index) => {
@@ -122,33 +134,35 @@ export default function Printer() {
   };
 
   const createCard = () => {
-    for (let i = 0; i <= gridNumber; i++) {
-      elements.push(
-        <Card key={i} style={styles.checkboxCard}>
-          <div style={styles.inputDiv}>
-            <TextInput value={info[i].printerName} onChange={text => onInputChange('printerName', text, i)} label={'Printer Name'} width={9} />
-            <TextInput value={info[i].moduleType} onChange={text => onInputChange('moduleType', text, i)} label={'Module Type'} width={7} />
-            <TextInput value={info[i].labelLayout} onChange={text => onInputChange('labelLayout', text, i)} label={'Label Layout'} width={9} />
-            <TextInput
-              value={info[i].numberOfLabels}
-              onChange={text => onInputChange('numberOfLabels', text, i)}
-              label={'Number Of Labels'}
-              width={9}
-            />
-            {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} /> : null}
-          </div>
-          <div style={styles.createButton}>
-            {i === 0 ? (
-              <div key={i} style={{display: 'flex', flexDirection: 'row'}}>
-                <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} />
-                <IconComponent icon={AddIcon} onClick={() => handlerAdd()} />
-              </div>
-            ) : null}
-          </div>
-        </Card>,
-      );
+    if (info && info.length > 0) {
+      for (let i = 0; i <= gridNumber; i++) {
+        elements.push(
+          <Card key={i} style={styles.checkboxCard}>
+            <div style={styles.inputDiv}>
+              <TextInput value={info[i].printerName} onChange={text => onInputChange('printerName', text, i)} label={'Printer Name'} width={9} />
+              <TextInput value={info[i].moduleType} onChange={text => onInputChange('moduleType', text, i)} label={'Module Type'} width={7} />
+              <TextInput value={info[i].labelLayout} onChange={text => onInputChange('labelLayout', text, i)} label={'Label Layout'} width={9} />
+              <TextInput
+                value={info[i].numberOfLabels}
+                onChange={text => onInputChange('numberOfLabels', text, i)}
+                label={'Number Of Labels'}
+                width={9}
+              />
+              {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} /> : null}
+            </div>
+            <div style={styles.createButton}>
+              {i === 0 ? (
+                <div key={i} style={{display: 'flex', flexDirection: 'row'}}>
+                  <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} />
+                  <IconComponent icon={AddIcon} onClick={() => handlerAdd()} />
+                </div>
+              ) : null}
+            </div>
+          </Card>,
+        );
+      }
+      return elements;
     }
-    return elements;
   };
 
   const IconComponent = ({icon, onClick}) => {
@@ -162,20 +176,22 @@ export default function Printer() {
   };
   return (
     <Box sx={commonStyles.boxStyle}>
-      <div className="container_myCompany">
-        <Col lg={12}>
-          <div className="bigCardArea_myCompany" style={{marginTop: 20, display: 'flex', flexDirection: 'column'}}>
-            <InlineTitle>Printers</InlineTitle>
-            <div style={styles.cardArea}>
-              <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
-              {gridNumber >= 0 ? createCard() : null}
-              <ButtonComponent onClick={() => null} label="SAVE" width={9} mT={20}>
-                SAVE
-              </ButtonComponent>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="container_myCompany">
+          <Col lg={12}>
+            <div className="bigCardArea_myCompany" style={{marginTop: 20, display: 'flex', flexDirection: 'column'}}>
+              <InlineTitle>Printers</InlineTitle>
+              <div style={styles.cardArea}>
+                <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
+                {gridNumber >= 0 ? createCard() : null}
+                <ButtonComponent onClick={() => updatePrinters()} label="SAVE" width={9} mT={20} />
+              </div>
             </div>
-          </div>
-        </Col>
-      </div>
+          </Col>
+        </div>
+      )}
     </Box>
   );
 }

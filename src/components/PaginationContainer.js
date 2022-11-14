@@ -69,14 +69,14 @@ const Styles = (width, height) => ({
   },
 });
 
-const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage, itemLength, isModified, PAG_CHOICES}) => {
+const PaginationContainer = ({itemCount, paginationCount, setPaginationCount, page, setPage, isModified, PAG_CHOICES}) => {
   const choice = PAG_CHOICES ? PAG_CHOICES : PAGINATION_CHOICES;
 
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
 
   const {paginationArea, caretArea, settingsContainer, caret, pageText, presentRows, paginationChoices} = Styles(dynamicWidth, dynamicHeight);
-  const pageLimit = Math.ceil(itemLength / paginationCount);
+  const pageLimit = Math.ceil(itemCount / paginationCount);
 
   const traversePage = (shouldDecrease = false) => {
     if (shouldDecrease) {
@@ -85,13 +85,13 @@ const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage
     }
 
     setPage(p => {
-      // if(p + 1 <= pageLimit) {
-      if (isModified) {
-        Alertify.ErrorNotifications('You have unsaved changes!');
-        return page;
+      if (p + 1 <= pageLimit) {
+        if (isModified) {
+          Alertify.ErrorNotifications('You have unsaved changes!');
+          return page;
+        }
+        return p + 1;
       }
-      return p + 1;
-      // }
 
       Alertify.ErrorNotifications('You have seen all available entries!');
       return page;
@@ -117,7 +117,7 @@ const PaginationContainer = ({paginationCount, setPaginationCount, page, setPage
         </button>
       </div>
       <div style={paginationArea}>
-        <div style={presentRows}>{`Displaying ${paginationCount} items `}</div>
+        <div style={presentRows}>{`Displaying ${(page - 1) * paginationCount} - ${page * paginationCount} items of ${itemCount}`}</div>
         {choice.map((count, idx) => (
           <button
             key={count}

@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import {Box, Button, Grid, Link, Checkbox} from '@mui/material';
 import {commonStyles} from '../../Styles/Styles';
 import AuthService from '../../Business/AuthService';
-import {SaveConfiguration} from '../../Redux/Actions/Actions';
 import {useNavigate} from 'react-router-dom';
 import Alertify from '../../components/Alertify';
 import Spinner from '../../components/Spinner';
@@ -25,7 +24,6 @@ export default function SignIn() {
     const {success, data, error} = await GetConfiguration(user);
     if (success == true) {
       Alertify.SuccessNotifications('Login is successfull!');
-      SaveConfiguration(data);
       navigate('/myCompany');
     } else {
       let response = error.response.data;
