@@ -24,8 +24,8 @@ export default function UserAuthLogs() {
 
   const getData = async () => {
     setLoading(true);
-    const {data, success} = await GetLog(types.UserAuth, true, pageCount, pageNumber);
-    setData(data);
+    const {success, count, list, error} = await GetLog(types.UserAuth, true, pageCount, pageNumber);
+    setData(list);
     setLoading(false);
   };
 

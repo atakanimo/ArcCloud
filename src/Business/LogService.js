@@ -13,20 +13,26 @@ class LogService extends BusinessBase {
     if (isPaging) {
       this.requestParams = `${type}?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
     } else this.requestParams = type;
-
-    return this.makeGetRequest();
+    const {success, data, error} = await this.makeGetRequest();
+    const {list, count} = data;
+    return {success, list, count, error};
   };
 
   GetDataByFilter = async (type, id, querry, isPaging) => {
     if (isPaging) {
       if (id) {
         this.requestParams = `${type}?id=${id}`;
-        return this.makeGetRequest();
+        const {success, data, error} = await this.makeGetRequest();
+        const {list, count} = data;
+
+        return {success, list, count, error};
       }
       this.requestParams = querry;
     } else this.requestParams = type;
 
-    return this.makeGetRequest();
+    const {success, data, error} = await this.makeGetRequest();
+    const {list, count} = data;
+    return {success, list, count, error};
   };
 }
 

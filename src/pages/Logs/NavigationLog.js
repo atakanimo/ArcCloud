@@ -24,9 +24,8 @@ const NavigationLogs = () => {
 
   const getData = async () => {
     setLoading(true);
-    const {data, success} = await GetLog(types.Nav, true, pageCount, pageNumber);
-    console.log(data, success, 'success', 'data');
-    setData(data);
+    const {success, count, list, error} = await GetLog(types.Nav, true, pageCount, pageNumber);
+    setData(list);
     setLoading(false);
   };
 

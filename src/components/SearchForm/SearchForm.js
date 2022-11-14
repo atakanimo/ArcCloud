@@ -76,9 +76,8 @@ export default function LogPagesSearch({pageNumber, pageCount, setData, setLoadi
     }
 
     // setLoading(true);
-    const {data, success, error} = await GetDataByFilter(logType, id, querry, true);
-    console.log(data, 'success');
-    setData(data);
+    const {success, count, list, error} = await GetDataByFilter(logType, id, querry, true);
+    setData(list);
     // setLoading(false);
   };
   const onChange = e => {

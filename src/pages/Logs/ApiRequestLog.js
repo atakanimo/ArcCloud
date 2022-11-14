@@ -23,8 +23,8 @@ const ApiRequestLogs = () => {
 
   const getData = async () => {
     setLoading(true);
-    const {data, success} = await GetLog(types.ApiRequest, true, pageCount, pageNumber);
-    setData(data);
+    const {success, count, list, error} = await GetLog(types.ApiRequest, true, pageCount, pageNumber);
+    setData(list);
     setLoading(false);
   };
 

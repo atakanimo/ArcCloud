@@ -24,8 +24,8 @@ const InteractionLogs = () => {
 
   const getData = async () => {
     setLoading(true);
-    const {data, success} = await GetLog(types.Interaction, true, pageCount, pageNumber);
-    setData(data);
+    const {success, count, list, error} = await GetLog(types.Interaction, true, pageCount, pageNumber);
+    setData(list);
     setLoading(false);
   };
 
