@@ -5,8 +5,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function SelectLabels() {
-  const [language, setLanguage] = React.useState('EN');
+export default function SelectLabels({deviceLanguage}) {
+  const [language, setLanguage] = React.useState(deviceLanguage);
 
   const handleChange = event => {
     setLanguage(event.target.value);
