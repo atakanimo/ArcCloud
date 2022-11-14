@@ -59,6 +59,11 @@ function GS1AppIdenList() {
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
   const [loading, setLoading] = React.useState(false);
 
+  //for alert
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState();
+  const [alertMessage, setAlertMessage] = useState();
+
   useEffect(() => {
     getAI();
   }, []);
@@ -75,6 +80,14 @@ function GS1AppIdenList() {
     setLoading(false);
   };
   const updateAI = async () => {
+    const index = info.length - 1;
+    if (info[index].code === '' || info[index].description === '' || info[index].format === '' || info[index].length === '') {
+      setShowAlert(true);
+      setAlertMessage(`Please fill in the ${info.length}th card`);
+      setAlertVariant('warning');
+      return;
+    }
+    setShowAlert(false);
     setLoading(true);
     const {data, success} = await UpdateAI(info);
     if (success) {
@@ -84,13 +97,7 @@ function GS1AppIdenList() {
     setLoading(false);
   };
 
-  const deleteAI = async id => {
-    if (info.length === 1) {
-      setShowAlert(true);
-      setAlertMessage('Must have at least one card');
-      setAlertVariant('danger');
-      return;
-    }
+  const confirmOK = async id => {
     setLoading(true);
     const {data, success, error} = await DeleteAI(id);
     console.log(data, success, error);
@@ -100,11 +107,24 @@ function GS1AppIdenList() {
     } else Alertify.ErrorNotifications('Error!');
     setLoading(false);
   };
+  const confirmCancel = () => {
+    Alertify.ErrorNotifications('Error!');
+  };
 
-  //for alert
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertVariant, setAlertVariant] = useState();
-  const [alertMessage, setAlertMessage] = useState();
+  const deleteAI = async id => {
+    if (info.length === 1) {
+      setShowAlert(true);
+      setAlertMessage('Must have at least one card');
+      setAlertVariant('danger');
+      return;
+    }
+    Alertify.ConfirmNotification(
+      'Delete',
+      'Are you sure you want to delete',
+      () => confirmOK(id),
+      () => confirmCancel(),
+    );
+  };
 
   let elements = [];
 

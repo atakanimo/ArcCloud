@@ -9,6 +9,18 @@ class Alertify {
     alertify.set('notifier', 'delay', time);
     return alertify.error(message);
   };
+  ConfirmNotification = (title, message, confirmOK, confirmCancel) => {
+    return alertify.confirm(
+      title,
+      message,
+      function () {
+        return confirmOK();
+      },
+      function () {
+        return confirmCancel();
+      },
+    );
+  };
 }
 
 export default new Alertify();
