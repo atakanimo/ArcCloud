@@ -2,7 +2,7 @@ import React from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 import Button from '@mui/material/Button';
 
-export default function ButtonComponent({mT, mL, height, minWidth, label, width, onClick, mR}) {
+export default function ButtonComponent({mT, mL, height, minWidth, label, width, onClick, mR, type}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
@@ -17,7 +17,7 @@ export default function ButtonComponent({mT, mL, height, minWidth, label, width,
     },
   };
   return (
-    <Button onClick={onClick} style={styles.button} variant="contained">
+    <Button type={type} onClick={onClick} style={styles.button} variant="contained">
       <div style={{fontSize: 17}}>{label}</div>
     </Button>
   );
