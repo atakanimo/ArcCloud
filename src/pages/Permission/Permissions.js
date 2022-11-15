@@ -89,6 +89,27 @@ const Permissions = () => {
     setIsModified(false);
   };
 
+  const confirmOK = async id => {
+    setLoading(true);
+    const {success, data, error} = await PermissionService.Delete(id);
+    console.log(success, data, error, 'deletechanges');
+    if (success) {
+      Alertify.SuccessNotifications('Deleted!');
+      fetch();
+    } else Alertify.ErrorNotifications('Error!');
+    setLoading(false);
+  };
+
+  const deleteChanges = async (e, id) => {
+    e.preventDefault();
+    Alertify.ConfirmNotification(
+      'DELETE',
+      'Are you sure you want to delete?',
+      () => confirmOK(id),
+      () => console.log('Pressed cancel'),
+    );
+  };
+
   const saveChanges = () => {
     PermissionService.SaveAllChanges(data);
     setIsModified(false);
@@ -120,6 +141,7 @@ const Permissions = () => {
         <div key={item.id} style={{display: 'flex', flexDirection: 'row'}}>
           <div style={{...decideStyle('edit', index), editIconContainer}}>
             <TbEdit onClick={onEdit} style={editIcon} />
+            <button onClick={(e) => deleteChanges(e, item.id)}>Delete</button>
           </div>
           <span style={decideStyle('id', index)}>{item.id}</span>
           <span style={decideStyle('control id', index)}>{item.controlId}</span>

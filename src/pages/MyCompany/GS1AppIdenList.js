@@ -118,8 +118,8 @@ function GS1AppIdenList() {
       return;
     }
     Alertify.ConfirmNotification(
-      'Delete',
-      'Are you sure you want to delete',
+      'DELETE',
+      'Are you sure you want to delete?',
       () => confirmOK(id),
       () => console.log('Pressed cancel'),
     );
