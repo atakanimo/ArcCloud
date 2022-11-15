@@ -79,7 +79,8 @@ function GS1AppIdenList() {
     }
     setLoading(false);
   };
-  const updateAI = async () => {
+  const updateAI = async e => {
+    e.preventDefault();
     const index = info.length - 1;
     if (info[index].code === '' || info[index].description === '' || info[index].format === '' || info[index].length === '') {
       setShowAlert(true);
@@ -108,7 +109,8 @@ function GS1AppIdenList() {
     setLoading(false);
   };
 
-  const deleteAI = async id => {
+  const deleteAI = async (e, id) => {
+    e.preventDefault();
     if (info.length === 1) {
       setShowAlert(true);
       setAlertMessage('Must have at least one card');
@@ -169,12 +171,12 @@ function GS1AppIdenList() {
               <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Description'} width={7} />
               <TextInput value={info[i].length} onChange={text => onInputChange('length', text, i)} label={'Length'} width={9} />
               <TextInput value={info[i].format} onChange={text => onInputChange('format', text, i)} label={'Format'} width={9} />
-              {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => deleteAI(info[i].id)} /> : null}
+              {i > 0 ? <IconComponent icon={DeleteIcon} onClick={e => deleteAI(e, info[i].id)} /> : null}
             </div>
             <div style={styles.createButton}>
               {i === 0 ? (
                 <div key={i} style={{display: 'flex', flexDirection: 'row'}}>
-                  <IconComponent icon={DeleteIcon} onClick={() => deleteAI(info[i].id)} />
+                  <IconComponent icon={DeleteIcon} onClick={(e) => deleteAI(e, info[i].id)} />
                   <IconComponent icon={AddIcon} onClick={() => handlerAdd()} />
                 </div>
               ) : null}
@@ -191,7 +193,7 @@ function GS1AppIdenList() {
         <Spinner />
       ) : (
         <>
-          <form onSubmit={event => updateAI(event)}>
+          <form onSubmit={e => updateAI(e)}>
             <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
             {gridNumber >= 0 ? createCard() : null}
             <ButtonComponent type="submit" label="Update" width={9} mT={20} />
