@@ -15,10 +15,10 @@ class AdminService extends BusinessBase {
     return this.makePostRequest(object);
   };
 
-  CreateDirectories = id => {
+  CreateDirectories = object => {
     this.requestParams = `${this.apiPorts.admin}${this.querryHeader}${this.querry.createDir}`;
 
-    return this.makePostRequest(id);
+    return this.makePostRequest(object);
   };
   TestTracelinkApi = tlUser => {
     this.requestParams = `${this.apiPorts.admin}${this.querryHeader}${this.querry.testTL}`;

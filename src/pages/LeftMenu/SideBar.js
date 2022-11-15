@@ -116,7 +116,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar__logo">
-        <img src={AdvancoLogo} />
+        <img src={AdvancoLogoWhite} />
       </div>
       <div ref={sidebarRef} className="sidebar__menu">
         {routes.map((item, index) => {

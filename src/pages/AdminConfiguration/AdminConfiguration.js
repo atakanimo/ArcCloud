@@ -36,6 +36,7 @@ export default function AdminConfiguration() {
   const [loading, setLoading] = React.useState(false);
   const [tlLoading, setTLLoading] = React.useState(false);
   const [serviceLoading, setServiceLoading] = React.useState(false);
+  const [createDirectoriesLoading, setCreateDirectoriesLoading] = useState(false);
 
   const [TLInfo, setTLInfo] = useState({username: '', password: '', webAddress: ''});
   const [paths, setPaths] = useState({aPKDirectoryPath: '', archiveDirectoryPath: '', inputDirectoryPath: '', logDirectoryPath: ''});
@@ -93,6 +94,14 @@ export default function AdminConfiguration() {
       else Alertify.ErrorNotifications(error.response.data);
     }
     setServiceLoading(false);
+  };
+
+  const createDirectories = async () => {
+    setCreateDirectoriesLoading(true);
+    const {success, data, error} = await CreateDirectories(paths);
+    if (success) Alertify.SuccessNotifications('Paths are created!');
+    else Alertify.ErrorNotifications(error.response.data);
+    setCreateDirectoriesLoading(false);
   };
 
   return (
@@ -226,7 +235,7 @@ export default function AdminConfiguration() {
                     />
                   </div>
                   <div className="createButtonAdmin">
-                    <Button height={65} width={8} label={'Create Directories'} />
+                    <Button loading={createDirectoriesLoading} onClick={createDirectories} height={65} width={8} label={'Create Directories'} />
                   </div>
                 </Card>
               </div>
