@@ -36,8 +36,8 @@ export default function Printer() {
     setLoading(false);
   };
 
-  const updatePrinters = async () => {
-    console.log(info, 'info');
+  const updatePrinters = async e => {
+    e.preventDefault();
     setLoading(true);
     const {data, success, error} = await UpdatePrinter(info);
     if (success) {
@@ -181,14 +181,16 @@ export default function Printer() {
       ) : (
         <div className="container_myCompany">
           <Col lg={12}>
-            <div className="bigCardArea_myCompany" style={{marginTop: 20, display: 'flex', flexDirection: 'column'}}>
-              <InlineTitle>Printers</InlineTitle>
-              <div style={styles.cardArea}>
-                <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
-                {gridNumber >= 0 ? createCard() : null}
-                <ButtonComponent onClick={() => updatePrinters()} label="SAVE" width={9} mT={20} />
+            <form onSubmit={event => updatePrinters(event)}>
+              <div className="bigCardArea_myCompany" style={{marginTop: 20, display: 'flex', flexDirection: 'column'}}>
+                <InlineTitle>Printers</InlineTitle>
+                <div style={styles.cardArea}>
+                  <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
+                  {gridNumber >= 0 ? createCard() : null}
+                  <ButtonComponent type={'submit'} label="SAVE" width={9} mT={20} />
+                </div>
               </div>
-            </div>
+            </form>
           </Col>
         </div>
       )}

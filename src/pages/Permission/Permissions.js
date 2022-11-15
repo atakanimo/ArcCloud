@@ -27,7 +27,7 @@ const allColumns = [...titles, ...roles];
 const ADD_COLUMN_TEXT = 'Add New Entry';
 const SAVE_TEXT = 'Save Changes';
 const UNDO_TEXT = 'Undo All Changes';
-const PAGINATION_CHOICES = [100, 200, 300];
+const PAGINATION_CHOICES = [50, 100, 200];
 
 const Permissions = () => {
   const [screenSize] = GetDynamicDimensions();
@@ -147,11 +147,13 @@ const Permissions = () => {
       if (isSearched) {
         setSearchFields({});
         setSearched(false);
+        setPage(1);
         return fetch();
       }
 
       if (!searchFields.id && !searchFields.controlId && !searchFields.formName && !searchFields.description) return null;
       const {data: result, success} = await PermissionService.Search(searchFields);
+      setItemCount(result.count);
 
       if (!success) {
         Alertify.ErrorNotifications('No result!');

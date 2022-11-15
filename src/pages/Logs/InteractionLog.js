@@ -43,7 +43,15 @@ const InteractionLogs = () => {
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
-      <SearchForm pageNumber={pageNumber} pageCount={pageCount} logType={types.Interaction} setData={setData} setLoading={setLoading} />
+      <SearchForm
+        setPageNumber={setPageNumber}
+        setItemCount={setItemCount}
+        pageNumber={pageNumber}
+        pageCount={pageCount}
+        logType={types.Interaction}
+        setData={setData}
+        setLoading={setLoading}
+      />
       <DataGrid
         height={commonStyles.LogGridHeight.height}
         id="gridContainer"

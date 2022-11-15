@@ -10,7 +10,7 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 
-export default function LogPagesSearch({pageNumber, pageCount, setData, setLoading, logType}) {
+export default function LogPagesSearch({setItemCount, pageNumber, pageCount, setData, setLoading, logType, setPageNumber}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
   const {types, GetDataByFilter, GetLog} = LogService;
@@ -51,7 +51,7 @@ export default function LogPagesSearch({pageNumber, pageCount, setData, setLoadi
 
   const getData = async () => {
     const {id, username, requestData, responseData, clientMessage, moduleName, dateFrom, dateTo} = searchedItems;
-    console.log(dateFrom.toString());
+    console.log(dateFrom.toString(), 'dateFrom');
     let querry;
     if (logType == types.ApiRequest) {
       querry = `${logType}?RequestData=${requestData == undefined ? '' : requestData}&ResponseData=${
@@ -77,6 +77,8 @@ export default function LogPagesSearch({pageNumber, pageCount, setData, setLoadi
 
     // setLoading(true);
     const {success, count, list, error} = await GetDataByFilter(logType, id, querry, true);
+    console.log(list);
+    setItemCount(count);
     setData(list);
     // setLoading(false);
   };
@@ -87,9 +89,11 @@ export default function LogPagesSearch({pageNumber, pageCount, setData, setLoadi
 
   const reset = async () => {
     setLoading(true);
-    const {data, success} = await GetLog(logType, true, pageCount, pageNumber);
-    setData(data);
+    const {success, count, list, error} = await GetLog(logType, true, pageCount, pageNumber);
+    setData(list);
+    setItemCount(count);
     setLoading(false);
+    setPageNumber(1);
   };
   if (logType == types.UserAuth) {
     return (

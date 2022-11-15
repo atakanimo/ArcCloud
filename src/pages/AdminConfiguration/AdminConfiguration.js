@@ -84,7 +84,7 @@ export default function AdminConfiguration() {
       {loading ? (
         <Spinner />
       ) : (
-        <form onSubmit={() => saveConfigurations()} className="container_admin">
+        <form onSubmit={event => saveConfigurations(event)} className="container_admin">
           <Col xxl={3} lg={4} md={4}>
             <div className="bigCardArea_admin">
               <InlineTitle>Tracelink Configuration</InlineTitle>
@@ -97,7 +97,6 @@ export default function AdminConfiguration() {
                     minWidth={210}
                     label={'Tracelink Username'}
                     width={6}
-                    isRequired={true}
                     mt={10}
                   />
                   <TextInput
@@ -108,7 +107,6 @@ export default function AdminConfiguration() {
                     label={'Tracelink Password'}
                     width={6}
                     type="password"
-                    isRequired={true}
                     mt={20}
                   />
                   <TextInput
@@ -118,7 +116,6 @@ export default function AdminConfiguration() {
                     minWidth={210}
                     label={'Tracelink Web Url'}
                     width={6}
-                    isRequired={true}
                     mt={20}
                     mb={15}
                   />
@@ -140,16 +137,8 @@ export default function AdminConfiguration() {
                       name={'ipAddress'}
                       onChange={e => onChangeService(e, 0, 'LogAPI')}
                       width={6}
-                      isRequired={true}
                     />
-                    <TextInput
-                      value={service[0].port}
-                      label={'Port'}
-                      name={'port'}
-                      onChange={e => onChangeService(e, 0, 'LogAPI')}
-                      width={15}
-                      isRequired={true}
-                    />
+                    <TextInput value={service[0].port} label={'Port'} name={'port'} onChange={e => onChangeService(e, 0, 'LogAPI')} width={15} />
                     <Button label={'Test'} width={10} />
                   </div>
                   <div style={{display: 'flex', flexDirection: 'row', marginTop: 20}}>
@@ -160,7 +149,6 @@ export default function AdminConfiguration() {
                       label={'Ip Adress'}
                       onChange={e => onChangeService(e, 1, 'PrintAPI')}
                       width={6}
-                      isRequired={true}
                     />
                     <TextInput
                       value={service[1].port}
@@ -168,7 +156,6 @@ export default function AdminConfiguration() {
                       label={'Port'}
                       onChange={e => onChangeService(e, 1, 'PrintAPI')}
                       width={15}
-                      isRequired={true}
                     />
                     <Button label={'Test'} onClick={() => null} width={10} />
                   </div>
@@ -193,7 +180,6 @@ export default function AdminConfiguration() {
                       header={'Input Directory Path'}
                       label={'Exp: C:/home/sharedFolder'}
                       width={7}
-                      isRequired={true}
                     />
                     <TextInput
                       onChange={onChangePath}
@@ -202,7 +188,6 @@ export default function AdminConfiguration() {
                       header={'Log Directory Path'}
                       label={'Exp: C:/home/sharedFolder/logs'}
                       width={7}
-                      isRequired={true}
                     />
                   </div>
                   <div>
@@ -214,7 +199,6 @@ export default function AdminConfiguration() {
                       header={'Archive Directory Path'}
                       label={'Exp: C:/home/sharedFolder/archive'}
                       width={7}
-                      isRequired={true}
                     />
                     <TextInput
                       onChange={onChangePath}
@@ -223,7 +207,6 @@ export default function AdminConfiguration() {
                       header={'APK Directory Path'}
                       label={'Exp: C:/home/sharedFolder/app'}
                       width={7}
-                      isRequired={true}
                     />
                   </div>
                   <div className="createButtonAdmin">

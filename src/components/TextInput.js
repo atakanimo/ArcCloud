@@ -3,7 +3,24 @@ import TextField from '@mui/material/TextField';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 import Text from './Text/Text';
 
-export default function TextInput({mb, mt, mL, name, minWidth, label, type, width, header, mR, fullWidth, value, onChange, isRequired, containerStyle, inputStyle}) {
+export default function TextInput({
+  mb,
+  mt,
+  mL,
+  name,
+  minWidth,
+  label,
+  type,
+  width,
+  header,
+  mR,
+  fullWidth,
+  value,
+  onChange,
+  isRequired,
+  containerStyle,
+  inputStyle,
+}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
@@ -30,7 +47,7 @@ export default function TextInput({mb, mt, mL, name, minWidth, label, type, widt
         onChange={onChange}
         style={inputStyle || styles.input}
         type={type}
-        required={isRequired ? true : false}
+        required={isRequired ? isRequired : true}
         label={label}
         value={value}
       />

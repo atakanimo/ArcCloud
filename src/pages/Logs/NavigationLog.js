@@ -43,7 +43,14 @@ const NavigationLogs = () => {
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
-      <SearchForm pageNumber={pageNumber} pageCount={pageCount} setData={setData} setLoading={setLoading} logType={types.Nav} />
+      <SearchForm
+        setItemCount={setItemCount}
+        pageNumber={pageNumber}
+        pageCount={pageCount}
+        setData={setData}
+        setLoading={setLoading}
+        logType={types.Nav}
+      />
       <DataGrid
         height={commonStyles.LogGridHeight.height}
         id="gridContainer"

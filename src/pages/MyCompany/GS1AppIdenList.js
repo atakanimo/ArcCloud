@@ -107,9 +107,6 @@ function GS1AppIdenList() {
     } else Alertify.ErrorNotifications('Error!');
     setLoading(false);
   };
-  const confirmCancel = () => {
-    Alertify.ErrorNotifications('Error!');
-  };
 
   const deleteAI = async id => {
     if (info.length === 1) {
@@ -122,7 +119,7 @@ function GS1AppIdenList() {
       'Delete',
       'Are you sure you want to delete',
       () => confirmOK(id),
-      () => confirmCancel(),
+      () => console.log('Pressed cancel'),
     );
   };
 
@@ -133,8 +130,6 @@ function GS1AppIdenList() {
     info[index] = {...info[index], [field]: value};
     setForce(!force);
   };
-
-  console.log(info, 'info');
 
   const handlerAdd = () => {
     let index = -1;
@@ -150,7 +145,6 @@ function GS1AppIdenList() {
       setAlertVariant('warning');
       return;
     }
-    console.log(gridNumber, 'grid');
     info[gridNumber + 1] = initialState[0];
     setGridNumber(gridNumber + 1);
   };
@@ -197,9 +191,11 @@ function GS1AppIdenList() {
         <Spinner />
       ) : (
         <>
-          <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
-          {gridNumber >= 0 ? createCard() : null}
-          <ButtonComponent onClick={() => updateAI()} label="Update" width={9} mT={20} />
+          <form onSubmit={event => updateAI(event)}>
+            <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
+            {gridNumber >= 0 ? createCard() : null}
+            <ButtonComponent type="submit" label="Update" width={9} mT={20} />
+          </form>
         </>
       )}
     </div>
