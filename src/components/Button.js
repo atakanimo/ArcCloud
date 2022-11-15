@@ -1,8 +1,8 @@
 import React from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
-import Button from '@mui/material/Button';
+import {LoadingButton} from '@mui/lab';
 
-export default function ButtonComponent({mT, mL, height, minWidth, label, width, onClick, mR, type}) {
+export default function ButtonComponent({loading, mT, mL, height, minWidth, label, width, onClick, mR, type}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
@@ -16,9 +16,10 @@ export default function ButtonComponent({mT, mL, height, minWidth, label, width,
       marginLeft: mL ? mL : 0,
     },
   };
+
   return (
-    <Button type={type} onClick={onClick} style={styles.button} variant="contained">
+    <LoadingButton loading={loading} type={type} onClick={onClick} style={styles.button} variant="contained">
       <div style={{fontSize: 17}}>{label}</div>
-    </Button>
+    </LoadingButton>
   );
 }

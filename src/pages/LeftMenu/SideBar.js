@@ -8,6 +8,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AdvancoLogo from '../../assets/advanco-logo-positive.svg';
+import AdvancoLogoWhite from '../../assets/ADV_Logo_White.png';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import {GrMail} from 'react-icons/gr';
 import {AiFillLinkedin} from 'react-icons/ai';

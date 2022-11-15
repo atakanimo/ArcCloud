@@ -103,13 +103,24 @@ export default function Printer() {
     setForce(!force);
   };
 
-  const handlerDelete = itemIndex => {
+  const handlerDelete = (e, itemIndex) => {
+    e.preventDefault();
     if (info.length === 1) {
       setShowAlert(true);
       setAlertMessage('Must have at least one card');
       setAlertVariant('danger');
       return;
     }
+
+    Alertify.ConfirmNotification(
+      'Delete',
+      "For delete permanantly don't forget to press Save button!",
+      () => confirmOK(itemIndex),
+      () => console.log('Pressed cancel'),
+    );
+  };
+
+  const confirmOK = async itemIndex => {
     const filtered = info.filter((item, index) => index !== itemIndex);
     setInfo(filtered);
     setGridNumber(gridNumber - 1);
@@ -148,12 +159,12 @@ export default function Printer() {
                 label={'Number Of Labels'}
                 width={9}
               />
-              {i > 0 ? <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} /> : null}
+              {i > 0 ? <IconComponent icon={DeleteIcon} onClick={e => handlerDelete(e, i)} /> : null}
             </div>
             <div style={styles.createButton}>
               {i === 0 ? (
                 <div key={i} style={{display: 'flex', flexDirection: 'row'}}>
-                  <IconComponent icon={DeleteIcon} onClick={() => handlerDelete(i)} />
+                  <IconComponent icon={DeleteIcon} onClick={e => handlerDelete(e, i)} />
                   <IconComponent icon={AddIcon} onClick={() => handlerAdd()} />
                 </div>
               ) : null}
@@ -181,7 +192,7 @@ export default function Printer() {
       ) : (
         <div className="container_myCompany">
           <Col lg={12}>
-            <form onSubmit={event => updatePrinters(event)}>
+            <form onSubmit={e => updatePrinters(e)}>
               <div className="bigCardArea_myCompany" style={{marginTop: 20, display: 'flex', flexDirection: 'column'}}>
                 <InlineTitle>Printers</InlineTitle>
                 <div style={styles.cardArea}>

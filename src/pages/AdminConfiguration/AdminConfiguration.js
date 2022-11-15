@@ -34,6 +34,9 @@ export default function AdminConfiguration() {
   };
 
   const [loading, setLoading] = React.useState(false);
+  const [tlLoading, setTLLoading] = React.useState(false);
+  const [serviceLoading, setServiceLoading] = React.useState(false);
+
   const [TLInfo, setTLInfo] = useState({username: '', password: '', webAddress: ''});
   const [paths, setPaths] = useState({aPKDirectoryPath: '', archiveDirectoryPath: '', inputDirectoryPath: '', logDirectoryPath: ''});
   const [service, setService] = useState([
@@ -71,12 +74,25 @@ export default function AdminConfiguration() {
   };
 
   const testTracelinkAPI = async () => {
-    // setLoading(true);
+    setTLLoading(true);
     const {data, success, error} = await TestTracelinkApi(TLInfo);
-    console.log(success, 'success', data, 'data', error, 'error');
     if (success) Alertify.SuccessNotifications('Tracelink infos are true!');
     else Alertify.ErrorNotifications(error.response.data.message);
-    // setLoading(false);
+    setTLLoading(false);
+  };
+
+  const testServiceAPI = async type => {
+    setServiceLoading(true);
+    if (type == 'log') {
+      const {data, success, error} = await TestLogApi({ipAddress: service[0].ipAddress, serviceName: 'log', port: service[0].port});
+      if (success) Alertify.SuccessNotifications(data);
+      else Alertify.ErrorNotifications(error.response.data);
+    } else {
+      const {data, success, error} = await TestPrintApi({ipAddress: service[1].ipAddress, serviceName: 'print', port: service[1].port});
+      if (success) Alertify.SuccessNotifications(data);
+      else Alertify.ErrorNotifications(error.response.data);
+    }
+    setServiceLoading(false);
   };
 
   return (
@@ -119,7 +135,7 @@ export default function AdminConfiguration() {
                     mt={20}
                     mb={15}
                   />
-                  <Button onClick={testTracelinkAPI} width={6} minWidth={200} label={'Test'} />
+                  <Button loading={tlLoading} onClick={testTracelinkAPI} width={6} minWidth={200} label={'Test'} />
                 </Card>
               </div>
             </div>
@@ -139,7 +155,7 @@ export default function AdminConfiguration() {
                       width={6}
                     />
                     <TextInput value={service[0].port} label={'Port'} name={'port'} onChange={e => onChangeService(e, 0, 'LogAPI')} width={15} />
-                    <Button label={'Test'} width={10} />
+                    <Button loading={serviceLoading} label={'Test'} onClick={() => testServiceAPI('log')} width={10} />
                   </div>
                   <div style={{display: 'flex', flexDirection: 'row', marginTop: 20}}>
                     <Text label={'Print API'} />
@@ -157,7 +173,7 @@ export default function AdminConfiguration() {
                       onChange={e => onChangeService(e, 1, 'PrintAPI')}
                       width={15}
                     />
-                    <Button label={'Test'} onClick={() => null} width={10} />
+                    <Button loading={serviceLoading} label={'Test'} onClick={() => testServiceAPI('print')} width={10} />
                   </div>
                   <Alert style={{marginTop: 20, flex: 1, fontSize: 18, fontWeight: 'bold'}} variant={'info'}>
                     **Auth ip must fill from the device!

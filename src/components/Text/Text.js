@@ -11,10 +11,11 @@ export default function Text({tAlign, label, isBold, fontSize, width, height, mT
       width: width ? width : 80,
       height: height ? height : 40,
       minWidth: 80,
-      marginTop: mT,
+      marginTop: mT ? mT : 5,
       marginRight: mR,
       marginBottom: mB,
       marginLeft: mL,
+      // backgroundColor: 'red',
     },
   };
   return <h4 style={styles.container}>{label}</h4>;
