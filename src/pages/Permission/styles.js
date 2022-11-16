@@ -9,6 +9,7 @@ const decideColumnStyles = (columnName, width, height) => {
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
+    paddingLeft: 3,
   };
 
   switch (columnName.toLowerCase()) {
@@ -17,13 +18,13 @@ const decideColumnStyles = (columnName, width, height) => {
     case 'id':
       return {...defaultStyle, minWidth: width * 0.1 * 0.5};
     case 'control id':
-      return {...defaultStyle, minWidth: width * 0.1 * 1.5};
+      return {...defaultStyle, minWidth: width * 0.1 * 1.5, justifyContent: 'flex-start'};
     case 'form name':
-      return {...defaultStyle, minWidth: width * 0.1 * 2};
+      return {...defaultStyle, minWidth: width * 0.1 * 1.5, justifyContent: 'flex-start'};
     case 'description':
-      return {...defaultStyle, minWidth: width * 0.1 * 2};
+      return {...defaultStyle, minWidth: width * 0.1 * 1.5, justifyContent: 'flex-start'};
     default:
-      return defaultStyle;
+      return { ...defaultStyle, paddingLeft: 0 };
   }
 };
 
@@ -43,7 +44,6 @@ const Styles = (width, height) => ({
     display: 'flex',
     flexDirection: 'column',
     height: height * 0.15,
-    // marginBottom: 10
     backgroundColor: '#F7F7F7',
   },
   btnsContainer: {
@@ -76,7 +76,6 @@ const Styles = (width, height) => ({
     fontWeight: '600',
     borderWidth: 0,
     borderRadius: 5,
-    // backgroundColor: 'green',
     backgroundColor: '#0D6A68',
     color: 'white',
     margin: 5,
@@ -91,7 +90,6 @@ const Styles = (width, height) => ({
     fontWeight: '600',
     borderWidth: 0,
     borderRadius: 5,
-    // backgroundColor: 'green',
     backgroundColor: '#0D6A68',
     color: 'white',
     marginLeft: 10,
@@ -107,7 +105,6 @@ const Styles = (width, height) => ({
     fontWeight: '600',
     borderWidth: 0,
     borderRadius: 5,
-    // backgroundColor: 'green',
     backgroundColor: '#0D6A68',
     color: 'white',
     marginLeft: width * 0.514,
@@ -146,6 +143,21 @@ const Styles = (width, height) => ({
     borderStyle: 'solid',
     borderColor: '#C8C8C8',
   },
+  tooltipStyle: position => ({
+    display: 'flex',
+    position: 'absolute',
+    backgroundColor: '#0D6A68',
+    color: 'white',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    left: position.x,
+    top: position.y,
+    minWidth: 40,
+    borderRadius: 10,
+    padding: 5,
+    paddingLeft: 10,
+    paddingRight: 10
+  })
 });
 
 export default {Styles, decideColumnStyles};

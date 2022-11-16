@@ -1,8 +1,11 @@
-import React, {useEffect, useRef} from 'react';
+import React from 'react';
 import GetDynamicDimensions from '../helper/GetDynamicDimensions';
 import Alertify from './Alertify';
 
-export const PAGINATION_CHOICES = [100, 500, 1000];
+export const getPaginationOptions = (isPermissionsPage = false) => {
+  if(isPermissionsPage) return [50, 100, 200];
+  return [200, 500, 1000];
+};
 
 const Styles = (width, height) => ({
   settingsContainer: {
@@ -10,7 +13,7 @@ const Styles = (width, height) => ({
     display: 'flex',
     flexDirection: 'row',
     padding: 10,
-    backgroundColor: '#F7F7F7',
+    // backgroundColor: '#F7F7F7',
   },
   caretArea: {
     flex: 1,
@@ -69,8 +72,8 @@ const Styles = (width, height) => ({
   },
 });
 
-const PaginationContainer = ({itemCount, paginationCount, setPaginationCount, page, setPage, isModified, PAG_CHOICES}) => {
-  const choice = PAG_CHOICES ? PAG_CHOICES : PAGINATION_CHOICES;
+const PaginationContainer = props => {
+  const { itemCount, paginationCount, setPaginationCount, page, setPage, isModified, isPermissionPage } = props;
 
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
@@ -93,7 +96,6 @@ const PaginationContainer = ({itemCount, paginationCount, setPaginationCount, pa
         return p + 1;
       }
 
-      Alertify.ErrorNotifications('You have seen all available entries!');
       return page;
     });
     return;
@@ -118,7 +120,7 @@ const PaginationContainer = ({itemCount, paginationCount, setPaginationCount, pa
       </div>
       <div style={paginationArea}>
         <div style={presentRows}>{`Displaying ${(page - 1) * paginationCount} - ${page * paginationCount} items of ${itemCount}`}</div>
-        {choice.map((count, idx) => (
+        {getPaginationOptions(isPermissionPage).map((count, idx) => (
           <button
             key={count}
             style={{...paginationChoices, color: count == paginationCount ? '#C8C8C8' : 'black'}}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
 import PermissionStyle from './styles';
 
@@ -8,8 +8,8 @@ import PermissionService from '../../Business/PermissionService';
 // COMPONENTS
 import {TbEdit} from 'react-icons/tb';
 import CheckBox from '../../components/Checkbox-Switch/Checkbox';
-import PaginationContainer from '../../components/PaginationContainer';
-import SettingsModal, {INPUT_MAX_CHAR_LENGTH, INPUT_MIN_CHAR_LENGTH} from './SettingsModal';
+import PaginationContainer, { getPaginationOptions } from '../../components/PaginationContainer';
+import SettingsModal from './SettingsModal';
 import Spinner from '../../components/Spinner';
 import TextInput from '../../components/TextInput';
 import Alertify from '../../components/Alertify';
@@ -27,9 +27,10 @@ const allColumns = [...titles, ...roles];
 const ADD_COLUMN_TEXT = 'Add New Entry';
 const SAVE_TEXT = 'Save Changes';
 const UNDO_TEXT = 'Undo All Changes';
-const PAGINATION_CHOICES = [50, 100, 200];
+const TOOLTIP_TIMEOUT_DURATION = 100;
 
 const Permissions = () => {
+  const options = getPaginationOptions(true);
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
   const {
@@ -47,33 +48,40 @@ const Permissions = () => {
     inputsContainer,
     inputStyle,
     inputContainer,
+    tooltipStyle
   } = Styles(dynamicWidth, dynamicHeight);
 
   const [data, setData] = useState([]);
-  const [isSearched, setSearched] = useState(false);
 
   const [modal, setModal] = useState({trigger: false, isNew: false});
+  const [tooltip, setTooltip] = useState({trigger: false, msg: null, position: { x: 0, y: 0 }});
   const [loading, setLoading] = useState(false);
-  const [selectedRowIdx, setSelectedRowIdx] = useState(null);
+  const [isSearched, setSearched] = useState(false);
+
   const [isModified, setIsModified] = useState(false);
+  const [selectedRowIdx, setSelectedRowIdx] = useState(null);
 
   const [page, setPage] = useState(1);
-  const [pageCount, setPageCount] = useState(PAGINATION_CHOICES[0]);
-  const [itemCount, setItemCount] = React.useState(100);
+  const [pageCount, setPageCount] = useState(options[0]);
+  const [itemCount, setItemCount] = useState(options[1]);
 
   const fetch = async () => {
     setLoading(true);
-    const {success, count, list, error} = await PermissionService.GetPermissions(true, pageCount, page);
-    if (success) {
-      setData(list);
-      setItemCount(count);
-    } else Alertify.ErrorNotifications('Could not load!');
+    const {success, count, list} = await PermissionService.GetPermissions(true, pageCount, page);
+    if (!success) {
+      Alertify.ErrorNotifications('Could not load!');
+      return;
+    }
+
+    setData(list);
+    setItemCount(count);
     setLoading(false);
   };
 
   useEffect(() => {
     fetch();
-  }, [pageCount, page]);
+    if(isSearched) setSearched(false);
+  }, [page, pageCount]);
 
   const onCheckboxChange = (columnTitle, rowIndex) => {
     const checkboxValue = data[rowIndex][columnTitle];
@@ -89,27 +97,6 @@ const Permissions = () => {
     setIsModified(false);
   };
 
-  const confirmOK = async id => {
-    setLoading(true);
-    const {success, data, error} = await PermissionService.Delete(id);
-    console.log(success, data, error, 'deletechanges');
-    if (success) {
-      Alertify.SuccessNotifications('Deleted!');
-      fetch();
-    } else Alertify.ErrorNotifications('Error!');
-    setLoading(false);
-  };
-
-  const deleteChanges = async (e, id) => {
-    e.preventDefault();
-    Alertify.ConfirmNotification(
-      'DELETE',
-      'Are you sure you want to delete?',
-      () => confirmOK(id),
-      () => console.log('Pressed cancel'),
-    );
-  };
-
   const saveChanges = () => {
     PermissionService.SaveAllChanges(data);
     setIsModified(false);
@@ -119,9 +106,31 @@ const Permissions = () => {
   const Row = props => {
     const {item, index, row, column} = props;
 
+    const idRef = useRef();
+    const controlIdRef = useRef();
+    const descriptionRef = useRef();
+    const formNameRef = useRef();
+
     const decideStyle = (element, idx = 1) => {
       const decideColor = rowIdx => ({backgroundColor: rowIdx % 2 === 0 ? '#FFFFFF' : '#C8C8C8'});
       return {...decideColumnStyles(element, dynamicWidth, dynamicHeight), ...decideColor(idx)};
+    };
+
+    const ellipsisText = text => text && text.length > 32 ? `${text.slice(0, 30) + '...'}` : text;
+
+    let TOOLTIP_TIMEOUT_ID = null;
+    const showTooltipIn = (tipMsg, elemRef) => {
+      if(tipMsg.length < 32) return;
+      const { offsetLeft, offsetTop } = elemRef.current;
+      setTooltip(({ trigger: true, msg: tipMsg, position: { x: offsetLeft + 5, y: offsetTop - 20 } }))
+      TOOLTIP_TIMEOUT_ID = setTimeout(() => setTooltip(({ trigger: true, msg: tipMsg, position: { x: offsetLeft + 5, y: offsetTop - 20 } })), TOOLTIP_TIMEOUT_DURATION);
+      return;
+    };
+
+    const cancelTooltipTimeout = () => {
+      if(tooltip.trigger) setTooltip(({ trigger: false, msg: null, position: { x: 0, y: 0 }}))
+      clearTimeout(TOOLTIP_TIMEOUT_ID);
+      return;
     };
 
     const onEdit = () => {
@@ -141,12 +150,11 @@ const Permissions = () => {
         <div key={item.id} style={{display: 'flex', flexDirection: 'row'}}>
           <div style={{...decideStyle('edit', index), editIconContainer}}>
             <TbEdit onClick={onEdit} style={editIcon} />
-            <button onClick={(e) => deleteChanges(e, item.id)}>Delete</button>
           </div>
-          <span style={decideStyle('id', index)}>{item.id}</span>
-          <span style={decideStyle('control id', index)}>{item.controlId}</span>
-          <span style={decideStyle('description', index)}>{item.description}</span>
-          <span style={decideStyle('form name', index)}>{item.formName}</span>
+          <span ref={idRef} onMouseOver={() => showTooltipIn(item.id, idRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('id', index)}>{ellipsisText(item.id)}</span>
+          <span ref={controlIdRef} onMouseOver={() => showTooltipIn(item.controlId, controlIdRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('control id', index)}>{ellipsisText(item.controlId)}</span>
+          <span ref={descriptionRef} onMouseOver={() => showTooltipIn(item.description, descriptionRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('description', index)}>{ellipsisText(item.description)}</span>
+          <span ref={formNameRef} onMouseOver={() => showTooltipIn(item.formName, formNameRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('form name', index)}>{ellipsisText(item.formName)}</span>
           {roles.length > 0 &&
             roles.map(role => (
               <CheckBox
@@ -175,7 +183,6 @@ const Permissions = () => {
 
       if (!searchFields.id && !searchFields.controlId && !searchFields.formName && !searchFields.description) return null;
       const {data: result, success} = await PermissionService.Search(searchFields);
-      setItemCount(result.count);
 
       if (!success) {
         Alertify.ErrorNotifications('No result!');
@@ -183,6 +190,7 @@ const Permissions = () => {
       }
 
       setData(result.list);
+      setItemCount(result.count);
       setSearched(true);
       return;
     };
@@ -225,6 +233,7 @@ const Permissions = () => {
 
   return (
     <div style={container}>
+      { tooltip.trigger && <span style={tooltipStyle(tooltip.position)}>{tooltip.msg}</span>}
       <Header />
       {modal.trigger && (
         <SettingsModal
@@ -248,7 +257,7 @@ const Permissions = () => {
         )}
       </div>
       <PaginationContainer
-        PAG_CHOICES={PAGINATION_CHOICES}
+        isPermissionPage
         itemCount={itemCount}
         paginationCount={pageCount}
         setPaginationCount={setPageCount}

@@ -82,7 +82,6 @@ const ApiRequestLogs = () => {
         <Column dataField="requestDate" />
       </DataGrid>
       <PaginationContainer
-        fetchedItemCnt={data.length}
         itemCount={itemCount}
         paginationCount={pageCount}
         setPaginationCount={setPageCount}
