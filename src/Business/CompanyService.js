@@ -1,8 +1,8 @@
 import {BusinessBase} from './BusinessBase';
 
 class CompanyService extends BusinessBase {
-  GetAI = () => {
-    this.requestParams = `${this.apiPorts.admin}/Company?Key=GS1-AI`;
+  GetCompany = key => {
+    this.requestParams = `${this.apiPorts.admin}/Company?Key=${key}`;
     return this.makeGetRequest();
   };
 
