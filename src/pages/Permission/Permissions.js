@@ -17,6 +17,7 @@ import Alertify from '../../components/Alertify';
 // ICONS
 import CancelIcon from '../../assets/cancel.png';
 import SearchIcon from '../../assets/search.png';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const {Styles, decideColumnStyles} = PermissionStyle;
 
@@ -200,8 +201,8 @@ const Permissions = () => {
       return (
         <div key={item.id} style={{display: 'flex', flexDirection: 'row'}}>
           <div style={{...decideStyle('edit', index), editIconContainer}}>
-            <TbEdit onClick={onEdit} style={editIcon} />
-            <button onClick={event => deleteChanges(event, item.id)}>Delete</button>
+            <TbEdit onClick={onEdit} style={{...editIcon, marginRight: 8}} />
+            <DeleteIcon onClick={event => deleteChanges(event, item.id)} />
           </div>
           <span style={decideStyle('id', index)}>{item.id}</span>
           <span

@@ -14,9 +14,9 @@ const decideColumnStyles = (columnName, width, height) => {
 
   switch (columnName.toLowerCase()) {
     case 'edit':
-      return {...defaultStyle, minWidth: width * 0.1 * 0.5, borderLeftWidth: 0};
+      return {...defaultStyle, minWidth: width * 0.1 * 0.4, borderLeftWidth: 0};
     case 'id':
-      return {...defaultStyle, minWidth: width * 0.1 * 0.5};
+      return {...defaultStyle, minWidth: width * 0.1 * 0.25};
     case 'control id':
       return {...defaultStyle, minWidth: width * 0.1 * 1.2, justifyContent: 'flex-start'};
     case 'form name':
@@ -111,8 +111,8 @@ const Styles = (width, height) => ({
     opacity: hasChanged ? 1 : 0.5,
   }),
   editIcon: {
-    width: 25,
-    height: 25,
+    width: 30,
+    height: 30,
     color: 'black',
   },
   searchInput: {
