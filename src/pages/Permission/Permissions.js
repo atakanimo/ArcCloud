@@ -8,7 +8,7 @@ import PermissionService from '../../Business/PermissionService';
 // COMPONENTS
 import {TbEdit} from 'react-icons/tb';
 import CheckBox from '../../components/Checkbox-Switch/Checkbox';
-import PaginationContainer, { getPaginationOptions } from '../../components/PaginationContainer';
+import PaginationContainer, {getPaginationOptions} from '../../components/PaginationContainer';
 import SettingsModal from './SettingsModal';
 import Spinner from '../../components/Spinner';
 import TextInput from '../../components/TextInput';
@@ -53,16 +53,16 @@ const Permissions = () => {
     inputsContainer,
     inputStyle,
     inputContainer,
-    tooltipStyle
+    tooltipStyle,
   } = Styles(dynamicWidth, dynamicHeight);
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [searchFields, setSearchFields] = useState({ id: '', controlId: '', description: '', formName: '' })
+  const [searchFields, setSearchFields] = useState({id: '', controlId: '', description: '', formName: ''});
 
   const [modal, setModal] = useState({trigger: false, isNew: false});
-  const [tooltip, setTooltip] = useState({trigger: false, msg: null, position: { x: 0, y: 0 }});
+  const [tooltip, setTooltip] = useState({trigger: false, msg: null, position: {x: 0, y: 0}});
 
   const [isModified, setIsModified] = useState(false);
   const [selectedRowIdx, setSelectedRowIdx] = useState(null);
@@ -96,7 +96,7 @@ const Permissions = () => {
     setIsModified(true);
     return;
   };
-  
+
   const onSearchInput = (event, field) => setSearchFields(p => ({...p, [field]: event.target.value}));
 
   const undoChanges = () => {
@@ -111,10 +111,10 @@ const Permissions = () => {
   };
 
   const resetSearch = () => {
-    setSearchFields({ id: '', controlId: '', description: '', formName: '' })
+    setSearchFields({id: '', controlId: '', description: '', formName: ''});
     setPage(1);
     return fetch();
-  }
+  };
 
   const handleSearch = async () => {
     setLoading(true);
@@ -132,7 +132,6 @@ const Permissions = () => {
     setLoading(false);
     return;
   };
-
   const Row = props => {
     const {item, index, row, column} = props;
 
@@ -145,27 +144,49 @@ const Permissions = () => {
       return {...decideColumnStyles(element, dynamicWidth, dynamicHeight), ...decideColor(idx)};
     };
 
-    const ellipsisText = text => text && text.length > MAX_TEXT_LENGTH ? `${text.slice(0, START_ELLIPSIS_AFTER) + '...'}` : text;
+    const ellipsisText = text => (text && text.length > MAX_TEXT_LENGTH ? `${text.slice(0, START_ELLIPSIS_AFTER) + '...'}` : text);
 
     const showTooltip = (tipMsg, elemRef) => {
-      if(TOOLTIP_TIMEOUT_ID) return;
-      if(tipMsg && tipMsg.length < MAX_TEXT_LENGTH) return;
-      const { offsetLeft, offsetTop } = elemRef.current;
-      TOOLTIP_TIMEOUT_ID = setTimeout(() => setTooltip(({ trigger: true, msg: tipMsg, position: { x: offsetLeft + 5, y: (offsetTop - gridElement.scrollTop) - 20 } })), TOOLTIP_TIMEOUT_DURATION);
+      if (TOOLTIP_TIMEOUT_ID) return;
+      if (tipMsg && tipMsg.length < MAX_TEXT_LENGTH) return;
+      const {offsetLeft, offsetTop} = elemRef.current;
+      TOOLTIP_TIMEOUT_ID = setTimeout(
+        () => setTooltip({trigger: true, msg: tipMsg, position: {x: offsetLeft + 5, y: offsetTop - gridElement.scrollTop - 20}}),
+        TOOLTIP_TIMEOUT_DURATION,
+      );
       return;
     };
 
     const clearTooltipTimer = () => {
-      if(!TOOLTIP_TIMEOUT_ID) return;
+      if (!TOOLTIP_TIMEOUT_ID) return;
       clearTimeout(TOOLTIP_TIMEOUT_ID);
       TOOLTIP_TIMEOUT_ID = null;
-      if(tooltip.trigger) setTooltip(({ trigger: false, msg: null, position: { x: 0, y: 0 }}))
+      if (tooltip.trigger) setTooltip({trigger: false, msg: null, position: {x: 0, y: 0}});
       return;
     };
 
     const onEdit = () => {
       setSelectedRowIdx(index);
       setModal({trigger: true, isNew: false});
+    };
+    const deleteChanges = (event, id) => {
+      event.preventDefault();
+      Alertify.ConfirmNotification(
+        'DELETE',
+        'Are you sure you want to delete?',
+        () => confirmOK(id),
+        () => console.log('Pressed cancel'),
+      );
+    };
+    const confirmOK = async id => {
+      setLoading(true);
+      const {data, success, error} = await PermissionService.Delete(id);
+      console.log(data, success, error);
+      if (success) {
+        Alertify.SuccessNotifications('Deleted successfully!');
+        fetch();
+      } else Alertify.ErrorNotifications('Error!');
+      setLoading(false);
     };
 
     if (column) {
@@ -175,17 +196,35 @@ const Permissions = () => {
         </span>
       );
     }
-
     if (row) {
       return (
         <div key={item.id} style={{display: 'flex', flexDirection: 'row'}}>
           <div style={{...decideStyle('edit', index), editIconContainer}}>
             <TbEdit onClick={onEdit} style={editIcon} />
+            <button onClick={event => deleteChanges(event, item.id)}>Delete</button>
           </div>
           <span style={decideStyle('id', index)}>{item.id}</span>
-          <span ref={controlIdRef} onMouseOver={() => showTooltip(item.controlId, controlIdRef)} onMouseLeave={clearTooltipTimer} style={decideStyle('control id', index)}>{ellipsisText(item.controlId)}</span>
-          <span ref={descriptionRef} onMouseOver={() => showTooltip(item.description, descriptionRef)} onMouseLeave={clearTooltipTimer} style={decideStyle('description', index)}>{ellipsisText(item.description)}</span>
-          <span ref={formNameRef} onMouseOver={() => showTooltip(item.formName, formNameRef)} onMouseLeave={clearTooltipTimer} style={decideStyle('form name', index)}>{ellipsisText(item.formName)}</span>
+          <span
+            ref={controlIdRef}
+            onMouseOver={() => showTooltip(item.controlId, controlIdRef)}
+            onMouseLeave={clearTooltipTimer}
+            style={decideStyle('control id', index)}>
+            {ellipsisText(item.controlId)}
+          </span>
+          <span
+            ref={descriptionRef}
+            onMouseOver={() => showTooltip(item.description, descriptionRef)}
+            onMouseLeave={clearTooltipTimer}
+            style={decideStyle('description', index)}>
+            {ellipsisText(item.description)}
+          </span>
+          <span
+            ref={formNameRef}
+            onMouseOver={() => showTooltip(item.formName, formNameRef)}
+            onMouseLeave={clearTooltipTimer}
+            style={decideStyle('form name', index)}>
+            {ellipsisText(item.formName)}
+          </span>
           {roles.length > 0 &&
             roles.map(role => (
               <CheckBox
@@ -203,7 +242,7 @@ const Permissions = () => {
 
   return (
     <div style={container}>
-      { tooltip.trigger && <span style={tooltipStyle(tooltip.position)}>{tooltip.msg}</span>}
+      {tooltip.trigger && <span style={tooltipStyle(tooltip.position)}>{tooltip.msg}</span>}
       <div style={header}>
         <div style={btnsContainer}>
           <button onClick={() => setModal({trigger: true, isNew: true})} style={addText}>
@@ -217,15 +256,39 @@ const Permissions = () => {
           </button>
         </div>
         <div style={inputsContainer}>
-          <TextInput value={searchFields.id} onChange={e => onSearchInput(e, 'id')} containerStyle={{...inputContainer, width: dynamicWidth * 0.1}} inputStyle={{...inputStyle, width: dynamicWidth * 0.1}} label={'ID'} />
-          <TextInput value={searchFields.controlId} onChange={e => onSearchInput(e, 'controlId')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Control ID'} />
-          <TextInput value={searchFields.description} onChange={e => onSearchInput(e, 'description')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Description'} />
-          <TextInput value={searchFields.formName} onChange={e => onSearchInput(e, 'formName')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Form Name'} />
+          <TextInput
+            value={searchFields.id}
+            onChange={e => onSearchInput(e, 'id')}
+            containerStyle={{...inputContainer, width: dynamicWidth * 0.1}}
+            inputStyle={{...inputStyle, width: dynamicWidth * 0.1}}
+            label={'ID'}
+          />
+          <TextInput
+            value={searchFields.controlId}
+            onChange={e => onSearchInput(e, 'controlId')}
+            containerStyle={inputContainer}
+            inputStyle={inputStyle}
+            label={'Control ID'}
+          />
+          <TextInput
+            value={searchFields.description}
+            onChange={e => onSearchInput(e, 'description')}
+            containerStyle={inputContainer}
+            inputStyle={inputStyle}
+            label={'Description'}
+          />
+          <TextInput
+            value={searchFields.formName}
+            onChange={e => onSearchInput(e, 'formName')}
+            containerStyle={inputContainer}
+            inputStyle={inputStyle}
+            label={'Form Name'}
+          />
           <div style={searchBtnContainer}>
-            <button style={searchBtns} onClick={handleSearch} >
+            <button style={searchBtns} onClick={handleSearch}>
               <img src={SearchIcon} style={searchIcon} />
             </button>
-            <button style={searchBtns} onClick={resetSearch} >
+            <button style={searchBtns} onClick={resetSearch}>
               <img src={CancelIcon} style={searchIcon} />
             </button>
           </div>
@@ -240,7 +303,7 @@ const Permissions = () => {
           roles={roles}
         />
       )}
-      <div id='gridElement' style={gridContainer}>
+      <div id="gridElement" style={gridContainer}>
         {loading ? (
           <Spinner />
         ) : (

@@ -98,6 +98,11 @@ class PermissionService extends BusinessBase {
 
     return this.makeGetRequest(validParams);
   };
+  Delete = id => {
+    this.endpoint = `${this.apiPorts.permission}/Permission/delete?id=${id}`;
+
+    return this.makePostRequest(id);
+  };
 }
 
 export default new PermissionService();
