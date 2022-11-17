@@ -11,8 +11,8 @@ export default function BasicCard({onChange, label, checkBox}) {
       <CardContent className="cardContent" style={{flex: 1, padding: 0, display: 'flex', flexDirection: 'column'}}>
         <Text tAlign={'t'} width={'auto'} height={'auto'} label={label} mT={'0'} />
         <div className="cc">
-          <div id="a" class="form-check form-switch">
-            <input style={inputStyle} class="form-check-input" type="checkbox" checked={checkBox} onChange={onChange} />
+          <div id="a" className="form-check form-switch">
+            <input style={inputStyle} className="form-check-input" type="checkbox" checked={checkBox} onChange={onChange} />
           </div>
         </div>
       </CardContent>

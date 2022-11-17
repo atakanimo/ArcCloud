@@ -1,12 +1,10 @@
 import React, {useState} from 'react';
 import Col from 'react-bootstrap/Col';
 import {Box} from '@mui/material';
-import styled from '@emotion/styled';
 import {commonStyles} from '../../Styles/Styles';
-import Spinner from '../../components/Spinner';
 
 import './MyCompany.scss';
-import keys from './CompanyKeys';
+import accordionsItems from './CompanyPages';
 
 //for accordion
 import Accordion from '@mui/material/Accordion';
@@ -41,29 +39,28 @@ export default function MyCompany() {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const [loading, setLoading] = React.useState(false);
   return (
     <Box sx={commonStyles.boxStyle}>
-      {keys.map((item, index) => {
+      {accordionsItems.map((page, index) => {
         return (
-          <Col key={index} lg={12} style={styles.col}>
-            <div className="container_myCompany">
-              <Accordion expanded={expanded === item.id} onChange={handleChange(item.id)}>
+          <div key={index} className="container_myCompany">
+            <Col lg={12} style={styles.col}>
+              <Accordion
+                style={{padding: '0.25rem'}}
+                className="bigCardArea_myCompany"
+                expanded={expanded === page.id}
+                onChange={handleChange(page.id)}>
                 <AccordionSummary style={styles.accordion} expandIcon={<ExpandMoreIcon />}>
-                  <Typography style={styles.typography}>{item.title}</Typography>
+                  <Typography style={styles.typography}>{page.title}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <item.details expanded={expanded} />
+                  <page.details expanded={expanded} />
                 </AccordionDetails>
               </Accordion>
-            </div>
-          </Col>
+            </Col>
+          </div>
         );
       })}
     </Box>
   );
 }
-
-const InlineTitle = styled.h3`
-  color: #495057;
-`;

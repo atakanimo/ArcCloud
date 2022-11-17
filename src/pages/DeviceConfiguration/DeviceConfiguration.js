@@ -24,6 +24,7 @@ export default function DeviceConfiguration() {
   const getDeviceConfiguration = async () => {
     setLoading(true);
     const {data, success} = await GetDeviceConf();
+    const {userOperationPermission, serializationValidation} = data;
     if (success) {
       const {
         aggregateValidation,
@@ -37,7 +38,10 @@ export default function DeviceConfiguration() {
         outboundValidation,
         replaceValidation,
         resetValidation,
-      } = data.serializationValidation;
+      } = serializationValidation;
+      const {outbound, packRepack, statusUpdateAndQueries} = userOperationPermission;
+      setPermission({outbound, packRepack, statusUpdateAndQueries});
+
       if (deviceMaxLogCount) setSliderValue(deviceMaxLogCount);
       setDeviceLanguage(language);
       setAdmin(isAdmin);
@@ -57,20 +61,31 @@ export default function DeviceConfiguration() {
 
   const updateDeviceConfiguration = async () => {
     const object = {
-      aggregateValidation,
-      decommissionValidation,
-      deviceMaxLogCount: sliderValue,
-      disaggregateValidation,
-      isAdmin,
-      isDeliveriesInfoComeFromSAP: isDeliverySap,
-      isTestDevice,
-      language: 'EN',
-      outboundValidation,
-      replaceValidation,
-      resetValidation,
+      serializationValidation: {
+        aggregateValidation,
+        decommissionValidation,
+        deviceMaxLogCount: sliderValue,
+        disaggregateValidation,
+        isAdmin,
+        isDeliveriesInfoComeFromSAP: isDeliverySap,
+        isTestDevice,
+        language: 'EN',
+        outboundValidation,
+        replaceValidation,
+        resetValidation,
+      },
+      userOperationPermission: {
+        outbound: permission.outbound,
+        statusUpdateAndQueries: {
+          updateSNStatus,
+          decommission,
+          takeProductSample,
+        },
+        packRepack: permission.packRepack,
+      },
     };
     setLoading(true);
-    const {data, success} = await UpdateDeviceConfiguration(object);
+    const {success} = await UpdateDeviceConfiguration(object);
     if (success) {
       getDeviceConfiguration();
       Alertify.SuccessNotifications('Saved successfully!');
@@ -88,6 +103,14 @@ export default function DeviceConfiguration() {
   const [isTestDevice, setTest] = useState(false);
   const [isDeliverySap, setSap] = useState(false);
   const [isAdmin, setAdmin] = useState(false);
+
+  const [permission, setPermission] = useState({
+    outbound: false,
+    packRepack: false,
+    statusUpdateAndQueries: {decommission: false, takeProductSample: false, updateSNStatus: false},
+  });
+  const {decommission, takeProductSample, updateSNStatus} = permission.statusUpdateAndQueries;
+
   const [screenConf, setScreenConfigs] = useState({
     aggregateValidation: false,
     decommissionValidation: false,
@@ -119,16 +142,17 @@ export default function DeviceConfiguration() {
   const {aggregateValidation, decommissionValidation, disaggregateValidation, outboundValidation, replaceValidation, resetValidation} =
     screenConf;
 
-  const messages = {
-    aggregate: 'Do not perform operation if any child items are aggregated to another container.',
-    disaggregate: 'Decommission container after operation is performed.',
-    reset:
-      'If checked: It is not allowed to aggregate already aggregated items to a container. If unchecked: It is allowed to aggregate already aggregated items to a container.',
-    replace: 'Do not perform operation if any child items are aggregated to another container.',
-    decommission: 'Automatically disaggregate items from parent container.',
-    outbound: 'Automatically disaggregate serial numbers that are aggregated to another number.',
-  };
   const onChangeSerialize = name => setScreenConfigs({...screenConf, [name]: !screenConf[name]});
+
+  const onChangePermission = name => {
+    if (name == 'decommission' || name == 'takeProductSample' || name == 'updateSNStatus') {
+      setPermission({
+        ...permission,
+        statusUpdateAndQueries: {...permission.statusUpdateAndQueries, [name]: !permission.statusUpdateAndQueries[name]},
+      });
+      return;
+    } else setPermission({...permission, [name]: !permission[name]});
+  };
 
   return (
     <Box sx={commonStyles.boxStyle}>
@@ -180,14 +204,14 @@ export default function DeviceConfiguration() {
               <InlineTitle>Permissions</InlineTitle>
               <div style={styles.area}>
                 <Card style={styles.checkBoxCard}>
-                  <Switch setValue={setTest} header={'Outbound'} checked={isTestDevice} />
-                  <Switch setValue={setAdmin} header={'Pack&Repack'} checked={isAdmin} />
-                  <Switch setValue={setSap} header={'Status Update and Queries'} checked={isDeliverySap} />
+                  <Switch setValue={() => onChangePermission('outbound')} header={'Outbound'} checked={permission.outbound} />
+                  <Switch setValue={() => onChangePermission('packRepack')} header={'Pack&Repack'} checked={permission.packRepack} />
+                  <Switch header={'Status Update and Queries'} checked={true} />
                 </Card>
                 <Card style={styles.checkBoxCard}>
-                  <Switch setValue={setTest} header={'Update SN Status'} checked={isTestDevice} />
-                  <Switch setValue={setAdmin} header={'Decommission'} checked={isAdmin} />
-                  <Switch setValue={setSap} header={'Take Product Sample'} checked={isDeliverySap} />
+                  <Switch setValue={() => onChangePermission('updateSNStatus')} header={'Update SN Status'} checked={updateSNStatus} />
+                  <Switch setValue={() => onChangePermission('decommission')} header={'Decommission'} checked={decommission} />
+                  <Switch setValue={() => onChangePermission('takeProductSample')} header={'Take Product Sample'} checked={takeProductSample} />
                 </Card>
               </div>
             </div>
@@ -198,6 +222,16 @@ export default function DeviceConfiguration() {
     </Box>
   );
 }
+
+const messages = {
+  aggregate: 'Do not perform operation if any child items are aggregated to another container.',
+  disaggregate: 'Decommission container after operation is performed.',
+  reset:
+    'If checked: It is not allowed to aggregate already aggregated items to a container. If unchecked: It is allowed to aggregate already aggregated items to a container.',
+  replace: 'Do not perform operation if any child items are aggregated to another container.',
+  decommission: 'Automatically disaggregate items from parent container.',
+  outbound: 'Automatically disaggregate serial numbers that are aggregated to another number.',
+};
 
 const InlineTitle = styled.h3`
   color: #495057;

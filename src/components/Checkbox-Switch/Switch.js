@@ -12,9 +12,9 @@ export default function Switch({setValue, header, checked, switchAreaStyle, swit
   const inputStyle = {width: 50, height: 25, marginRight: 10};
 
   return (
-    <div class="form-check form-switch" style={switchAreaStyle || divStyle}>
-      <input style={switchStyle || inputStyle} class="form-check-input" type="checkbox" onChange={() => setValue(!checked)} checked={checked} />
-      <label style={label} class="form-check-label">
+    <div className="form-check form-switch" style={switchAreaStyle || divStyle}>
+      <input style={switchStyle || inputStyle} className="form-check-input" type="checkbox" onChange={() => setValue(!checked)} checked={checked} />
+      <label style={label} className="form-check-label">
         {header}
       </label>
     </div>

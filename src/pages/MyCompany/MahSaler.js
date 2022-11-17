@@ -11,7 +11,7 @@ import Spinner from '../../components/Spinner';
 import Alertify from '../../components/Alertify';
 import companyKeys from './CompanyKeys';
 
-function GS1AppIdenList({expanded}) {
+function MahSaler({expanded}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
@@ -50,11 +50,15 @@ function GS1AppIdenList({expanded}) {
       borderWidth: 0,
       cursor: 'pointer',
     },
+    inputStyle: {
+      width: dynamicWidth * 0.04,
+      marginTop: 5,
+    },
   };
 
   const {GetCompany, DeleteAI, UpdateAI} = CompanyService;
 
-  const initialState = [{plantId: '0000', key: companyKeys.GS1_AI, code: '', description: '', length: '', format: ''}];
+  const initialState = [{plantId: '0000', key: companyKeys.MAH_SALER, code: '', description: '', length: '', format: '', otherValues: ''}];
   const [gridNumber, setGridNumber] = useState(0);
   const [info, setInfo] = useState(initialState);
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
@@ -66,12 +70,12 @@ function GS1AppIdenList({expanded}) {
   const [alertMessage, setAlertMessage] = useState();
 
   useEffect(() => {
-    if (expanded === 'panel1') getCompany();
+    if (expanded === 'panel5') getCompany();
   }, [expanded]);
 
   const getCompany = async () => {
     setLoading(true);
-    const {data, success} = await GetCompany(companyKeys.GS1_AI);
+    const {data, success} = await GetCompany(companyKeys.MAH_SALER);
     if (success) {
       if (data.list.length > 0) {
         setInfo(data.list);
@@ -83,7 +87,13 @@ function GS1AppIdenList({expanded}) {
   const updateAI = async e => {
     e.preventDefault();
     const index = info.length - 1;
-    if (info[index].code === '' || info[index].description === '' || info[index].format === '' || info[index].length === '') {
+    if (
+      info[index].code === '' ||
+      info[index].description === '' ||
+      info[index].length === '' ||
+      info[index].format === '' ||
+      info[index].otherValues === ''
+    ) {
       setShowAlert(true);
       setAlertMessage(`Please fill in the ${info.length}th card`);
       setAlertVariant('warning');
@@ -137,7 +147,7 @@ function GS1AppIdenList({expanded}) {
   const handlerAdd = () => {
     let index = -1;
     info.forEach((element, idx) => {
-      if (element.code === '' || element.description === '' || element.length === '' || element.format === '') {
+      if (element.code === '' || element.description === '' || element.length === '' || element.format === '' || element.otherValues === '') {
         index = idx;
         return;
       }
@@ -168,10 +178,50 @@ function GS1AppIdenList({expanded}) {
         elements.push(
           <Card key={i} style={styles.checkboxCard}>
             <div style={styles.inputDiv}>
-              <TextInput value={info[i].code} onChange={text => onInputChange('code', text, i)} label={'Code'} width={9} />
-              <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Description'} width={7} />
-              <TextInput value={info[i].length} onChange={text => onInputChange('length', text, i)} label={'Length'} width={9} />
-              <TextInput value={info[i].format} onChange={text => onInputChange('format', text, i)} label={'Format'} width={9} />
+              <TextInput
+                inputStyle={styles.inputStyle}
+                value={info[i].code}
+                onChange={text => onInputChange('code', text, i)}
+                label={'ARC-ID'}
+                width={9}
+              />
+              <TextInput
+                inputStyle={styles.inputStyle}
+                value={info[i].description}
+                onChange={text => onInputChange('description', text, i)}
+                label={'ID'}
+                width={7}
+              />
+              <TextInput
+                inputStyle={styles.inputStyle}
+                value={info[i].length}
+                onChange={text => onInputChange('length', text, i)}
+                label={'Name'}
+                width={9}
+              />
+              <TextInput
+                inputStyle={styles.inputStyle}
+                value={info[i].format}
+                onChange={text => onInputChange('format', text, i)}
+                label={'Street'}
+                width={9}
+              />
+              <TextInput
+                inputStyle={styles.inputStyle}
+                value={info[i].otherValues}
+                onChange={text => onInputChange('otherValues', text, i)}
+                label={'Street 2'}
+                width={9}
+              />
+              <TextInput value={info[i].otherValues} onChange={text => onInputChange('otherValues', text, i)} label={'City'} width={9} />
+              <TextInput value={info[i].otherValues} onChange={text => onInputChange('otherValues', text, i)} label={'Postcode'} width={9} />
+              <TextInput value={info[i].otherValues} onChange={text => onInputChange('otherValues', text, i)} label={'Country Code'} width={9} />
+              <TextInput
+                value={info[i].otherValues}
+                onChange={text => onInputChange('otherValues', text, i)}
+                label={'MAH-Wholesaler'}
+                width={9}
+              />
               {i > 0 ? <IconComponent icon={DeleteIcon} onClick={e => deleteAI(e, info[i].id)} /> : null}
             </div>
             <div style={styles.createButton}>
@@ -204,4 +254,4 @@ function GS1AppIdenList({expanded}) {
     </div>
   );
 }
-export default GS1AppIdenList;
+export default MahSaler;

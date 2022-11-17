@@ -10,6 +10,7 @@ import CompanyService from '../../Business/CompanyService';
 import Spinner from '../../components/Spinner';
 import Alertify from '../../components/Alertify';
 import styled from '@emotion/styled';
+import companyKeys from './CompanyKeys';
 
 function GLN({expanded}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
@@ -54,7 +55,7 @@ function GLN({expanded}) {
 
   const {GetCompany, DeleteAI, UpdateAI} = CompanyService;
 
-  const initialState = [{plantId: '0000', key: 'GLN', code: '', description: '', length: ''}];
+  const initialState = [{plantId: '0000', key: companyKeys.GLN, code: '', description: '', length: ''}];
   const [gridNumber, setGridNumber] = useState(0);
   const [info, setInfo] = useState(initialState);
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
@@ -67,12 +68,12 @@ function GLN({expanded}) {
   const [alertMessage, setAlertMessage] = useState();
 
   useEffect(() => {
-    if (expanded === "panel2") getCompany();
+    if (expanded === 'panel2') getCompany();
   }, [expanded]);
 
   const getCompany = async () => {
     setLoading(true);
-    const {data, success} = await GetCompany('GLN');
+    const {data, success} = await GetCompany(companyKeys.GLN);
     if (success) {
       if (data.list.length > 0) {
         setInfo(data.list);
@@ -171,7 +172,7 @@ function GLN({expanded}) {
             <div style={styles.inputDiv}>
               <TextInput value={info[i].code} onChange={text => onInputChange('code', text, i)} label={'GLN Code'} width={9} />
               <TextInput value={info[i].description} onChange={text => onInputChange('description', text, i)} label={'Company code'} width={7} />
-              <TextInput value={info[i].length} onChange={text => onInputChange('length', text, i)} label={'Comapny name'} width={9} />
+              <TextInput value={info[i].length} onChange={text => onInputChange('length', text, i)} label={'Company name'} width={9} />
               {i > 0 ? <IconComponent icon={DeleteIcon} onClick={e => deleteAI(e, info[i].id)} /> : null}
             </div>
             <div style={styles.createButton}>

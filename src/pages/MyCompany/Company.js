@@ -10,8 +10,9 @@ import CompanyService from '../../Business/CompanyService';
 import Spinner from '../../components/Spinner';
 import Alertify from '../../components/Alertify';
 import styled from '@emotion/styled';
+import companyKeys from './CompanyKeys';
 
-function GLN({expanded}) {
+function Company({expanded}) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
 
@@ -54,7 +55,7 @@ function GLN({expanded}) {
 
   const {GetCompany, DeleteAI, UpdateAI} = CompanyService;
 
-  const initialState = [{plantId: '0000', key: 'GLN', code: '', description: '', length: ''}];
+  const initialState = [{plantId: '0000', key: companyKeys.COMPANY, code: '', description: '', length: ''}];
   const [gridNumber, setGridNumber] = useState(0);
   const [info, setInfo] = useState(initialState);
   const [force, setForce] = useState(false); // TO FORCE THE RENDER AFTER USER PRESSED ON A CHECKBOX
@@ -72,7 +73,7 @@ function GLN({expanded}) {
 
   const getCompany = async () => {
     setLoading(true);
-    const {data, success} = await GetCompany('COMPANY');
+    const {data, success} = await GetCompany(companyKeys.COMPANY);
     if (success) {
       if (data.list.length > 0) {
         setInfo(data.list);
@@ -84,7 +85,7 @@ function GLN({expanded}) {
   const updateAI = async e => {
     e.preventDefault();
     const index = info.length - 1;
-    if (info[index].code === '' || info[index].description === '' || info[index].format === '' || info[index].length === '') {
+    if (info[index].code === '' || info[index].description === '' || info[index].length === '') {
       setShowAlert(true);
       setAlertMessage(`Please fill in the ${info.length}th card`);
       setAlertVariant('warning');
@@ -138,7 +139,7 @@ function GLN({expanded}) {
   const handlerAdd = () => {
     let index = -1;
     info.forEach((element, idx) => {
-      if (element.code === '' || element.description === '' || element.length === '' || element.format === '') {
+      if (element.code === '' || element.description === '' || element.length === '') {
         index = idx;
         return;
       }
@@ -204,7 +205,7 @@ function GLN({expanded}) {
     </div>
   );
 }
-export default GLN;
+export default Company;
 
 const InlineTitle = styled.h3`
   color: #495057;
