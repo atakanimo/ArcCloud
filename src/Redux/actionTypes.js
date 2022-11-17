@@ -1,5 +1,5 @@
 const actionTypes = {
-  GET_CONFIGURATION: 'GET_CONFIGURATION',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
 };
 
 export default actionTypes;

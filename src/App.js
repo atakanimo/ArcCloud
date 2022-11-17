@@ -1,6 +1,6 @@
 import './App.css';
-import React from 'react';
-import {Routes, Route, useLocation} from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {Routes, Route, useLocation, useNavigate} from 'react-router-dom';
 import AdminConfiguration from './pages/AdminConfiguration/AdminConfiguration';
 import Col from 'react-bootstrap/Col';
 import Sidebar from './pages/LeftMenu/SideBar';
@@ -14,9 +14,17 @@ import NavigationLog from './pages/Logs/NavigationLog';
 // import NetworkLog from './pages/Logs/NetworkLog';
 import UserAuthLog from './pages/Logs/UserAuthLog';
 import Printer from './pages/Printer/Printer';
+import store from './Redux/store';
 
 export default function App() {
+  const {isLogin, token} = store.getState().LoginReducer;
+
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin == false) navigate('/');
+  }, []);
 
   return (
     <div style={{display: 'flex', flex: 1, flexDirection: 'row'}}>
@@ -30,7 +38,6 @@ export default function App() {
             <Sidebar />
           </Col>
           <Col xs={8} md={9} lg={10} style={{padding: 0}}>
-            {/* <NavbarComponent /> */}
             <Routes>
               <Route index path="/" element={<LoginPage />} />
               <Route path="/myCompany" element={<MyCompany />} />

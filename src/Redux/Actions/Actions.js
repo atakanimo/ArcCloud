@@ -1,9 +1,9 @@
 import actionTypes from '../actionTypes';
 import store from '../store';
 
-export const SaveConfiguration = conf => {
+export const LoginAction = () => {
   store.dispatch({
-    type: actionTypes.GET_CONFIGURATION,
-    payload: conf,
+    type: actionTypes.LOGIN_SUCCESS,
+    payload: null,
   });
 };

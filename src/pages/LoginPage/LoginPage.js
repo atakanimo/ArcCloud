@@ -10,6 +10,7 @@ import AuthService from '../../Business/AuthService';
 import {useNavigate} from 'react-router-dom';
 import Alertify from '../../components/Alertify';
 import {LoadingButton} from '@mui/lab';
+import {LoginAction} from '../../Redux/Actions/Actions';
 
 export default function SignIn() {
   const {GetConfiguration} = AuthService;
@@ -23,6 +24,7 @@ export default function SignIn() {
     setLoading(true);
     const {success, data, error} = await GetConfiguration(user);
     if (success == true) {
+      LoginAction();
       Alertify.SuccessNotifications('Login is successfull!');
       navigate('/myCompany');
     } else {
