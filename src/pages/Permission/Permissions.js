@@ -6,7 +6,6 @@ import PermissionStyle from './styles';
 import PermissionService from '../../Business/PermissionService';
 
 // COMPONENTS
-import {TbEdit} from 'react-icons/tb';
 import CheckBox from '../../components/Checkbox-Switch/Checkbox';
 import PaginationContainer, {getPaginationOptions} from '../../components/PaginationContainer';
 import SettingsModal from './SettingsModal';
@@ -18,6 +17,7 @@ import Alertify from '../../components/Alertify';
 import CancelIcon from '../../assets/cancel.png';
 import SearchIcon from '../../assets/search.png';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const {Styles, decideColumnStyles} = PermissionStyle;
 
@@ -201,7 +201,7 @@ const Permissions = () => {
       return (
         <div key={item.id} style={{display: 'flex', flexDirection: 'row'}}>
           <div style={{...decideStyle('edit', index), editIconContainer}}>
-            <TbEdit onClick={onEdit} style={{...editIcon, marginRight: 8}} />
+            <EditIcon onClick={onEdit} style={{...editIcon, marginRight: 8, height: 25}} />
             <DeleteIcon onClick={event => deleteChanges(event, item.id)} />
           </div>
           <span style={decideStyle('id', index)}>{item.id}</span>
