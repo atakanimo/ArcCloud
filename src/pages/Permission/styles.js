@@ -58,13 +58,13 @@ const Styles = (width, height) => ({
     height: height * 0.15,
   },
   inputContainer: {
-    width: width * 0.215,
+    width: width * 0.2,
     alignItems: 'center',
     marginLeft: 5,
     marginRight: 5,
   },
   inputStyle: {
-    width: width * 0.215,
+    width: width * 0.2,
   },
   addText: {
     display: 'flex',
@@ -132,6 +132,11 @@ const Styles = (width, height) => ({
     height: 30,
   },
   searchBtnContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: 40
+  },
+  searchBtns: {
     width: width * 0.05,
     height: 40,
     marginLeft: 10,
@@ -156,7 +161,8 @@ const Styles = (width, height) => ({
     borderRadius: 10,
     padding: 5,
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    zIndex: 100
   })
 });
 

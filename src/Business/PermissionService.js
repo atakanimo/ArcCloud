@@ -36,8 +36,8 @@ const emptyEntryObject = {
 class PermissionService extends BusinessBase {
   GetPermissions = async (isPaging, ItemCount, PageNumber) => {
     if (isPaging) {
-      this.requestParams = `${this.apiPorts.permission}/Permission?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
-    } else this.requestParams = `${this.apiPorts.permission}/Permission`;
+      this.endpoint = `${this.apiPorts.permission}/Permission?IsPaging=${isPaging}&PageNumber=${PageNumber}&PageCount=${ItemCount}`;
+    } else this.endpoint = `${this.apiPorts.permission}/Permission`;
 
     const {success, data, error} = await this.makeGetRequest();
     const {list, count} = data;
@@ -74,32 +74,29 @@ class PermissionService extends BusinessBase {
   };
 
   CreateEntry = (formName, controlId, description, checkBoxValues) => {
-    this.requestParams = `${this.apiPorts.permission}/Permission/add`;
+    this.endpoint = `${this.apiPorts.permission}/Permission/add`;
     const newEntity = this.ConstructEntryObject(formName, controlId, description, null, checkBoxValues, true);
 
     return this.makePostRequest(newEntity);
   };
 
   SaveAllChanges = data => {
-    this.requestParams = `${this.apiPorts.permission}/Permission/updateAll`;
+    this.endpoint = `${this.apiPorts.permission}/Permission/updateAll`;
 
     return this.makePostRequest(data);
   };
 
   Search = params => {
-    // if id is present, only id will be sent
-    this.requestParams = `${this.apiPorts.permission}/Permission`;
+    this.endpoint = `${this.apiPorts.permission}/Permission`;
 
     if (params.id) return this.makeGetRequest({id: params.id});
 
-    return this.makeGetRequest(params);
-  };
+    const validParams = {};
+    for (const [key, value] of Object.entries(params)) {
+      if (value) validParams[key] = value;
+    }
 
-  Delete = id => {
-    console.log(id, "item");
-    this.requestParams = `${this.apiPorts.permission}/Permission/delete?id=${id}`;
-
-    return this.makePostRequest(id);
+    return this.makeGetRequest(validParams);
   };
 }
 

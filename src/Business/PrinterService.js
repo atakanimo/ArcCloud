@@ -5,7 +5,7 @@ class PrinterService extends BusinessBase {
   querry = {save: '/save'};
 
   GetPrinter = async () => {
-    this.requestParams = `${this.apiPorts.admin}${this.querryHeader}`;
+    this.endpoint = `${this.apiPorts.admin}${this.querryHeader}`;
 
     const {success, data, error} = await this.makeGetRequest();
     const {list, count} = data;
@@ -13,7 +13,7 @@ class PrinterService extends BusinessBase {
   };
 
   UpdatePrinter = async object => {
-    this.requestParams = `${this.apiPorts.admin}${this.querryHeader}${this.querry.save}`;
+    this.endpoint = `${this.apiPorts.admin}${this.querryHeader}${this.querry.save}`;
 
     const {success, data, error} = await this.makePostRequest(object);
 

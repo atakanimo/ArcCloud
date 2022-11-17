@@ -46,6 +46,7 @@ const Permissions = () => {
     editIcon,
     searchIcon,
     searchBtnContainer,
+    searchBtns,
     editIconContainer,
     gridContainer,
     btnsContainer,
@@ -57,7 +58,8 @@ const Permissions = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isSearched, setSearched] = useState(false);
+
+  const [searchFields, setSearchFields] = useState({ id: '', controlId: '', description: '', formName: '' })
 
   const [modal, setModal] = useState({trigger: false, isNew: false});
   const [tooltip, setTooltip] = useState({trigger: false, msg: null, position: { x: 0, y: 0 }});
@@ -84,7 +86,6 @@ const Permissions = () => {
 
   useEffect(() => {
     fetch();
-    if(isSearched) setSearched(false);
   }, [page, pageCount]);
 
   const onCheckboxChange = (columnTitle, rowIndex) => {
@@ -95,6 +96,8 @@ const Permissions = () => {
     setIsModified(true);
     return;
   };
+  
+  const onSearchInput = (event, field) => setSearchFields(p => ({...p, [field]: event.target.value}));
 
   const undoChanges = () => {
     fetch();
@@ -105,6 +108,29 @@ const Permissions = () => {
     PermissionService.SaveAllChanges(data);
     setIsModified(false);
     Alertify.SuccessNotifications('Changes saved!');
+  };
+
+  const resetSearch = () => {
+    setSearchFields({ id: '', controlId: '', description: '', formName: '' })
+    setPage(1);
+    return fetch();
+  }
+
+  const handleSearch = async () => {
+    setLoading(true);
+    if (!searchFields.id && !searchFields.controlId && !searchFields.formName && !searchFields.description) return null;
+    const {data: result, success} = await PermissionService.Search(searchFields);
+
+    if (!success) {
+      Alertify.ErrorNotifications('No result!');
+      setLoading(false);
+      return;
+    }
+
+    setData(result.list);
+    setItemCount(result.count);
+    setLoading(false);
+    return;
   };
 
   const Row = props => {
@@ -175,33 +201,9 @@ const Permissions = () => {
     }
   };
 
-  const Header = () => {
-    const [searchFields, setSearchFields] = useState({});
-    const onTextChange = (event, field) => setSearchFields(p => ({...p, [field]: event.target.value}));
-
-    const handleSearch = async () => {
-      if (isSearched) {
-        setSearchFields({});
-        setSearched(false);
-        setPage(1);
-        return fetch();
-      }
-
-      if (!searchFields.id && !searchFields.controlId && !searchFields.formName && !searchFields.description) return null;
-      const {data: result, success} = await PermissionService.Search(searchFields);
-
-      if (!success) {
-        Alertify.ErrorNotifications('No result!');
-        return;
-      }
-
-      setData(result.list);
-      setItemCount(result.count);
-      setSearched(true);
-      return;
-    };
-
-    return (
+  return (
+    <div style={container}>
+      { tooltip.trigger && <span style={tooltipStyle(tooltip.position)}>{tooltip.msg}</span>}
       <div style={header}>
         <div style={btnsContainer}>
           <button onClick={() => setModal({trigger: true, isNew: true})} style={addText}>
@@ -215,32 +217,20 @@ const Permissions = () => {
           </button>
         </div>
         <div style={inputsContainer}>
-          <TextInput
-            onChange={e => onTextChange(e, 'id')}
-            containerStyle={{...inputContainer, width: dynamicWidth * 0.1}}
-            inputStyle={{...inputStyle, width: dynamicWidth * 0.1}}
-            label={'ID'}
-          />
-          <TextInput onChange={e => onTextChange(e, 'controlId')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Control ID'} />
-          <TextInput
-            onChange={e => onTextChange(e, 'description')}
-            containerStyle={inputContainer}
-            inputStyle={inputStyle}
-            label={'Description'}
-          />
-          <TextInput onChange={e => onTextChange(e, 'formName')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Form Name'} />
-          <button style={searchBtnContainer} onClick={handleSearch}>
-            <img src={isSearched ? CancelIcon : SearchIcon} style={searchIcon} />
-          </button>
+          <TextInput value={searchFields.id} onChange={e => onSearchInput(e, 'id')} containerStyle={{...inputContainer, width: dynamicWidth * 0.1}} inputStyle={{...inputStyle, width: dynamicWidth * 0.1}} label={'ID'} />
+          <TextInput value={searchFields.controlId} onChange={e => onSearchInput(e, 'controlId')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Control ID'} />
+          <TextInput value={searchFields.description} onChange={e => onSearchInput(e, 'description')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Description'} />
+          <TextInput value={searchFields.formName} onChange={e => onSearchInput(e, 'formName')} containerStyle={inputContainer} inputStyle={inputStyle} label={'Form Name'} />
+          <div style={searchBtnContainer}>
+            <button style={searchBtns} onClick={handleSearch} >
+              <img src={SearchIcon} style={searchIcon} />
+            </button>
+            <button style={searchBtns} onClick={resetSearch} >
+              <img src={CancelIcon} style={searchIcon} />
+            </button>
+          </div>
         </div>
       </div>
-    );
-  };
-
-  return (
-    <div style={container}>
-      { tooltip.trigger && <span style={tooltipStyle(tooltip.position)}>{tooltip.msg}</span>}
-      <Header />
       {modal.trigger && (
         <SettingsModal
           itemToEdit={{item: data[selectedRowIdx] || null, itemIdx: selectedRowIdx || null}}

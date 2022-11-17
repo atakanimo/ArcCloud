@@ -5,12 +5,12 @@ class DeviceService extends BusinessBase {
   querry = {save: '/save'};
 
   GetDeviceConf = () => {
-    this.requestParams = `${this.apiPorts.admin}${this.querryHeader}`;
+    this.endpoint = `${this.apiPorts.admin}${this.querryHeader}`;
     return this.makeGetRequest();
   };
 
   UpdateDeviceConfiguration = object => {
-    this.requestParams = `${this.apiPorts.admin}${this.querryHeader}${this.querry.save}`;
+    this.endpoint = `${this.apiPorts.admin}${this.querryHeader}${this.querry.save}`;
 
     return this.makePostRequest(object);
   };
