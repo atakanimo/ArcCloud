@@ -27,9 +27,13 @@ const allColumns = [...titles, ...roles];
 const ADD_COLUMN_TEXT = 'Add New Entry';
 const SAVE_TEXT = 'Save Changes';
 const UNDO_TEXT = 'Undo All Changes';
-const TOOLTIP_TIMEOUT_DURATION = 100;
+const TOOLTIP_TIMEOUT_DURATION = 500;
+const START_ELLIPSIS_AFTER = 30;
+const MAX_TEXT_LENGTH = 32;
+let TOOLTIP_TIMEOUT_ID = null;
 
 const Permissions = () => {
+  const gridElement = document.querySelector('#gridElement');
   const options = getPaginationOptions(true);
   const [screenSize] = GetDynamicDimensions();
   const {dynamicHeight, dynamicWidth} = screenSize;
@@ -52,11 +56,11 @@ const Permissions = () => {
   } = Styles(dynamicWidth, dynamicHeight);
 
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isSearched, setSearched] = useState(false);
 
   const [modal, setModal] = useState({trigger: false, isNew: false});
   const [tooltip, setTooltip] = useState({trigger: false, msg: null, position: { x: 0, y: 0 }});
-  const [loading, setLoading] = useState(false);
-  const [isSearched, setSearched] = useState(false);
 
   const [isModified, setIsModified] = useState(false);
   const [selectedRowIdx, setSelectedRowIdx] = useState(null);
@@ -106,7 +110,6 @@ const Permissions = () => {
   const Row = props => {
     const {item, index, row, column} = props;
 
-    const idRef = useRef();
     const controlIdRef = useRef();
     const descriptionRef = useRef();
     const formNameRef = useRef();
@@ -116,20 +119,21 @@ const Permissions = () => {
       return {...decideColumnStyles(element, dynamicWidth, dynamicHeight), ...decideColor(idx)};
     };
 
-    const ellipsisText = text => text && text.length > 32 ? `${text.slice(0, 30) + '...'}` : text;
+    const ellipsisText = text => text && text.length > MAX_TEXT_LENGTH ? `${text.slice(0, START_ELLIPSIS_AFTER) + '...'}` : text;
 
-    let TOOLTIP_TIMEOUT_ID = null;
-    const showTooltipIn = (tipMsg, elemRef) => {
-      if(tipMsg.length < 32) return;
+    const showTooltip = (tipMsg, elemRef) => {
+      if(TOOLTIP_TIMEOUT_ID) return;
+      if(tipMsg && tipMsg.length < MAX_TEXT_LENGTH) return;
       const { offsetLeft, offsetTop } = elemRef.current;
-      setTooltip(({ trigger: true, msg: tipMsg, position: { x: offsetLeft + 5, y: offsetTop - 20 } }))
-      TOOLTIP_TIMEOUT_ID = setTimeout(() => setTooltip(({ trigger: true, msg: tipMsg, position: { x: offsetLeft + 5, y: offsetTop - 20 } })), TOOLTIP_TIMEOUT_DURATION);
+      TOOLTIP_TIMEOUT_ID = setTimeout(() => setTooltip(({ trigger: true, msg: tipMsg, position: { x: offsetLeft + 5, y: (offsetTop - gridElement.scrollTop) - 20 } })), TOOLTIP_TIMEOUT_DURATION);
       return;
     };
 
-    const cancelTooltipTimeout = () => {
-      if(tooltip.trigger) setTooltip(({ trigger: false, msg: null, position: { x: 0, y: 0 }}))
+    const clearTooltipTimer = () => {
+      if(!TOOLTIP_TIMEOUT_ID) return;
       clearTimeout(TOOLTIP_TIMEOUT_ID);
+      TOOLTIP_TIMEOUT_ID = null;
+      if(tooltip.trigger) setTooltip(({ trigger: false, msg: null, position: { x: 0, y: 0 }}))
       return;
     };
 
@@ -145,19 +149,21 @@ const Permissions = () => {
         </span>
       );
     }
+
     if (row) {
       return (
         <div key={item.id} style={{display: 'flex', flexDirection: 'row'}}>
           <div style={{...decideStyle('edit', index), editIconContainer}}>
             <TbEdit onClick={onEdit} style={editIcon} />
           </div>
-          <span ref={idRef} onMouseOver={() => showTooltipIn(item.id, idRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('id', index)}>{ellipsisText(item.id)}</span>
-          <span ref={controlIdRef} onMouseOver={() => showTooltipIn(item.controlId, controlIdRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('control id', index)}>{ellipsisText(item.controlId)}</span>
-          <span ref={descriptionRef} onMouseOver={() => showTooltipIn(item.description, descriptionRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('description', index)}>{ellipsisText(item.description)}</span>
-          <span ref={formNameRef} onMouseOver={() => showTooltipIn(item.formName, formNameRef)} onMouseLeave={cancelTooltipTimeout} style={decideStyle('form name', index)}>{ellipsisText(item.formName)}</span>
+          <span style={decideStyle('id', index)}>{item.id}</span>
+          <span ref={controlIdRef} onMouseOver={() => showTooltip(item.controlId, controlIdRef)} onMouseLeave={clearTooltipTimer} style={decideStyle('control id', index)}>{ellipsisText(item.controlId)}</span>
+          <span ref={descriptionRef} onMouseOver={() => showTooltip(item.description, descriptionRef)} onMouseLeave={clearTooltipTimer} style={decideStyle('description', index)}>{ellipsisText(item.description)}</span>
+          <span ref={formNameRef} onMouseOver={() => showTooltip(item.formName, formNameRef)} onMouseLeave={clearTooltipTimer} style={decideStyle('form name', index)}>{ellipsisText(item.formName)}</span>
           {roles.length > 0 &&
             roles.map(role => (
               <CheckBox
+                key={role}
                 checked={data[index][role] === 1 || data[index][role] === 9}
                 disabled={data[index][role] === 9}
                 style={decideStyle('checkbox', index)}
@@ -244,7 +250,7 @@ const Permissions = () => {
           roles={roles}
         />
       )}
-      <div style={gridContainer}>
+      <div id='gridElement' style={gridContainer}>
         {loading ? (
           <Spinner />
         ) : (

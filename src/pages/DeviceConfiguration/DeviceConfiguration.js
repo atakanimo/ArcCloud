@@ -97,6 +97,25 @@ export default function DeviceConfiguration() {
     resetValidation: false,
   });
 
+  const styles = {
+    area: {
+      width: 'auto',
+      backgroundColor: '#f8f9fa',
+      borderRadius: '10px',
+      padding: '10px',
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    checkBoxCard: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '1rem',
+      borderRadius: '5px',
+      marginRight: 20,
+      minWidth: '220px',
+    },
+  };
+
   const {aggregateValidation, decommissionValidation, disaggregateValidation, outboundValidation, replaceValidation, resetValidation} =
     screenConf;
 
@@ -109,9 +128,7 @@ export default function DeviceConfiguration() {
     decommission: 'Automatically disaggregate items from parent container.',
     outbound: 'Automatically disaggregate serial numbers that are aggregated to another number.',
   };
-  const onChangeSerialize = name => {
-    setScreenConfigs({...screenConf, [name]: !screenConf[name]});
-  };
+  const onChangeSerialize = name => setScreenConfigs({...screenConf, [name]: !screenConf[name]});
 
   return (
     <Box sx={commonStyles.boxStyle}>
@@ -155,6 +172,23 @@ export default function DeviceConfiguration() {
                     <Switch setValue={setSap} header={'Is deliveries info come from SAP ?'} checked={isDeliverySap} />
                   </Card>
                 </div>
+              </div>
+            </div>
+          </Col>
+          <Col lg={12}>
+            <div className="bigCardArea_deviceConf" style={{marginTop: 20}}>
+              <InlineTitle>Permissions</InlineTitle>
+              <div style={styles.area}>
+                <Card style={styles.checkBoxCard}>
+                  <Switch setValue={setTest} header={'Outbound'} checked={isTestDevice} />
+                  <Switch setValue={setAdmin} header={'Pack&Repack'} checked={isAdmin} />
+                  <Switch setValue={setSap} header={'Status Update and Queries'} checked={isDeliverySap} />
+                </Card>
+                <Card style={styles.checkBoxCard}>
+                  <Switch setValue={setTest} header={'Update SN Status'} checked={isTestDevice} />
+                  <Switch setValue={setAdmin} header={'Decommission'} checked={isAdmin} />
+                  <Switch setValue={setSap} header={'Take Product Sample'} checked={isDeliverySap} />
+                </Card>
               </div>
             </div>
           </Col>

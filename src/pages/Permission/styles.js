@@ -18,11 +18,11 @@ const decideColumnStyles = (columnName, width, height) => {
     case 'id':
       return {...defaultStyle, minWidth: width * 0.1 * 0.5};
     case 'control id':
-      return {...defaultStyle, minWidth: width * 0.1 * 1.5, justifyContent: 'flex-start'};
+      return {...defaultStyle, minWidth: width * 0.1 * 1.2, justifyContent: 'flex-start'};
     case 'form name':
-      return {...defaultStyle, minWidth: width * 0.1 * 1.5, justifyContent: 'flex-start'};
+      return {...defaultStyle, minWidth: width * 0.1 * 1.2, justifyContent: 'flex-start'};
     case 'description':
-      return {...defaultStyle, minWidth: width * 0.1 * 1.5, justifyContent: 'flex-start'};
+      return {...defaultStyle, minWidth: width * 0.1 * 1.2, justifyContent: 'flex-start'};
     default:
       return { ...defaultStyle, paddingLeft: 0 };
   }
