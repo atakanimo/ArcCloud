@@ -10,9 +10,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AdvancoLogo from '../../assets/advanco-logo-positive.svg';
 import AdvancoLogoWhite from '../../assets/ADV_Logo_White.png';
 import GetDynamicDimensions from '../../helper/GetDynamicDimensions';
-import {GrMail} from 'react-icons/gr';
-import {AiFillLinkedin} from 'react-icons/ai';
-import {FaHome} from 'react-icons/fa';
+import HomeIcon from '@mui/icons-material/Home';
+import MailIcon from '@mui/icons-material/Mail';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const routes = [
   {
@@ -109,8 +109,9 @@ const Sidebar = () => {
       justifyContent: 'center',
     },
     icons: {
-      fontSize: '36px',
+      fontSize: '40px',
       margin: '15px',
+      color: "white"
     },
   };
   return (
@@ -164,13 +165,9 @@ const Sidebar = () => {
         })}
       </div>
       <div style={styles.iconArea}>
-        <FaHome color="white" style={styles.icons} onClick={() => window.open('https://www.advanco.com/tr/')} />
-        <GrMail color="white" style={styles.icons} />
-        <AiFillLinkedin
-          color="white"
-          style={styles.icons}
-          onClick={() => window.open('https://www.linkedin.com/company/advanco-sa/mycompany/')}
-        />
+        <HomeIcon color="white" style={styles.icons} onClick={() => window.open('https://www.advanco.com/tr/')} />
+        <MailIcon color="white" style={styles.icons} />
+        <LinkedInIcon color="white" style={styles.icons} onClick={() => window.open('https://www.linkedin.com/company/advanco-sa/mycompany/')} />
       </div>
     </div>
   );
