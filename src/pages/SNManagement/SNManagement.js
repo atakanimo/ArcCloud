@@ -1,28 +1,20 @@
 import React from 'react';
-import DataGrid, {Button, Column, FilterRow, Scrolling, Pager, Paging} from 'devextreme-react/data-grid';
+import DataGrid, {Button, Column, FilterRow, Pager, Paging} from 'devextreme-react/data-grid';
 
 import BasicModal from '../../components/Modal.js';
 
 import SNManagementSearchForm from '../../components/SearchForm/SNManagementSearchForm';
-import PaginationContainer from '../../components/PaginationContainer.js';
 import LogService from '../../Business/LogService.js';
 import Spinner from '../../components/Spinner.js';
 import {commonStyles} from '../../Styles/Styles';
 
-import Mock from './Mock';
+import {createData} from './Mock';
 
 const SNManagement = () => {
   const [data, setData] = React.useState([]);
-
-  const [pageNumber, setPageNumber] = React.useState(1);
-  const [pageCount, setPageCount] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
-  const [itemCount, setItemCount] = React.useState(100);
 
-  const pageSizes = [10, 20, 40];
-
-  //   useEffect(() => {
-  //   }, [pageCount, pageNumber]);
+  const pageSizes = [50, 100, 'all'];
 
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState([]);
@@ -52,23 +44,20 @@ const SNManagement = () => {
   ];
   if (loading == true) return <Spinner />;
 
+  const {item} = createData(100);
+  console.log('====================================');
+  console.log(item);
+  console.log('====================================');
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
-      <SNManagementSearchForm
-        setPageNumber={setPageNumber}
-        setItemCount={setItemCount}
-        pageNumber={pageNumber}
-        pageCount={pageCount}
-        setData={setData}
-        setLoading={setLoading}
-      />
+      <SNManagementSearchForm setData={setData} setLoading={setLoading} />
       <DataGrid
         scrolling="standart"
         height={commonStyles.LogGridHeight.height2}
         id="gridContainer"
-        dataSource={Mock}
-        keyExpr="id"
+        dataSource={item}
+        keyExpr="ID"
         showBorders={true}
         customizeColumns={customizeColumns}>
         <FilterRow visible={true} />
@@ -84,13 +73,11 @@ const SNManagement = () => {
             }}
           />
         </Column>
-
         {/* hidingPriority={2} */}
-        <Column dataField="id" />
+        <Column dataField="ID" />
         <Column dataField="origin" />
         <Column dataField="objectValue" />
         <Column dataField="material" />
-        <Column dataField="ID" />
         <Column dataField="epcType" />
         <Column dataField="slot" />
         <Column dataField="filterValue" />
@@ -107,7 +94,7 @@ const SNManagement = () => {
         <Column dataField="updateDate" />
         <Column dataField="creationDate" />
         <Pager allowedPageSizes={pageSizes} showPageSizeSelector={true} />
-        <Paging defaultPageSize={10} />
+        <Paging defaultPageSize={50} />
       </DataGrid>
     </>
   );
@@ -122,19 +109,18 @@ function customizeColumns(columns) {
   columns[3].width = 160;
   columns[4].width = 90;
   columns[5].width = 90;
-  columns[6].width = 100;
+  columns[6].width = 70;
   columns[7].width = 60;
   columns[8].width = 90;
   columns[9].width = 80;
   columns[10].width = 60;
-  columns[11].width = 110;
+  columns[11].width = 80;
   columns[12].width = 80;
   columns[13].width = 100;
-  columns[14].width = 90;
-  columns[15].width = 120;
+  columns[14].width = 110;
+  columns[15].width = 80;
   columns[16].width = 90;
   columns[17].width = 60;
   columns[18].width = 110;
-  columns[19].width = 160;
-  columns[20].width = 160;
+  columns[19].width = 150;
 }
