@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid, {Button, Column, FilterRow, Scrolling} from 'devextreme-react/data-grid';
+import DataGrid, {Button, Column, FilterRow, Scrolling, Pager, Paging} from 'devextreme-react/data-grid';
 
 import BasicModal from '../../components/Modal.js';
 
@@ -11,14 +11,15 @@ import {commonStyles} from '../../Styles/Styles';
 
 import Mock from './Mock';
 
-const ApiRequestLogs = () => {
-  const {types, GetLog} = LogService;
+const SNManagement = () => {
   const [data, setData] = React.useState([]);
 
   const [pageNumber, setPageNumber] = React.useState(1);
   const [pageCount, setPageCount] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
   const [itemCount, setItemCount] = React.useState(100);
+
+  const pageSizes = [10, 20, 40];
 
   //   useEffect(() => {
   //   }, [pageCount, pageNumber]);
@@ -61,17 +62,17 @@ const ApiRequestLogs = () => {
         pageCount={pageCount}
         setData={setData}
         setLoading={setLoading}
-        logType={types.ApiRequest}
       />
       <DataGrid
-        height={commonStyles.LogGridHeight.height}
+        scrolling="standart"
+        height={commonStyles.LogGridHeight.height2}
         id="gridContainer"
         dataSource={Mock}
         keyExpr="id"
         showBorders={true}
         customizeColumns={customizeColumns}>
         <FilterRow visible={true} />
-        <Scrolling mode="virtual" />
+        {/* <Scrolling mode="virtual" /> */}
         <Column type="buttons">
           <Button
             hint="details"
@@ -83,6 +84,8 @@ const ApiRequestLogs = () => {
             }}
           />
         </Column>
+
+        {/* hidingPriority={2} */}
         <Column dataField="id" />
         <Column dataField="origin" />
         <Column dataField="objectValue" />
@@ -103,19 +106,14 @@ const ApiRequestLogs = () => {
         <Column dataField="serialNumber" />
         <Column dataField="updateDate" />
         <Column dataField="creationDate" />
+        <Pager allowedPageSizes={pageSizes} showPageSizeSelector={true} />
+        <Paging defaultPageSize={10} />
       </DataGrid>
-      <PaginationContainer
-        itemCount={itemCount}
-        paginationCount={pageCount}
-        setPaginationCount={setPageCount}
-        page={pageNumber}
-        setPage={setPageNumber}
-      />
     </>
   );
 };
 
-export default ApiRequestLogs;
+export default SNManagement;
 
 function customizeColumns(columns) {
   columns[0].width = 50;

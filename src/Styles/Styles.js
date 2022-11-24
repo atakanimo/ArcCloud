@@ -32,6 +32,7 @@ export const commonStyles = {
   },
   LogGridHeight: {
     height: '80vh',
+    height2: '88vh',
   },
   center: {
     display: 'flex',
