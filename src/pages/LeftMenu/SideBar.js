@@ -36,6 +36,11 @@ const routes = [
         to: '/printers',
         section: 'printers',
       },
+      {
+        display: 'SN Management',
+        to: '/SNManagement',
+        section: 'SNManagement',
+      },
     ],
   },
   {
@@ -111,7 +116,7 @@ const Sidebar = () => {
     icons: {
       fontSize: '40px',
       margin: '15px',
-      color: "white"
+      color: 'white',
     },
   };
   return (

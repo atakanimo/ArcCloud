@@ -1,43 +1,33 @@
-.container_deviceConf {
+.cardArea_deviceConf {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  .bigCardArea_deviceConf {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    padding: 10px;
-    .cardArea_deviceConf {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding-top: 0px;
-      padding-bottom: 15px;
+  justify-content: center;
+  padding-top: 0px;
+  padding-bottom: 15px;
 
-      .checkboxCardLang_deviceConf {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding: 1rem;
-        border-radius: 5px;
-        width: 20vh;
-        min-width: 200px;
-        margin-top: 1rem;
-        height: 15vh;
-        max-height: 35vh;
-      }
-    }
-    .checkboxCard_deviceConf {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      padding: 1rem;
-      border-radius: 5px;
-      width: 40vh;
-      min-width: 220px;
-      margin-top: 1rem;
-      height: 15vh;
-      max-height: 35vh;
-    }
+  .checkboxCardLang_deviceConf {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 5px;
+    width: 20vh;
+    min-width: 200px;
+    margin-top: 1rem;
+    height: 15vh;
+    max-height: 35vh;
   }
+}
+.checkboxCard_deviceConf {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 5px;
+  width: 40vh;
+  min-width: 220px;
+  margin-top: 1rem;
+  height: 15vh;
+  max-height: 35vh;
 }

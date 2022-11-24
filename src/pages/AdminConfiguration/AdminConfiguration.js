@@ -109,9 +109,9 @@ export default function AdminConfiguration() {
       {loading ? (
         <Spinner />
       ) : (
-        <form onSubmit={event => saveConfigurations(event)} className="container_admin">
+        <form style={commonStyles.containerStyles} onSubmit={event => saveConfigurations(event)}>
           <Col xxl={3} lg={4} md={4}>
-            <div className="bigCardArea_admin">
+            <div style={commonStyles.cardArea}>
               <InlineTitle>Tracelink Configuration</InlineTitle>
               <div className="cardArea_admin">
                 <Card className="checkboxCard_admin">
@@ -150,7 +150,7 @@ export default function AdminConfiguration() {
             </div>
           </Col>
           <Col xxl={9} lg={8} md={8}>
-            <div className="bigCardArea_admin" style={{marginLeft: 20, minWidth: 600}}>
+            <div style={{...commonStyles.cardArea, marginLeft: 20, minWidth: 600}}>
               <InlineTitle>Service Endpoints</InlineTitle>
               <div className="cardArea_admin">
                 <Card className="checkboxCard_admin">
@@ -192,7 +192,7 @@ export default function AdminConfiguration() {
             </div>
           </Col>
           <Col>
-            <div className="bigCardArea_admin" style={{marginTop: 20}}>
+            <div style={{...commonStyles.cardArea, marginTop: 20}}>
               <InlineTitle>Directory and File Path</InlineTitle>
               <div className="cardArea_admin">
                 <Card className="checkboxCard_admin" style={{flexDirection: 'row', display: 'flex'}}>

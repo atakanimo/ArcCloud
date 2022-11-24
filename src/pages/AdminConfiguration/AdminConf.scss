@@ -1,34 +1,22 @@
-.container_admin {
+.cardArea_admin {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-
-  .bigCardArea_admin {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    padding: 0.7rem;
-
-    .cardArea_admin {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      padding-top: 0px;
-    }
-    .checkboxCard_admin {
-      display: flex;
-      flex-direction: column;
-      border-radius: 5px;
-      width: auto;
-      padding: 0.8rem;
-      min-width: 10vw;
-      margin-top: 1rem;
-      height: auto;
-    }
-    .createButtonAdmin {
-      display: flex;
-      flex: 1;
-      align-items: flex-end;
-      margin-bottom: 15px;
-    }
-  }
+  padding-top: 0px;
+}
+.checkboxCard_admin {
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  width: auto;
+  padding: 0.8rem;
+  min-width: 10vw;
+  margin-top: 1rem;
+  height: auto;
+}
+.createButtonAdmin {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  margin-bottom: 15px;
 }

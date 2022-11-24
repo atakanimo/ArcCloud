@@ -3,7 +3,6 @@ import Col from 'react-bootstrap/Col';
 import {Box} from '@mui/material';
 import {commonStyles} from '../../Styles/Styles';
 
-import './MyCompany.scss';
 import accordionsItems from './CompanyPages';
 
 //for accordion
@@ -43,19 +42,13 @@ export default function MyCompany() {
     <Box sx={commonStyles.boxStyle}>
       {accordionsItems.map((page, index) => {
         return (
-          <div key={index} className="container_myCompany">
+          <div key={index} style={commonStyles.containerStyles}>
             <Col lg={12} style={styles.col}>
-              <Accordion
-                style={{padding: '0.25rem'}}
-                className="bigCardArea_myCompany"
-                expanded={expanded === page.id}
-                onChange={handleChange(page.id)}>
+              <Accordion style={{...commonStyles.cardArea, padding: '0.3rem'}} expanded={expanded === page.id} onChange={handleChange(page.id)}>
                 <AccordionSummary style={styles.accordion} expandIcon={<ExpandMoreIcon />}>
                   <Typography style={styles.typography}>{page.title}</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
-                  <page.details expanded={expanded} />
-                </AccordionDetails>
+                <AccordionDetails>{expanded === page.id ? <page.details expanded={expanded} /> : null}</AccordionDetails>
               </Accordion>
             </Col>
           </div>

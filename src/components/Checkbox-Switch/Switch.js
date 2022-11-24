@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-export default function Switch({setValue, header, checked, switchAreaStyle, switchStyle}) {
+export default function Switch({headerStyle, setValue, header, checked, switchAreaStyle, switchStyle}) {
   const divStyle = {
     flexDirection: 'row',
     marginTop: 10,
@@ -13,8 +13,14 @@ export default function Switch({setValue, header, checked, switchAreaStyle, swit
 
   return (
     <div className="form-check form-switch" style={switchAreaStyle || divStyle}>
-      <input style={switchStyle || inputStyle} className="form-check-input" type="checkbox" onChange={() => setValue(!checked)} checked={checked} />
-      <label style={label} className="form-check-label">
+      <input
+        style={switchStyle || inputStyle}
+        className="form-check-input"
+        type="checkbox"
+        onChange={() => setValue(!checked)}
+        checked={checked}
+      />
+      <label style={headerStyle || label} className="form-check-label">
         {header}
       </label>
     </div>

@@ -159,9 +159,9 @@ export default function DeviceConfiguration() {
       {loading ? (
         <Spinner />
       ) : (
-        <div className="container_deviceConf">
+        <div style={commonStyles.containerStyles}>
           <Col lg={7}>
-            <div className="bigCardArea_deviceConf">
+            <div style={commonStyles.cardArea}>
               <InlineTitle>Serialization Validation</InlineTitle>
               <div className="cardArea_deviceConf">
                 <BasicCard onChange={() => onChangeSerialize('aggregateValidation')} checkBox={aggregateValidation} label={messages.aggregate} />
@@ -182,7 +182,7 @@ export default function DeviceConfiguration() {
             </div>
           </Col>
           <Col lg={5}>
-            <div style={{marginLeft: 20}} className="bigCardArea_deviceConf">
+            <div style={{...commonStyles.cardArea, marginLeft: 20}}>
               <InlineTitle>Other Settings</InlineTitle>
               <div style={{display: 'flex', justifyContent: 'flex-start', paddingLeft: 20}} className="cardArea_deviceConf">
                 <SliderBar setSliderValue={setSliderValue} sliderValue={sliderValue} />
@@ -200,7 +200,7 @@ export default function DeviceConfiguration() {
             </div>
           </Col>
           <Col lg={12}>
-            <div className="bigCardArea_deviceConf" style={{marginTop: 20}}>
+            <div style={{...commonStyles.cardArea, marginTop: 20}}>
               <InlineTitle>Permissions</InlineTitle>
               <div style={styles.area}>
                 <Card style={styles.checkBoxCard}>

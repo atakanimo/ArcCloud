@@ -17,6 +17,16 @@ export const commonStyles = {
     flexDirection: 'column',
     overflowY: 'scroll',
   },
+  containerStyles: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  cardArea: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: '10px',
+    padding: '0.7rem',
+  },
   LogSearchFormHeight: {
     height: '12vh',
   },

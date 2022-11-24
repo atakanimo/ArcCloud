@@ -20,6 +20,7 @@ export default function TextInput({
   isRequired,
   containerStyle,
   inputStyle,
+  headerMt,
 }) {
   const [screenSize, getDimension] = GetDynamicDimensions();
   const {dynamicWidth, dynamicHeight} = screenSize;
@@ -39,7 +40,7 @@ export default function TextInput({
   };
   return (
     <div style={containerStyle || styles.container}>
-      {header ? <Text mT={15} width={'auto'} height={'auto'} label={header} /> : null}
+      {header ? <Text mT={headerMt ? headerMt : 15} width={'auto'} height={'auto'} label={header} /> : null}
       <TextField
         name={name}
         size="small"

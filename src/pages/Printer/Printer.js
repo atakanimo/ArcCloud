@@ -74,7 +74,7 @@ export default function Printer() {
       justifyContent: 'center',
       display: 'flex',
       flexDirection: 'row',
-      padding: 16,
+      padding: '1rem',
       borderRadius: 5,
       width: 'auto',
       minWidth: dynamicWidth / 10,
@@ -190,16 +190,14 @@ export default function Printer() {
       {loading ? (
         <Spinner />
       ) : (
-        <div className="container_myCompany">
+        <div style={commonStyles.containerStyles}>
           <Col lg={12}>
             <form onSubmit={e => updatePrinters(e)}>
-              <div className="bigCardArea_myCompany" style={{marginTop: 20, display: 'flex', flexDirection: 'column'}}>
+              <div style={commonStyles.cardArea}>
                 <InlineTitle>Printers</InlineTitle>
-                <div style={styles.cardArea}>
-                  <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
-                  {gridNumber >= 0 ? createCard() : null}
-                  <ButtonComponent type={'submit'} label="SAVE" width={9} mT={20} />
-                </div>
+                <AlertComponent variant={alertVariant} text={alertMessage} show={showAlert} setShow={setShowAlert} />
+                {gridNumber >= 0 ? createCard() : null}
+                <ButtonComponent type={'submit'} label="SAVE" width={9} mT={20} />
               </div>
             </form>
           </Col>

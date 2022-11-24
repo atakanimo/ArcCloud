@@ -14,6 +14,7 @@ import NavigationLog from './pages/Logs/NavigationLog';
 // import NetworkLog from './pages/Logs/NetworkLog';
 import UserAuthLog from './pages/Logs/UserAuthLog';
 import Printer from './pages/Printer/Printer';
+import SNManagement from './pages/SNManagement/SNManagement';
 import store from './Redux/store';
 
 export default function App() {
@@ -49,6 +50,7 @@ export default function App() {
               <Route path="interactionLogs" element={<InteractionLog />} />
               <Route path="userAuthLogs" element={<UserAuthLog />} />
               <Route path="printers" element={<Printer />} />
+              <Route path="SNManagement" element={<SNManagement />} />
               {/* <Route path="networkLogs" element={<NetworkLog />} /> */}
               <Route
                 path="*"
