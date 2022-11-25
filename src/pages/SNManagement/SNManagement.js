@@ -44,10 +44,8 @@ const SNManagement = () => {
   ];
   if (loading == true) return <Spinner />;
 
-  const {item} = createData(100);
-  console.log('====================================');
-  console.log(item);
-  console.log('====================================');
+  const {item} = createData(500);
+
   return (
     <>
       <BasicModal open={open} setOpen={() => setOpen(false)} selectedData={selectedItem} header={header} />
